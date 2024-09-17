@@ -11,19 +11,23 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
 
 int	main(int argc, char **argv)
 {
 	char	*input;
 
-	// signals();
+	signals();
 	if (argc != 1 || argv[1])
 		return (0);
 	while (1)
 	{
 		input = readline("\033[1;34mminishell$\033[0m ");
 		if (!input || ft_strncmp(input, "exit", 5) == 0)
+		{
+			free (input);
 			break ;
+		}
 		if (*input)
 		{
 			add_history(input);
