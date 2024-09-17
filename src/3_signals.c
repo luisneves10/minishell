@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   3_signals.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/13 14:18:15 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/09/17 10:41:36 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/09/17 11:01:16 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-#include <signal.h>
-#include "../libft/include/libft.h"
-#include "../libft/include/ft_printf.h"
-#include "../libft/include/get_next_line.h"
+static void	signal_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
 
-void	signals();
+	}
+}
 
-#endif
+void	signals(void)
+{
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, SIG_IGN);
+	while (1)
+	{
+
+	}
+}

@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   0_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/13 14:18:15 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/09/13 14:58:12 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/09/17 11:03:46 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-#include <signal.h>
-#include "../libft/include/libft.h"
-#include "../libft/include/ft_printf.h"
-#include "../libft/include/get_next_line.h"
+int	main(int argc, char **argv)
+{
+	char	*input;
 
-void	signals();
-
-#endif
+	// signals();
+	if (argc != 1 || argv[1])
+		return (0);
+	while (1)
+	{
+		input = readline("\033[1;34mminishell$\033[0m ");
+		if (!input || ft_strncmp(input, "exit", 5) == 0)
+			break ;
+		if (*input)
+		{
+			add_history(input);
+			printf("Input: %s\n", input);
+		}
+		free (input);
+	}
+	return (0);
+}

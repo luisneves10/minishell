@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/13 14:18:15 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/04/09 15:41:19 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/04/18 10:20:26 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "libft.h"
 
-# include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-#include <signal.h>
-#include "../libft/include/libft.h"
-#include "../libft/include/ft_printf.h"
-#include "../libft/include/get_next_line.h"
+int	ft_strlen(const char *s)
+{
+	int	i;
 
-void	signals();
-
-#endif
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}

@@ -16,15 +16,18 @@
 
 NAME	= minishell
 
-CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -g -lreadline
-RM		= rm -rf
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror
+LIBFLAGS	= -lreadline
+RM			= rm -rf
 
-INCLUDE	= -Iinclude/
-SRC_DIR	= src/
-OBJ_DIR = obj/
+INCLUDE		= -Iinclude/
+SRC_DIR		= src/
+OBJ_DIR		= obj/
+LIBFT_DIR	= libft/
+LIBFT		= libft/libft.a
 
-SRC_FILES	= main.c
+SRC_FILES	= 0_main.c 3_signals.c
 
 SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
 
@@ -51,18 +54,21 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 $(NAME): $(OBJ_DIR) $(OBJ)
+	@ make -C $(LIBFT_DIR)
 	@ echo "Compilation of ${YELLOW}$(NAME) ${CLR_RMV}..."
-	@ $(CC) $(CFLAGS) $(INCLUDE) $(SRC) -o $(NAME)
+	@ $(CC) $(CFLAGS) $(INCLUDE) $(SRC) -o $(NAME) $(LIBFLAGS) $(LIBFT)
 	@ echo "$(GREEN)$(NAME) created!${CLR_RMV}"
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 clean:
+	@ make clean -C $(LIBFT_DIR)
 	@ $(RM) $(OBJ_DIR)
 	@ echo "$(RED)Deleting $(CLR_RMV)object files"
 
 fclean: clean
+	@ make fclean -C $(LIBFT_DIR)
 	@ $(RM) $(NAME)
 	@ echo "$(RED)Deleting $(CLR_RMV)binary"
 

@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putpointer_pf.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/13 14:58:12 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/13 14:58:15 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/04/27 15:07:20 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/05/24 10:35:25 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "ft_printf.h"
 
-int	main(void)
+int	ft_putpointer_pf(unsigned long long n)
 {
-	char	*input;
+	int	len;
 
-	while (1)
-	{
-		input = readline("minishell> ");
-		if (!input)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (*input)
-		{
-			// add_history(input);
-			printf("Input: %s", input);
-		}
-		free (input);
-	}
-	return (0);
+	if (!n)
+		return (ft_putstr_pf("(nil)"));
+	len = 0;
+	len += ft_putstr_pf("0x");
+	len += ft_puthexa_lower_pf(n);
+	return (len);
 }
