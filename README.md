@@ -1,5 +1,19 @@
 # ️‍🔥 minihell ️‍🔥
 
+## Code Structure
+    minishell/
+    ├── libft/
+    ├── src/
+    │   ├── 0_main.c
+    │   ├── 1_parser.c
+    │   ├── 2_executor.c
+    │   ├── 3_signals.c
+    │   ├── 4_utils.c
+    │   └── builtins/
+    ├── includes/
+    │   └── minishell.h
+    └── Makefile
+
 ## Resources
 - https://www.cs.purdue.edu/homes/grr/SystemsProgrammingBook/Book/Chapter5-WritingYourOwnShell.pdf
 - https://m4nnb3ll.medium.com/minishell-building-a-mini-bash-a-42-project-b55a10598218
