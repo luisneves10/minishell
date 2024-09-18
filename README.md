@@ -8,3 +8,18 @@
 - https://indradhanush.github.io/blog/writing-a-unix-shell-part-1/
 - https://indradhanush.github.io/blog/writing-a-unix-shell-part-2/
 - https://indradhanush.github.io/blog/writing-a-unix-shell-part-3/
+
+## Code Structure
+    minishell/
+    ├── libft/
+    ├── src/
+    │   ├── 0_main.c
+    │   ├── 1_parser.c
+    │   ├── 2_executor.c
+    │   ├── 3_signals.c
+    │   ├── 4_utils.c
+    │   └── builtins/
+    ├── includes/
+    │   └── minishell.h
+    └── Makefile
+    
