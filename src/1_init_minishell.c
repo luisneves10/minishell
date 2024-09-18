@@ -1,31 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   3_signals.c                                        :+:      :+:    :+:   */
+/*   1_init_minishell.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/17 10:41:36 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/18 12:00:27 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/09/18 12:03:18 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	signal_handler(int sig)
+void	init_minishell(void)
 {
-	if (sig == SIGINT)
-	{
-		printf("\n");
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		print_user_and_cwd();
-		rl_redisplay();
-	}
-}
+	char	*input;
 
-void	signals(void)
-{
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
+	signals();
+	while (1)
+	{
+		print_user_and_cwd();
+		input = readline("$\033[0m ");
+		if (!input)
+		{
+			printf("exit\n");
+			free (input);
+			break ;
+		}
+		if (ft_strncmp(input, "exit", 5) == 0)
+		{
+			free (input);
+			break ;
+		}
+		if (*input)
+		{
+			add_history(input);
+			printf("Input: %s\n", input); // placeholder para o parse do input
+		}
+		free (input);
+	}
 }

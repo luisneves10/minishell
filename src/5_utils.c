@@ -1,31 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   3_signals.c                                        :+:      :+:    :+:   */
+/*   5_utils.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/17 10:41:36 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/18 12:00:27 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/09/18 11:56:02 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/09/18 12:02:13 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	signal_handler(int sig)
+void	print_user_and_cwd(void)
 {
-	if (sig == SIGINT)
-	{
-		printf("\n");
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		print_user_and_cwd();
-		rl_redisplay();
-	}
-}
+	char	*username;
+	char	path[1024];
 
-void	signals(void)
-{
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
+	username = getenv("LOGNAME");
+	getcwd(path, sizeof(path));
+	printf("\033[1;34m%s:\033[0;36m~%s", username, path);
 }

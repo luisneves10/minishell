@@ -23,6 +23,8 @@
 #include "../libft/include/ft_printf.h"
 #include "../libft/include/get_next_line.h"
 
+void	init_minishell(void);
 void	signals();
+void	print_user_and_cwd(void);
 
 #endif
