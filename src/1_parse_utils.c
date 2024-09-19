@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/09/19 10:21:31 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/19 15:35:12 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 int	gettoken(char **ptr_str, char *end_str, char **start_token, char **end_token)
 {
 	char	*str;
-	int	ret;
+	int	ret = 0;
 
 	str = *ptr_str;
 	while (str < end_str && *str == ' ')
 		str ++;
-	if (str)
-	{
+	if (start_token)
 		*start_token = str;
-		ret = special_chars(str);
-	}
-	while (str < end_str && *str != ' ')
-	{
+	ret = special_chars(str);
+	if (ret != 'a')
 		str ++;
-	}
-	*end_token = str;
+	//printf("WHAT: %s\n", str);
+	while (str < end_str && *str != ' ')
+		str ++;
+	if (end_token)
+		*end_token = str;
 	*ptr_str = str;
 	return (ret);
 }
@@ -92,5 +92,8 @@ int	find_char(char **ptr_str, char *end_str, char *set)
 	while (s < end_str && strchr(" ", *s))
 		s++;
 	*ptr_str = s;
-	return (*s && strchr(set, *s));
+	if (s < end_str && strchr(set, *s))
+		return (1);
+	else
+		return (0);
 }

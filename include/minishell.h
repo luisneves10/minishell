@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/13 14:18:15 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:56:01 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -42,9 +44,9 @@ typedef struct	execcmd
 
 typedef struct	redircmd {
 	int	type;
-	struct	cmd *cmd;
+	t_cmd *cmd;
 	char	*file;
-	char	*efile;
+	char	*end_file;
 	int	mode;
 	int	fd;
 } t_redircmd;
@@ -80,5 +82,6 @@ void	nulterminate(t_cmd *cmd);
 int	find_char(char **ptr_str, char *end_str, char *set);
 t_cmd	*execcmd(void);
 t_cmd	*pipecmd(t_cmd *left, t_cmd *right);
+t_cmd	*redircmd(t_cmd	*next_cmd, char *file, char *end_file, int mode, int fd);
 
 #endif
