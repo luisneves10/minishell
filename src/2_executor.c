@@ -1,37 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   1_init_minishell.c                                 :+:      :+:    :+:   */
+/*   2_executor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/19 12:38:31 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/09/19 12:48:54 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	init_minishell(void)
+void	runcmd(t_cmd *cmd)
 {
-	char	*input;
+	t_execcmd	*execcmd;
 
-	signals();
-	while (1)
-	{
-		print_user_and_cwd();
-		input = readline("$\033[0m ");
-		if (!input || ft_strncmp(input, "exit", 4) == 0)
-		{
-			printf("exit\n");
-			free (input);
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-			runcmd(parsecmd(input));
-		}
-		free (input);
-	}
+	execcmd = (t_execcmd *)cmd;
+	if (ft_strncmp(execcmd->argv[0], "cd", 2) == 0)
+		ft_cd(execcmd->argv[1]);
 }
