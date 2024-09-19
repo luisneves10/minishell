@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/09/19 15:35:12 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:29:55 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	gettoken(char **ptr_str, char *end_str, char **start_token, char **end_token
 	ret = special_chars(str);
 	if (ret != 'a')
 		str ++;
-	//printf("WHAT: %s\n", str);
 	while (str < end_str && *str != ' ')
 		str ++;
 	if (end_token)
@@ -72,7 +71,6 @@ void	nulterminate(t_cmd *cmd)
 		while (ecmd->argv[i])
 		{
 			*ecmd->end_argv[i] = '\0';
-			printf("token %d: %s\n", i, ecmd->argv[i]);
 			i ++;
 		}
 	}

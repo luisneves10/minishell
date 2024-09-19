@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/19 11:56:01 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:20:27 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include "../libft/include/libft.h"
 # include "../libft/include/ft_printf.h"
 # include "../libft/include/get_next_line.h"
+# include <sys/types.h>
+# include <sys/wait.h>
 
 # define EXEC  1
 # define REDIR 2
@@ -55,28 +57,18 @@ typedef struct	redircmd {
 typedef struct	pipecmd
 {
 	int			type;
-	struct	cmd *left;
-	struct	cmd *right;
+	int		pipefd[2];
+	t_cmd *left;
+	t_cmd *right;
+	pid_t	pid1;
+	pid_t	pid2;
 }	t_pipecmd;
-
-typedef struct	listcmd
-{
-	int			type;
-	struct	cmd *left;
-	struct	cmd *right;
-}	t_listcmd;
-
-typedef struct	backcmd
-{
-	int			type;
-	struct	cmd *cmd;
-}	t_backcmd;
 
 /* =========================================================================== */
 /*	FUNCTIONS                                                                  */
 /* =========================================================================== */
 
-void	init_minishell(void);
+void	init_minishell(char *envp[]);
 void	signals();
 void	print_user_and_cwd(void);
 
@@ -89,7 +81,14 @@ t_cmd	*execcmd(void);
 t_cmd	*pipecmd(t_cmd *left, t_cmd *right);
 t_cmd	*redircmd(t_cmd	*next_cmd, char *file, char *end_file, int mode, int fd);
 
-void	runcmd(t_cmd *cmd);
+void	runcmd(t_cmd *cmd, char *envp[]);
+
+char	*get_cmd_path(char **env, char *cmd);
+char	*get_cmds_path(char	*path, char	*cmd);
+void	child1_process(t_pipecmd *pipecmd, char *envp[]);
+void	child2_process(t_pipecmd *pipecmd, char *envp[]);
+void	fork_function(t_pipecmd *pipecmd, char *envp[]);
+void	close_all(t_pipecmd *pipecmd);
 
 int		ft_pwd(char **argv);
 int		ft_cd(char **argv);

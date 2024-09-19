@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   0_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:58:12 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/18 11:59:47 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/09/19 16:50:21 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char *envp[])
 {
 	if (argc != 1 || argv[1])
 		return (0);
-	init_minishell();
+	init_minishell(envp);
 	return (0);
 }
