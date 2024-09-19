@@ -78,7 +78,7 @@ static t_cmd	*parsepipe(char **ptr_str, char *end_str)
 	return (cmd);
 }
 
-void	parsecmd(char *str)
+t_cmd	*parsecmd(char *str)
 {
 	char	*end_str;
 	t_cmd	*cmd;
@@ -87,4 +87,5 @@ void	parsecmd(char *str)
 	cmd = parsepipe(&str, end_str);
 	printf("cmd type: %d\n", cmd->type);
 	nulterminate(cmd);
+	return (cmd);
 }
