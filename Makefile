@@ -27,7 +27,8 @@ OBJ_DIR		= obj/
 LIBFT_DIR	= libft/
 LIBFT		= libft/libft.a
 
-SRC_FILES	= 0_main.c 1_init_minishell.c 3_signals.c 5_utils.c
+SRC_FILES	= 0_main.c 1_init_minishell.c 1_constructors.c 3_signals.c \
+			  4_utils.c 1_parse_func.c 1_parse_utils.c
 
 SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
 

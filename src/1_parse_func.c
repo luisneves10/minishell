@@ -12,18 +12,7 @@
 
 #include "minishell.h"
 
-void	parsecmd(char *str)
-{
-	char	*end_str;
-	t_cmd	*cmd;
-
-	end_str = str + strlen(str);
-	cmd = parsepipe(&str, end_str);
-	printf("cmd type: %d\n", cmd->type);
-	nulterminate(cmd);
-}
-
-t_cmd	*parseexec(char **ptr_str, char *end_str)
+static t_cmd	*parseexec(char **ptr_str, char *end_str)
 {
 	char	*start_token = NULL;
 	char	*end_token = NULL;
@@ -57,7 +46,7 @@ t_cmd	*parseexec(char **ptr_str, char *end_str)
 	return (ret);
 }
 
-t_cmd	*parsepipe(char **ptr_str, char *end_str)
+static t_cmd	*parsepipe(char **ptr_str, char *end_str)
 {
 	t_cmd	*cmd;
 	char	*s = NULL, *es = NULL;
@@ -72,3 +61,13 @@ t_cmd	*parsepipe(char **ptr_str, char *end_str)
 	return (cmd);
 }
 
+void	parsecmd(char *str)
+{
+	char	*end_str;
+	t_cmd	*cmd;
+
+	end_str = str + strlen(str);
+	cmd = parsepipe(&str, end_str);
+	printf("cmd type: %d\n", cmd->type);
+	nulterminate(cmd);
+}

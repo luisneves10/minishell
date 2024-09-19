@@ -21,21 +21,16 @@ void	init_minishell(void)
 	{
 		print_user_and_cwd();
 		input = readline("$\033[0m ");
-		if (!input)
+		if (!input || ft_strncmp(input, "exit", 4) == 0)
 		{
 			printf("exit\n");
-			free (input);
-			break ;
-		}
-		if (ft_strncmp(input, "exit", 5) == 0)
-		{
 			free (input);
 			break ;
 		}
 		if (*input)
 		{
 			add_history(input);
-			printf("Input: %s\n", input); // placeholder para o parse do input
+			parsecmd(input);
 		}
 		free (input);
 	}
