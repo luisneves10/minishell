@@ -21,11 +21,16 @@
  * additional arguments?
  * */
 
-int	ft_pwd(void)
+int	ft_pwd(char **argv)
 {
 	char	path[1024];
 
+	if (argv[1] && argv[1][0] == '-')
+	{
+		printf("minishell: pwd: %s: invalid option\n", argv[1]);
+		return (-1);
+	}
 	getcwd(path, sizeof(path));
-	printf("%s", path);
+	printf("%s\n", path);
 	return (0);
 }

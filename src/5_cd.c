@@ -16,18 +16,20 @@
  *
  * */
 
-int	ft_cd(char *args)
+int	ft_cd(char **argv)
 {
-	if (!args)
+	if (!argv[1])
 	{
 		chdir(getenv("HOME"));
 		return (1);
 	}
 	else
 	{
-		if (chdir(args) == -1)
+		if (argv[1][0] == '~')
+			argv[1]++;
+		if (chdir(argv[1]) == -1)
 		{
-			printf("%s: no such directory\n", args);
+			printf("%s: no such directory\n", argv[1]);
 			return (-1);
 		}
 	}

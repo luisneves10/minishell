@@ -89,7 +89,7 @@ t_cmd	*pipecmd(t_cmd *left, t_cmd *right);
 
 void	runcmd(t_cmd *cmd);
 
-int		ft_pwd(void);
-int		ft_cd(char *args);
+int		ft_pwd(char **argv);
+int		ft_cd(char **argv);
 
 #endif

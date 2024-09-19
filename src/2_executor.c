@@ -18,5 +18,7 @@ void	runcmd(t_cmd *cmd)
 
 	execcmd = (t_execcmd *)cmd;
 	if (ft_strncmp(execcmd->argv[0], "cd", 2) == 0)
-		ft_cd(execcmd->argv[1]);
+		ft_cd(execcmd->argv);
+	if (ft_strncmp(execcmd->argv[0], "pwd", 3) == 0)
+		ft_pwd(execcmd->argv);
 }
