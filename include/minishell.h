@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/20 11:22:17 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:02:03 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,13 @@ typedef struct	pipecmd
 	pid_t	pid2;
 }	t_pipecmd;
 
+typedef struct	token
+{
+	char	*start;
+	char	*end;
+}	t_token;
+
+
 /* =========================================================================== */
 /*	FUNCTIONS                                                                  */
 /* =========================================================================== */
@@ -86,7 +93,8 @@ void	nulterminate(t_cmd *cmd);
 int		find_char(char **ptr_str, char *end_str, char *set);
 t_cmd	*execcmd(void);
 t_cmd	*pipecmd(t_cmd *left, t_cmd *right);
-t_cmd	*redircmd(t_cmd	*next_cmd, char *file, char *end_file, int mode, int fd);
+t_cmd	*redircmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd);
+t_token	*create_token(void);
 
 void	runcmd(t_cmd *cmd, char *envp[]);
 void	execute_commands(t_execcmd *execcmd, char *envp[]);
