@@ -33,7 +33,7 @@ SRC_FILES	= 0_main.c \
 			  2_executor.c 2_pipe_exec.c \
 			  3_signals.c \
 			  4_utils.c \
-			  5_pwd.c 5_cd.c\
+			  5_builtins.c 5_pwd.c 5_cd.c 5_exit.c\
 
 SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
 

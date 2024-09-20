@@ -52,21 +52,22 @@ typedef struct	execcmd
 	char	*end_argv[20];
 }	t_execcmd;
 
-typedef struct	redircmd {
-	int	type;
-	t_cmd *cmd;
+typedef struct	redircmd
+{
+	int		type;
+	t_cmd	*cmd;
 	char	*file;
 	char	*end_file;
-	int	mode;
-	int	fd;
-} t_redircmd;
+	int		mode;
+	int		fd;
+}	t_redircmd;
 
 typedef struct	pipecmd
 {
-	int			type;
+	int		type;
 	int		pipefd[2];
-	t_cmd *left;
-	t_cmd *right;
+	t_cmd	*left;
+	t_cmd	*right;
 	pid_t	pid1;
 	pid_t	pid2;
 }	t_pipecmd;
@@ -98,7 +99,10 @@ void	child2_process(t_pipecmd *pipecmd, char *envp[]);
 void	fork_function(t_pipecmd *pipecmd, char *envp[]);
 void	close_all(t_pipecmd *pipecmd);
 
+char	*is_builtin(t_execcmd *execcmd);
+void	exec_builtin(char **argv, char *builtin);
 int		ft_pwd(char **argv);
 int		ft_cd(char **argv);
+int		ft_exit();
 
 #endif

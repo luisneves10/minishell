@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/20 11:41:19 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/20 15:01:54 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,9 @@ void	execute_commands(t_execcmd *execcmd, char *envp[])
 {
 	int	pid;
 
-	if (ft_strncmp(execcmd->argv[0], "cd", 2) == 0)
+	if (is_builtin(execcmd) != NULL)
 	{
-		ft_cd(execcmd->argv);
-		return ;
-	}
-	if (ft_strncmp(execcmd->argv[0], "pwd", 3) == 0)
-	{
-		ft_pwd(execcmd->argv);
+		exec_builtin(execcmd->argv, is_builtin(execcmd));
 		return ;
 	}
 	pid = fork();
