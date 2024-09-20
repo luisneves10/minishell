@@ -101,6 +101,7 @@ void	close_all(t_pipecmd *pipecmd);
 
 char	*is_builtin(t_execcmd *execcmd);
 void	exec_builtin(char **argv, char *builtin);
+int		ft_echo(char **argv);
 int		ft_pwd(char **argv);
 int		ft_cd(char **argv);
 int		ft_exit();

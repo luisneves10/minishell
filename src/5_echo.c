@@ -1,24 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   5_exit.c                                           :+:      :+:    :+:   */
+/*   5_echo.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/20 14:28:33 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/20 15:33:37 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/09/20 15:35:17 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/09/20 15:47:28 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * subject does not require additional arguments in exit
- */
-
-int	ft_exit()
+static int	is_echo_flag(char *arg)
 {
-	printf("exit\n");
-	// clear desta merda toda
-	exit (0);
+	if (arg[0] == '-' && arg[1] == 'n' && arg[2] == '\0')
+		return (1);
+	return (0);
+}
+
+int	ft_echo(char **argv)
+{
+	int	i;
+
+	i = 1;
+	if (is_echo_flag(argv[1]))
+		i++;
+	while (argv[i] && argv[i + 1] != NULL)
+		printf("%s ", argv[i++]);
+	if (is_echo_flag(argv[1]))
+		printf("%s", argv[i]);
+	else
+		printf("%s\n", argv[i]);
+	return (0);
 }
