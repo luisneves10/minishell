@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/09/19 15:36:35 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/19 16:58:50 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_cmd	*execcmd(void)
 	return ((t_cmd*)cmd);
 }
 
-t_cmd	*pipecmd(t_cmd	*left, t_cmd	*right)
+t_cmd	*pipecmd(t_cmd *left, t_cmd *right)
 {
 	t_pipecmd	*cmd;
 

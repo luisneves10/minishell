@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   1_init_minishell.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/19 12:38:31 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/09/19 16:55:56 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	init_minishell(void)
+void	init_minishell(char *envp[])
 {
 	char	*input;
 
@@ -30,7 +30,7 @@ void	init_minishell(void)
 		if (*input)
 		{
 			add_history(input);
-			runcmd(parsecmd(input));
+			runcmd(parsecmd(input), envp);
 		}
 		free (input);
 	}

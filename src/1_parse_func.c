@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/09/19 15:54:37 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:29:40 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ t_cmd	*parsecmd(char *str)
 
 	end_str = str + strlen(str);
 	cmd = parsepipe(&str, end_str);
-	printf("cmd type: %d\n", cmd->type);
 	nulterminate(cmd);
 	return (cmd);
 }

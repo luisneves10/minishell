@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 15:24:50 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/06/19 10:47:42 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:11:56 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,29 @@
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*s3;
+	char	*str;
+	int		s1len;
+	int		s2len;
 	int		i;
-	int		j;
-	int		s1_len;
-	int		s2_len;
 
+	s1len = 0;
+	s2len = 0;
 	i = 0;
-	j = 0;
-	s1_len = ft_strlen((char *)s1);
-	s2_len = ft_strlen ((char *)s2);
-	s3 = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
-	if (!s3)
+	while (s1[s1len])
+		s1len ++;
+	while (s2[s2len])
+		s2len ++;
+	str = malloc((s1len * sizeof(char)) + (s2len * sizeof(char)) + 1);
+	if (!str)
 		return (NULL);
-	while (s1[i])
+	while (i < s1len)
 	{
-		s3[i] = s1[i];
-		i++;
+		str[i] = s1[i];
+		i ++;
 	}
-	while (s2[j])
-		s3[i++] = s2[j++];
-	s3[i] = '\0';
-	free ((char *)s1);
-	return (s3);
+	i = 0;
+	while (i < s2len)
+		str[s1len++] = s2[i++];
+	str[s1len] = '\0';
+	return (str);
 }
