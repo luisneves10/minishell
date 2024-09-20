@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/19 17:20:27 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/20 11:22:17 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,13 @@ typedef struct	cmd
 {
 	int	type;
 }	t_cmd;
+
+typedef struct	execexec
+{
+	int		type;
+	char	*argv[20];
+	char	*end_argv[20];
+}	t_execexec;
 
 typedef struct	execcmd
 {
@@ -82,6 +89,7 @@ t_cmd	*pipecmd(t_cmd *left, t_cmd *right);
 t_cmd	*redircmd(t_cmd	*next_cmd, char *file, char *end_file, int mode, int fd);
 
 void	runcmd(t_cmd *cmd, char *envp[]);
+void	execute_commands(t_execcmd *execcmd, char *envp[]);
 
 char	*get_cmd_path(char **env, char *cmd);
 char	*get_cmds_path(char	*path, char	*cmd);

@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/19 17:36:35 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/20 11:41:19 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,24 +67,30 @@ void	execute_commands(t_execcmd *execcmd, char *envp[])
 {
 	int	pid;
 
+	if (ft_strncmp(execcmd->argv[0], "cd", 2) == 0)
+	{
+		ft_cd(execcmd->argv);
+		return ;
+	}
+	if (ft_strncmp(execcmd->argv[0], "pwd", 3) == 0)
+	{
+		ft_pwd(execcmd->argv);
+		return ;
+	}
 	pid = fork();
+	if (pid < 0)
+		perror("error fork");
 	if (pid == 0)
 	{
-		if (ft_strncmp(execcmd->argv[0], "cd", 2) == 0)
-			ft_cd(execcmd->argv);
-		if (ft_strncmp(execcmd->argv[0], "pwd", 3) == 0)
-			ft_pwd(execcmd->argv);
-		else
-		{
-			char *path = get_cmd_path(envp, execcmd->argv[0]);
-			if (execve(path, execcmd->argv, envp) == -1)
-				perror("execve error");
-		}
+		// TRATAR EXECUTAVEIS
+		/* if (execve(execcmd->argv[0], execcmd->argv, envp) == -1)
+			perror("execve error"); */
+		char *path = get_cmd_path(envp, execcmd->argv[0]);
+		if (execve(path, execcmd->argv, envp) == -1)
+			perror("execve error");
 	}
 	if (pid > 0)
 		waitpid(pid, NULL, 0);
-	else
-		perror("error fork");
 }
 
 void	runcmd(t_cmd *cmd, char *envp[])
