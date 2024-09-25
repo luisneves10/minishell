@@ -83,7 +83,7 @@ t_cmd	*parsecmd(char *str)
 	char	*end_str;
 	t_cmd	*cmd;
 
-	end_str = str + strlen(str);
+	end_str = str + ft_strlen(str);
 	cmd = parsepipe(&str, end_str);
 	nulterminate(cmd);
 	return (cmd);

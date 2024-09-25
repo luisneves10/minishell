@@ -16,10 +16,10 @@ void	child1_process(t_pipecmd *pipecmd, char *envp[])
 {
 	char	*path;
 	t_execcmd *left;
-	t_execcmd *right;
+	// t_execcmd *right;
 
 	left = (t_execcmd *)pipecmd->left;
-	right = (t_execcmd *)pipecmd->right;
+	// right = (t_execcmd *)pipecmd->right;
 	path = get_cmd_path(envp, left->argv[0]);
 	dup2(pipecmd->pipefd[1], STDOUT_FILENO);
 	close(pipecmd->pipefd[1]);
@@ -34,10 +34,10 @@ void	child1_process(t_pipecmd *pipecmd, char *envp[])
 void	child2_process(t_pipecmd *pipecmd, char *envp[])
 {
 	char	*path;
-	t_execcmd *left;
+	// t_execcmd *left;
 	t_execcmd *right;
 
-	left = (t_execcmd *)pipecmd->left;
+	// left = (t_execcmd *)pipecmd->left;
 	right = (t_execcmd *)pipecmd->right;
 	path = get_cmd_path(envp, right->argv[0]);
 	dup2(pipecmd->pipefd[0], STDIN_FILENO);

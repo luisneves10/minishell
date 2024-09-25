@@ -87,10 +87,10 @@ int	find_char(char **ptr_str, char *end_str, char *set)
 	char	*s;
 
 	s = *ptr_str;
-	while (s < end_str && strchr(" ", *s))
+	while (s < end_str && ft_strchr(" ", *s))
 		s++;
 	*ptr_str = s;
-	if (s < end_str && strchr(set, *s))
+	if (s < end_str && ft_strchr(set, *s))
 		return (1);
 	else
 		return (0);
