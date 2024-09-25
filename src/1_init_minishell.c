@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/19 16:55:56 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/20 15:08:22 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	init_minishell(char *envp[])
 	{
 		print_user_and_cwd();
 		input = readline("$\033[0m ");
-		if (!input || ft_strncmp(input, "exit", 4) == 0)
+		if (!input)
 		{
 			printf("exit\n");
 			free (input);

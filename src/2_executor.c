@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/20 11:41:19 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/20 15:55:49 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,17 @@ char	*get_cmd_path(char **env, char *cmd)
 void	execute_commands(t_execcmd *execcmd, char *envp[])
 {
 	int	pid;
+	char *path;
 
-	if (ft_strncmp(execcmd->argv[0], "cd", 2) == 0)
+	if (is_builtin(execcmd) != NULL)
 	{
-		ft_cd(execcmd->argv);
+		exec_builtin(execcmd->argv, is_builtin(execcmd));
 		return ;
 	}
-	if (ft_strncmp(execcmd->argv[0], "pwd", 3) == 0)
+	path = get_cmd_path(envp, execcmd->argv[0]);
+	if (!path)
 	{
-		ft_pwd(execcmd->argv);
+		printf("%s: command not found\n", execcmd->argv[0]);
 		return ;
 	}
 	pid = fork();
@@ -85,7 +87,6 @@ void	execute_commands(t_execcmd *execcmd, char *envp[])
 		// TRATAR EXECUTAVEIS
 		/* if (execve(execcmd->argv[0], execcmd->argv, envp) == -1)
 			perror("execve error"); */
-		char *path = get_cmd_path(envp, execcmd->argv[0]);
 		if (execve(path, execcmd->argv, envp) == -1)
 			perror("execve error");
 	}
