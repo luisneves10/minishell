@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/20 11:22:17 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/09/30 16:25:39 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,12 @@ void	fork_function(t_pipecmd *pipecmd, char *envp[]);
 void	close_all(t_pipecmd *pipecmd);
 
 char	*is_builtin(t_execcmd *execcmd);
-void	exec_builtin(char **argv, char *builtin);
+void	exec_builtin(char **argv, char *builtin, char *envp[]);
 int		ft_echo(char **argv);
 int		ft_pwd(char **argv);
 int		ft_cd(char **argv);
+void	ft_export(char **argv, char *envp[]);
+void	ft_env(char **argv, char *envp[]);
 int		ft_exit();
 
 #endif

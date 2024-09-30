@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   3_signals.c                                        :+:      :+:    :+:   */
+/*   5_env.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/17 10:41:36 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/30 15:25:45 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/09/30 16:24:22 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/09/30 16:35:01 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	signal_handler(int sig)
+void	ft_env(char **argv, char *envp[])
 {
-	if (sig == SIGINT)
-	{
-		printf("\n");
-		// rl_replace_line("", 0);
-		rl_on_new_line();
-		print_user_and_cwd();
-		rl_redisplay();
-	}
-}
+	int	i;
 
-void	signals(void)
-{
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
+	if (argv[1])
+	{
+		printf("env: No options or arguments are allowed.\n");
+		return ;
+	}
+	i = 0;
+	while (envp[i])
+        printf("%s\n", envp[i++]);
 }

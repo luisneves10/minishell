@@ -70,7 +70,7 @@ void	execute_commands(t_execcmd *execcmd, char *envp[])
 
 	if (is_builtin(execcmd) != NULL)
 	{
-		exec_builtin(execcmd->argv, is_builtin(execcmd));
+		exec_builtin(execcmd->argv, is_builtin(execcmd), envp);
 		return ;
 	}
 	path = get_cmd_path(envp, execcmd->argv[0]);
