@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/20 13:02:03 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/01 11:56:04 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ typedef struct	redircmd {
 
 typedef struct	pipecmd
 {
-	int			type;
+	int		type;
 	int		pipefd[2];
+	int		prev_pipe;
 	t_cmd *left;
 	t_cmd *right;
 	pid_t	pid1;
@@ -101,7 +102,7 @@ void	execute_commands(t_execcmd *execcmd, char *envp[]);
 
 char	*get_cmd_path(char **env, char *cmd);
 char	*get_cmds_path(char	*path, char	*cmd);
-void	child1_process(t_pipecmd *pipecmd, char *envp[]);
+void	child1_process(t_pipecmd *pipecmd, char *envp[], int prev_pipe);
 void	child2_process(t_pipecmd *pipecmd, char *envp[]);
 void	fork_function(t_pipecmd *pipecmd, char *envp[]);
 void	close_all(t_pipecmd *pipecmd);

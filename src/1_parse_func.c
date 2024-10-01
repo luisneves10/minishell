@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/09/20 16:06:20 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/01 12:09:51 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ static t_cmd	*parseexec(char **ptr_str, char *end_str)
 static t_cmd	*parsepipe(char **ptr_str, char *end_str)
 {
 	t_cmd	*cmd;
-	char	*s = NULL, *es = NULL;
+	char	*s = NULL;
+	char	*es = NULL;
 
 	cmd = parseexec(ptr_str, end_str);
 	if (find_char(ptr_str, end_str, "|"))
@@ -90,11 +91,11 @@ t_cmd	*parsecmd(char *str)
 	end_str = str + ft_strlen(str);
 	cmd = parsepipe(&str, end_str);
 	nulterminate(cmd);
-	t_pipecmd *piped = (t_pipecmd *)cmd;
-	t_execcmd *left = (t_execcmd *)piped->left;
-	t_redircmd *right = (t_redircmd *)piped->right;
-	t_execcmd *rightcmd = (t_execcmd *)right;
-	printf("left command: %s\n", left->argv[0]);
-	printf("right command: %s\n", rightcmd->argv[0]);
+	//t_pipecmd *piped = (t_pipecmd *)cmd;
+	//t_execcmd *left = (t_execcmd *)piped->left;
+	//t_redircmd *right = (t_redircmd *)piped->right;
+	//t_execcmd *rightcmd = (t_execcmd *)right;
+	//printf("left command: %s\n", left->argv[0]);
+	//printf("right command: %s\n", rightcmd->argv[0]);
 	return (cmd);
 }

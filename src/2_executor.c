@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/20 15:54:39 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/01 12:09:20 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	execute_commands(t_execcmd *execcmd, char *envp[])
 {
 	int	pid;
 
-	printf("command: %s\n", execcmd->argv[0]);
+	//printf("command: %s\n", execcmd->argv[0]);
 	if (ft_strncmp(execcmd->argv[0], "cd", 2) == 0)
 	{
 		ft_cd(execcmd->argv);
