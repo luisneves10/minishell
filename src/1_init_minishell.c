@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/20 15:08:22 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/01 11:00:21 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 void	init_minishell(char *envp[])
 {
 	char	*input;
+	char	**local_env;
 
+	local_env = copy_env(envp);
 	signals();
 	while (1)
 	{
@@ -25,12 +27,13 @@ void	init_minishell(char *envp[])
 		{
 			printf("exit\n");
 			free (input);
+			free_env(local_env);
 			break ;
 		}
 		if (*input)
 		{
 			add_history(input);
-			runcmd(parsecmd(input), envp);
+			runcmd(parsecmd(input), local_env);
 		}
 		free (input);
 	}

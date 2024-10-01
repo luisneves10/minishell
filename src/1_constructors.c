@@ -19,7 +19,7 @@ t_cmd	*execcmd(void)
 	cmd = malloc(sizeof(t_execcmd));
 	if (!cmd)
 		exit(0); // DAR HANDLE
-	memset(cmd, 0, sizeof(t_execcmd));
+	ft_memset(cmd, 0, sizeof(t_execcmd));
 	cmd->type = EXEC;
 	return ((t_cmd*)cmd);
 }
@@ -31,7 +31,7 @@ t_cmd	*pipecmd(t_cmd *left, t_cmd *right)
 	cmd = malloc(sizeof(t_pipecmd));
 	if (!cmd)
 		exit(0); // DAR HANDLE
-	memset(cmd, 0, sizeof(t_pipecmd));
+	ft_memset(cmd, 0, sizeof(t_pipecmd));
 	cmd->type = PIPE;
 	cmd->left = left;
 	cmd->right = right;
@@ -45,7 +45,7 @@ t_cmd	*redircmd(t_cmd	*next_cmd, char *file, char *end_file, int mode, int fd)
 	cmd = malloc(sizeof(t_redircmd));
 	if (!cmd)
 		exit(0); // DAR HANDLE
-	memset(cmd, 0, sizeof(t_redircmd));
+	ft_memset(cmd, 0, sizeof(t_redircmd));
 	cmd->type = REDIR;
 	cmd->cmd = next_cmd;
 	cmd->file = file;

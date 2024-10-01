@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   4_utils.c                                          :+:      :+:    :+:   */
+/*   5_env.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/18 11:56:02 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/18 12:15:42 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/09/30 16:24:22 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/10/01 11:06:05 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_user_and_cwd(void)
+void	ft_env(char **argv, char **local_env)
 {
-	char	*username;
-	char	path[1024];
+	int	i;
 
-	username = getenv("LOGNAME");
-	getcwd(path, sizeof(path));
-	printf("\033[1;34m%s:\033[0;36m%s", username, path);
+	if (argv[1])
+	{
+		printf("env: No options or arguments are allowed.\n");
+		return ;
+	}
+	i = 0;
+	while (local_env[i])
+        printf("%s\n", local_env[i++]);
 }
