@@ -6,13 +6,13 @@
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 16:24:22 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/30 16:35:01 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/01 11:06:05 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_env(char **argv, char *envp[])
+void	ft_env(char **argv, char **local_env)
 {
 	int	i;
 
@@ -22,6 +22,6 @@ void	ft_env(char **argv, char *envp[])
 		return ;
 	}
 	i = 0;
-	while (envp[i])
-        printf("%s\n", envp[i++]);
+	while (local_env[i])
+        printf("%s\n", local_env[i++]);
 }

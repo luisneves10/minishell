@@ -19,5 +19,5 @@ void	print_user_and_cwd(void)
 
 	username = getenv("LOGNAME");
 	getcwd(path, sizeof(path));
-	printf("\033[1;34m%s:\033[0;36m~%s", username, path);
+	printf("\033[1;34m%s:\033[0;36m%s", username, path);
 }

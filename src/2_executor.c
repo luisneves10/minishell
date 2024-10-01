@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/20 15:55:49 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/01 10:59:20 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,17 @@ char	*get_cmd_path(char **env, char *cmd)
 	return (real_path);
 }
 
-void	execute_commands(t_execcmd *execcmd, char *envp[])
+void	execute_commands(t_execcmd *execcmd, char **local_env)
 {
 	int	pid;
 	char *path;
 
 	if (is_builtin(execcmd) != NULL)
 	{
-		exec_builtin(execcmd->argv, is_builtin(execcmd), envp);
+		exec_builtin(execcmd->argv, is_builtin(execcmd), local_env);
 		return ;
 	}
-	path = get_cmd_path(envp, execcmd->argv[0]);
+	path = get_cmd_path(local_env, execcmd->argv[0]);
 	if (!path)
 	{
 		printf("%s: command not found\n", execcmd->argv[0]);
@@ -85,16 +85,16 @@ void	execute_commands(t_execcmd *execcmd, char *envp[])
 	if (pid == 0)
 	{
 		// TRATAR EXECUTAVEIS
-		/* if (execve(execcmd->argv[0], execcmd->argv, envp) == -1)
+		/* if (execve(execcmd->argv[0], execcmd->argv, local_env) == -1)
 			perror("execve error"); */
-		if (execve(path, execcmd->argv, envp) == -1)
+		if (execve(path, execcmd->argv, local_env) == -1)
 			perror("execve error");
 	}
 	if (pid > 0)
 		waitpid(pid, NULL, 0);
 }
 
-void	runcmd(t_cmd *cmd, char *envp[])
+void	runcmd(t_cmd *cmd, char **local_env)
 {
 	t_execcmd	*execcmd;
 	t_pipecmd	*pipecmd;
@@ -102,7 +102,7 @@ void	runcmd(t_cmd *cmd, char *envp[])
 	if (cmd->type == EXEC)
 	{
 		execcmd = (t_execcmd *)cmd;
-		execute_commands(execcmd, envp);
+		execute_commands(execcmd, local_env);
 	}
 	else if (cmd->type == PIPE)
 	{
@@ -112,7 +112,7 @@ void	runcmd(t_cmd *cmd, char *envp[])
 			perror("pipe error");
 			exit(1);
 		}
-		fork_function(pipecmd, envp);
+		fork_function(pipecmd, local_env);
 		close_all(pipecmd);
 	}
 }
