@@ -23,5 +23,5 @@ void	ft_env(char **argv, char **local_env)
 	}
 	i = 0;
 	while (local_env[i])
-        printf("%s\n", local_env[i++]);
+		printf("%s\n", local_env[i++]);
 }

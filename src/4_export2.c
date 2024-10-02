@@ -1,37 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   4_cd.c                                             :+:      :+:    :+:   */
+/*   4_export2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/18 13:01:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/02 11:42:14 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/10/02 15:06:17 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/10/02 15:39:14 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * see "man cd" to complete this builtin.
- * */
-
-int	ft_cd(char **argv)
+/* static void	sort_env(char **env)
 {
-	if (!argv[1])
+} */
+
+void	ft_export_no_args(char **local_env)
+{
+	char	**env_copy;
+	int		i;
+	int		j;
+
+	env_copy = copy_env(local_env);
+	// sort_env(env_copy);
+	i = 0;
+	while (env_copy[i])
 	{
-		chdir(getenv("HOME"));
-		return (1);
+		j = 0;
+		printf("declare -x ");
+		while (env_copy[i][j] && env_copy[i][j] != '=')
+			printf("%c", env_copy[i][j++]);
+		printf("%c", env_copy[i][j++]);
+		printf("\"%s\"\n", env_copy[i]);
+		i++;
 	}
-	else
-	{
-		if (argv[1][0] == '~')
-			argv[1]++;
-		if (chdir(argv[1]) == -1)
-		{
-			printf("%s: no such directory\n", argv[1]);
-			return (-1);
-		}
-	}
-	return (0);
+	free_env(env_copy);
 }

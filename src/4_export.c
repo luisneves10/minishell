@@ -6,7 +6,7 @@
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 15:21:52 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/02 11:42:36 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:40:46 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,21 @@ static int	has_options(char **argv)
 	return (0);
 }
 
-static int	var_name_len(char *var)
-{
-	int	i;
-
-	i = 0;
-	while (var[i] && var[i] != '=')
-		i++;
-	return (i);
-}
-
 static int	var_update(char **local_env, char *var)
 {
 	int	i;
-	int	var_name_size;
+	int	var_size;
 
+	var_size = 0;
+	while (var[var_size] && var[var_size] != '=')
+		var_size++;
 	i = 0;
 	while (local_env[i])
 	{
-		var_name_size = var_name_len(var);
-		if (ft_strncmp(local_env[i], var, var_name_size + 1) == 0)
+		if (ft_strncmp(local_env[i], var, var_size + 1) == 0)
 		{
 			free (local_env[i]);
+			local_env[i] = NULL;
 			local_env[i] = ft_strdup(var);
 			return (1);
 		}
@@ -83,22 +76,21 @@ static char	**update_env(char **local_env, char *var)
 	return (new_env);
 }
 
+/*
+ * NOT WORKING, AFTER CREATING A NEW VAR....
+ *
+ * EXPORT WITH NO ARGS NOT SORTING THE ENV YET!
+*/
+
 void ft_export(char **argv, char **local_env)
 {
 	char	*arg;
 	char	*equal;
 	int		i;
-	int		j;
 
-	printf("### ENTRA export ------------------------\n"); /* --- DEBUG --- */
-	j = 0;
 	if (argv[1] == NULL)
 	{
-		/* ------------------------------------------------- NOT WORKING ---*/
-		while (local_env && local_env[j])
-			printf("declare -x %s\n", local_env[j++]);
-		/* ------------------------------------------------- NOT WORKING ---*/
-		printf("### SAI export SEM ARGS -----------------\n"); /* --- DEBUG --- */
+		ft_export_no_args(local_env);
 		return;
 	}
 	if (has_options(argv))
@@ -112,5 +104,4 @@ void ft_export(char **argv, char **local_env)
 			local_env = update_env(local_env, argv[i]);
 		i++;
 	}
-	printf("### SAI export COM ARGS -----------------\n"); /* --- DEBUG --- */
 }
