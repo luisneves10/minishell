@@ -21,8 +21,7 @@ void	init_minishell(char *envp[])
 	signals();
 	while (1)
 	{
-		print_user_and_cwd();
-		input = readline("$\033[0m ");
+		input = readline("\033[1;34mminishell$\033[0m ");
 		if (!input)
 		{
 			printf("exit\n");

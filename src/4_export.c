@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   5_export.c                                         :+:      :+:    :+:   */
+/*   4_export.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 15:21:52 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/01 12:52:29 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/02 11:42:36 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	var_name_len(char *var)
 	return (i);
 }
 
-static char	**var_update(char **local_env, char *var)
+static int	var_update(char **local_env, char *var)
 {
 	int	i;
 	int	var_name_size;
@@ -52,11 +52,11 @@ static char	**var_update(char **local_env, char *var)
 		{
 			free (local_env[i]);
 			local_env[i] = ft_strdup(var);
-			return (local_env);
+			return (1);
 		}
 		i++;
 	}
-	return (local_env);
+	return (0);
 }
 
 static char	**update_env(char **local_env, char *var)
@@ -65,7 +65,7 @@ static char	**update_env(char **local_env, char *var)
 	int		local_env_size;
 	char	**new_env;
 
-	if (var_update(local_env, var) != NULL)
+	if (var_update(local_env, var))
 		return (local_env);
 	local_env_size = env_size(local_env);
 	new_env = malloc((local_env_size + 2) * sizeof(char *));
@@ -77,8 +77,8 @@ static char	**update_env(char **local_env, char *var)
 		new_env[i] = ft_strdup(local_env[i]);
 		i++;
 	}
-	new_env[i++] = ft_strdup(var);
-	new_env[i] = NULL;
+	new_env[i] = ft_strdup(var);
+	new_env[i + 1] = NULL;
 	free_env(local_env);
 	return (new_env);
 }
@@ -90,11 +90,15 @@ void ft_export(char **argv, char **local_env)
 	int		i;
 	int		j;
 
+	printf("### ENTRA export ------------------------\n"); /* --- DEBUG --- */
 	j = 0;
 	if (argv[1] == NULL)
 	{
-		while (local_env[j])
+		/* ------------------------------------------------- NOT WORKING ---*/
+		while (local_env && local_env[j])
 			printf("declare -x %s\n", local_env[j++]);
+		/* ------------------------------------------------- NOT WORKING ---*/
+		printf("### SAI export SEM ARGS -----------------\n"); /* --- DEBUG --- */
 		return;
 	}
 	if (has_options(argv))
@@ -108,4 +112,5 @@ void ft_export(char **argv, char **local_env)
 			local_env = update_env(local_env, argv[i]);
 		i++;
 	}
+	printf("### SAI export COM ARGS -----------------\n"); /* --- DEBUG --- */
 }

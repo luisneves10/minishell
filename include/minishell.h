@@ -78,7 +78,6 @@ typedef struct pipecmd
 
 void	init_minishell(char *envp[]);
 void	signals(void);
-void	print_user_and_cwd(void);
 
 char	**copy_env(char **env);
 int		env_size(char **env);
