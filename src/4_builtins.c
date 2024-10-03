@@ -6,7 +6,7 @@
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 11:58:25 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/02 11:42:08 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/03 15:44:01 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	exec_builtin(char **argv, char *builtin, char **local_env)
 		ft_pwd(argv);
 	else if (ft_strncmp(builtin, "export", ft_strlen(builtin)) == 0)
 		ft_export(argv, local_env);
-	// else if (ft_strncmp(builtin, "unset", ft_strlen(builtin)) == 0)
-	// 	ft_unset(argv);
+	else if (ft_strncmp(builtin, "unset", ft_strlen(builtin)) == 0)
+		ft_unset(argv, local_env);
 	else if (ft_strncmp(builtin, "env", ft_strlen(builtin)) == 0)
 		ft_env(argv, local_env);
 	else if (ft_strncmp(builtin, "exit", ft_strlen(builtin)) == 0)
