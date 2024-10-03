@@ -41,9 +41,9 @@ t_cmd	*pipecmd(t_cmd *left, t_cmd *right)
 t_cmd	*redircmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd)
 {
 	t_redircmd	*cmd;
-	t_execcmd	*execcmd;
+	//t_execcmd	*execcmd;
 
-	execcmd = (t_execcmd *)next_cmd;
+	//execcmd = (t_execcmd *)next_cmd;
 	cmd = malloc(sizeof(t_redircmd));
 	if (!cmd)
 		exit(0); // DAR HANDLE

@@ -14,10 +14,10 @@
 
 static t_cmd	*parseredirs(t_cmd *cmd, char **ptr_str, char *end_str)
 {
-	int	token;
 	t_token	*tok;
-	char	*start_tok;
+	int		token;
 	char	*end_tok;
+	char	*start_tok;
 
 	tok = create_token();
 	while (find_char(ptr_str, end_str, "<>"))
@@ -33,29 +33,32 @@ static t_cmd	*parseredirs(t_cmd *cmd, char **ptr_str, char *end_str)
 		if (token == '<')
 			cmd = redircmd(cmd, tok, O_RDONLY, 0);
 		else if (token == '>')
-			cmd = redircmd(cmd, tok, O_WRONLY|O_CREAT, 1);
+			cmd = redircmd(cmd, tok, O_WRONLY | O_CREAT, 1);
 		else if (token == '+')
-			cmd = redircmd(cmd, tok, O_WRONLY|O_CREAT, 1);
+			cmd = redircmd(cmd, tok, O_WRONLY | O_CREAT, 1);
 	}
 	return (cmd);
 }
 
 static t_cmd	*parseexec(char **ptr_str, char *end_str)
 {
-	char	*start_token;
-	char	*end_token;
+	int			tok;
+	int			argc;
+	t_cmd		*ret;
 	t_execcmd	*cmd;
-	t_cmd	*ret;
-	int	argc = 0;
-	int	tok = 0;
+	char		*end_token;
+	char		*start_token;
 
+	tok = 0;
+	argc = 0;
 	ret = execcmd();
 	cmd = (t_execcmd *)ret;
 	ret = parseredirs(ret, ptr_str, end_str);
 	while (!find_char(ptr_str, end_str, "|"))
 	{
-		if ((tok = gettoken(ptr_str, end_str, &start_token, &end_token)) == 0)
-			break;
+		tok = gettoken(ptr_str, end_str, &start_token, &end_token);
+		if (tok == 0)
+			break ;
 		if (tok != 'a')
 			exit(0);
 		cmd->argv[argc] = start_token;

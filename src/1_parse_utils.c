@@ -12,23 +12,25 @@
 
 #include "minishell.h"
 
-int	gettoken(char **ptr_str, char *end_str, char **start_token, char **end_token)
+int	gettoken(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 {
 	char	*str;
-	int	ret = 0;
+	int		ret;
 
+	ret = 0;
 	str = *ptr_str;
 	while (str < end_str && *str == ' ')
 		str ++;
-	if (start_token)
-		*start_token = str;
+	if (start_tok)
+		*start_tok = str;
 	ret = special_chars(str);
-	//if (ret != 'a')
-		//str ++;
-	while (str < end_str && *str != ' ')
+	if (ret != 'a')
 		str ++;
-	if (end_token)
-		*end_token = str;
+	while (str < end_str && *str != ' ' && *str != '|' && *str != '>'
+		&& *str != '<' && ret == 'a')
+		str ++;
+	if (end_tok)
+		*end_tok = str;
 	*ptr_str = str;
 	return (ret);
 }
@@ -59,9 +61,9 @@ int	special_chars(char *str)
 
 void	nulterminate(t_cmd *cmd)
 {
-	t_execcmd *ecmd;
-	t_pipecmd *pcmd;
-	int	i;
+	t_execcmd	*ecmd;
+	t_pipecmd	*pcmd;
+	int			i;
 
 	i = 0;
 	if (cmd == NULL)

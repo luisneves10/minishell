@@ -67,7 +67,6 @@ void	execute_commands(t_execcmd *execcmd, char *envp[])
 {
 	int	pid;
 
-	//printf("command: %s\n", execcmd->argv[0]);
 	if (ft_strncmp(execcmd->argv[0], "cd", 2) == 0)
 	{
 		ft_cd(execcmd->argv);
