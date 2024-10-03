@@ -78,11 +78,10 @@ static char	**update_env(char **local_env, char *var)
 
 /*
  * NOT WORKING, AFTER CREATING A NEW VAR....
- *
- * EXPORT WITH NO ARGS NOT SORTING THE ENV YET!
+ * SEG FAULT BRUHHHHH
 */
 
-void ft_export(char **argv, char **local_env)
+void	ft_export(char **argv, char **local_env)
 {
 	char	*arg;
 	char	*equal;
@@ -91,10 +90,10 @@ void ft_export(char **argv, char **local_env)
 	if (argv[1] == NULL)
 	{
 		ft_export_no_args(local_env);
-		return;
+		return ;
 	}
 	if (has_options(argv))
-		return;
+		return ;
 	i = 1;
 	while (argv[i] != NULL)
 	{
@@ -102,6 +101,8 @@ void ft_export(char **argv, char **local_env)
 		equal = ft_strchr(arg, '=');
 		if (equal)
 			local_env = update_env(local_env, argv[i]);
+		if (!local_env)
+			return ;
 		i++;
 	}
 }

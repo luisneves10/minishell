@@ -12,9 +12,50 @@
 
 #include "minishell.h"
 
-/* static void	sort_env(char **env)
+static int	smaller_var(int size1, int size2)
 {
-} */
+	if (size1 < size2)
+		return (size1);
+	return (size2);
+}
+
+static int	var_name_len(char *var)
+{
+	int	i;
+
+	i = 0;
+	while (var[i] != '=')
+		i++;
+	return (i);
+}
+
+static void	sort_env(char **env)
+{
+	int		i;
+	int		j;
+	int		size1;
+	int		size2;
+	char	*tmp;
+
+	i = 0;
+	while (env[i])
+	{
+		j = 0;
+		while (env[j + 1])
+		{
+			size1 = var_name_len(env[j]);
+			size2 = var_name_len(env[j + 1]);
+			if (ft_strncmp(env[j], env[j + 1], smaller_var(size1, size2)) > 0)
+			{
+				tmp = env[j];
+				env[j] = env[j + 1];
+				env[j + 1] = tmp;
+			}
+			j++;
+		}
+		i++;
+	}
+}
 
 void	ft_export_no_args(char **local_env)
 {
@@ -23,7 +64,7 @@ void	ft_export_no_args(char **local_env)
 	int		j;
 
 	env_copy = copy_env(local_env);
-	// sort_env(env_copy);
+	sort_env(env_copy);
 	i = 0;
 	while (env_copy[i])
 	{
@@ -32,7 +73,14 @@ void	ft_export_no_args(char **local_env)
 		while (env_copy[i][j] && env_copy[i][j] != '=')
 			printf("%c", env_copy[i][j++]);
 		printf("%c", env_copy[i][j++]);
-		printf("\"%s\"\n", env_copy[i]);
+		printf("\"");
+		while (env_copy[i][j])
+		{
+			if (env_copy[i][j] == '$')
+				printf("\\");
+			printf("%c", env_copy[i][j++]);
+		}
+		printf("\"\n");
 		i++;
 	}
 	free_env(env_copy);
