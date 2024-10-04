@@ -6,7 +6,7 @@
 #    By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/13 14:19:16 by luibarbo          #+#    #+#              #
-#    Updated: 2024/09/19 17:19:51 by daduarte         ###   ########.fr        #
+#    Updated: 2024/10/04 15:08:41 by daduarte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ LIBFT		= libft/libft.a
 
 SRC_FILES	= 0_main.c \
 			  1_init_minishell.c 1_constructors.c 1_parse_func.c \
-			  1_parse_utils.c \
+			  1_parse_utils.c 1_sintax_check.c \
 			  2_executor.c 2_pipe_exec.c \
 			  3_signals.c \
 			  4_utils.c \

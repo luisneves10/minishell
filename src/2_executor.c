@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/01 12:09:20 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/04 13:08:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,10 @@ void	redirect_cmd(t_redircmd *redircmd, char *envp[])
 	{
 		redircmd->fd = open(redircmd->file, redircmd->mode, 0777);
 		if (redircmd->fd < 0)
+		{
 			perror("redir");
+			exit (0);
+		}
 		saved_fd = dup(STDOUT_FILENO);
 		dup2(redircmd->fd, STDOUT_FILENO);
 		close(redircmd->fd);
@@ -116,7 +119,10 @@ void	redirect_cmd(t_redircmd *redircmd, char *envp[])
 	{
 		redircmd->fd = open(redircmd->file, O_RDONLY);
 		if (redircmd->fd < 0)
+		{
 			perror("redir");
+			exit (0);
+		}
 		saved_fd = dup(STDIN_FILENO);
 		dup2(redircmd->fd, STDIN_FILENO);
 		close(redircmd->fd);

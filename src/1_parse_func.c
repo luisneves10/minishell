@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/01 12:09:51 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/04 13:08:03 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static t_cmd	*parseredirs(t_cmd *cmd, char **ptr_str, char *end_str)
 	tok = create_token();
 	while (find_char(ptr_str, end_str, "<>"))
 	{
+		printf("ENTERED: %s\n", *ptr_str);
 		token = gettoken(ptr_str, end_str, 0, 0);
 		if (gettoken(ptr_str, end_str, &start_tok, &end_tok) != 'a')
 		{
@@ -74,11 +75,13 @@ static t_cmd	*parseexec(char **ptr_str, char *end_str)
 static t_cmd	*parsepipe(char **ptr_str, char *end_str)
 {
 	t_cmd	*cmd;
+	t_execcmd	*test;
 	char	*s = NULL;
 	char	*es = NULL;
 
 	cmd = parseexec(ptr_str, end_str);
-	if (find_char(ptr_str, end_str, "|"))
+	test = (t_execcmd *)cmd;
+	while (find_char(ptr_str, end_str, "|"))
 	{
 		gettoken(ptr_str, end_str, &s, &es);
 		cmd = pipecmd(cmd, parsepipe(ptr_str, end_str));
