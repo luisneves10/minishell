@@ -72,12 +72,11 @@ static char	**update_env(char **local_env, char *var)
 	}
 	new_env[i] = ft_strdup(var);
 	new_env[i + 1] = NULL;
-	local_env = new_env;
-	// free_env(local_env);
-	return (local_env);
+	free_env(local_env);
+	return (new_env);
 }
 
-void	ft_export(char **argv, char **local_env)
+void	ft_export(char **argv, char ***local_env)
 {
 	char	*arg;
 	char	*equal;
@@ -85,7 +84,7 @@ void	ft_export(char **argv, char **local_env)
 
 	if (argv[1] == NULL)
 	{
-		ft_export_no_args(local_env);
+		ft_export_no_args(*local_env);
 		return ;
 	}
 	if (has_options(argv))
@@ -96,7 +95,7 @@ void	ft_export(char **argv, char **local_env)
 		arg = argv[i];
 		equal = ft_strchr(arg, '=');
 		if (equal)
-			local_env = update_env(local_env, argv[i]);
+			*local_env = update_env(*local_env, argv[i]);
 		i++;
 	}
 }

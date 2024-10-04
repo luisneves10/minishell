@@ -32,7 +32,7 @@ void	init_minishell(char *envp[])
 		if (*input)
 		{
 			add_history(input);
-			runcmd(parsecmd(input), local_env);
+			runcmd(parsecmd(input), &local_env);
 		}
 		free (input);
 	}

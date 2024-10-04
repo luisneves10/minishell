@@ -63,7 +63,7 @@ char	*get_cmd_path(char **env, char *cmd)
 	return (real_path);
 }
 
-void	execute_commands(t_execcmd *execcmd, char **local_env)
+void	execute_commands(t_execcmd *execcmd, char ***local_env)
 {
 	int	pid;
 	char *path;
@@ -73,7 +73,7 @@ void	execute_commands(t_execcmd *execcmd, char **local_env)
 		exec_builtin(execcmd->argv, is_builtin(execcmd), local_env);
 		return ;
 	}
-	path = get_cmd_path(local_env, execcmd->argv[0]);
+	path = get_cmd_path(*local_env, execcmd->argv[0]);
 	if (!path)
 	{
 		printf("%s: command not found\n", execcmd->argv[0]);
@@ -87,14 +87,14 @@ void	execute_commands(t_execcmd *execcmd, char **local_env)
 		// TRATAR EXECUTAVEIS
 		/* if (execve(execcmd->argv[0], execcmd->argv, local_env) == -1)
 			perror("execve error"); */
-		if (execve(path, execcmd->argv, local_env) == -1)
+		if (execve(path, execcmd->argv, *local_env) == -1)
 			perror("execve error");
 	}
 	if (pid > 0)
 		waitpid(pid, NULL, 0);
 }
 
-void	runcmd(t_cmd *cmd, char **local_env)
+void	runcmd(t_cmd *cmd, char ***local_env)
 {
 	t_execcmd	*execcmd;
 	t_pipecmd	*pipecmd;
@@ -112,7 +112,7 @@ void	runcmd(t_cmd *cmd, char **local_env)
 			perror("pipe error");
 			exit(1);
 		}
-		fork_function(pipecmd, local_env);
+		fork_function(pipecmd, *local_env);
 		close_all(pipecmd);
 	}
 }
