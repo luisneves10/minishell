@@ -17,7 +17,7 @@
 NAME	= minishell
 
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -g
 LIBFLAGS	= -lreadline
 RM			= rm -rf
 
@@ -27,14 +27,21 @@ OBJ_DIR		= obj/
 LIBFT_DIR	= libft/
 LIBFT		= libft/libft.a
 
+LEAKS_LOG		= ./leaks.log
+READLINE_SUPP	= readline.supp
+VALGRINDFLAGS	= -s --suppressions=$(READLINE_SUPP) \
+				  --tool=memcheck --leak-check=full \
+				  --show-leak-kinds=all --track-origins=yes \
+				  --track-fds=yes --show-below-main=no \
+				  --log-file=$(LEAKS_LOG)
+
 SRC_FILES	= 0_main.c \
 			  1_init_minishell.c 1_constructors.c 1_parse_func.c \
 			  1_parse_utils.c 1_copy_env.c\
 			  2_executor.c 2_pipe_exec.c \
 			  3_signals.c \
-			  4_utils.c \
-			  5_builtins.c 5_echo.c 5_pwd.c 5_cd.c 5_export.c 5_env.c\
-			  5_exit.c\
+			  4_builtins.c 4_echo.c 4_pwd.c 4_cd.c 4_export.c 4_export2.c \
+			  4_unset.c 4_env.c 4_exit.c\
 
 SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
 
@@ -81,4 +88,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+leaks: all
+	valgrind $(VALGRINDFLAGS) ./$(NAME)
+
+.PHONY: all clean fclean re leaks

@@ -21,8 +21,7 @@ void	init_minishell(char *envp[])
 	signals();
 	while (1)
 	{
-		print_user_and_cwd();
-		input = readline("$\033[0m ");
+		input = readline("\033[1;34mminishell$\033[0m ");
 		if (!input)
 		{
 			printf("exit\n");
@@ -33,7 +32,7 @@ void	init_minishell(char *envp[])
 		if (*input)
 		{
 			add_history(input);
-			runcmd(parsecmd(input), local_env);
+			runcmd(parsecmd(input), &local_env);
 		}
 		free (input);
 	}
