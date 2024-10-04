@@ -52,18 +52,18 @@ static char	**remove_var(char **local_env, char *var)
 	return (local_env);
 }
 
-void	ft_unset(char **argv, char **local_env)
+void	ft_unset(char **argv, char ***local_env)
 {
 	int		i;
 
 	/*--------------------------------------------------------*/
-	i = 0;
+	/* i = 0;
 	while (local_env[i])
 	{
 		if (ft_strncmp(local_env[i], "MAIL=", 5) == 0)
 			printf("BEFORE -> %s\n", local_env[i]);
 		i++;
-	}
+	}*/
 	/*--------------------------------------------------------*/
 	if (argv[1] == NULL)
 		return ;
@@ -72,16 +72,16 @@ void	ft_unset(char **argv, char **local_env)
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		local_env = remove_var(local_env, argv[i]);
+		*local_env = remove_var(*local_env, argv[i]);
 		i++;
 	}
 	/*--------------------------------------------------------*/
-	i = 0;
+	/* i = 0;
 	while (local_env[i])
 	{
 		if (ft_strncmp(local_env[i], "MAIL=", 5) == 0)
 			printf("AFTER -> %s\n", local_env[i]);
 		i++;
-	}
+	} */
 	/*--------------------------------------------------------*/
 }
