@@ -35,12 +35,13 @@ static char	**remove_var(char **local_env, char *var)
 	int	var_size;
 
 	var_size = 0;
-	while (var[var_size] && var[var_size] != '=')
+	while (var[var_size])
 		var_size++;
 	i = 0;
 	while (local_env[i])
 	{
-		if (ft_strncmp(local_env[i], var, var_size + 1) == 0)
+		if (ft_strncmp(local_env[i], var, var_size) == 0
+			&& local_env[i][var_size] == '=')
 		{
 			free (local_env[i]);
 			local_env[i] = ft_strdup(local_env[env_size(local_env)]);
@@ -54,18 +55,9 @@ static char	**remove_var(char **local_env, char *var)
 
 void	ft_unset(char **argv, char ***local_env)
 {
-	int		i;
+	int	i;
 
-	/*--------------------------------------------------------*/
-	/* i = 0;
-	while (local_env[i])
-	{
-		if (ft_strncmp(local_env[i], "MAIL=", 5) == 0)
-			printf("BEFORE -> %s\n", local_env[i]);
-		i++;
-	}*/
-	/*--------------------------------------------------------*/
-	if (argv[1] == NULL)
+	if (!argv[1])
 		return ;
 	if (has_options(argv))
 		return ;
@@ -75,13 +67,4 @@ void	ft_unset(char **argv, char ***local_env)
 		*local_env = remove_var(*local_env, argv[i]);
 		i++;
 	}
-	/*--------------------------------------------------------*/
-	/* i = 0;
-	while (local_env[i])
-	{
-		if (ft_strncmp(local_env[i], "MAIL=", 5) == 0)
-			printf("AFTER -> %s\n", local_env[i]);
-		i++;
-	} */
-	/*--------------------------------------------------------*/
 }
