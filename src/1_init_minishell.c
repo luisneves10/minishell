@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/01 11:00:21 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:07:55 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	init_minishell(char *envp[])
 			free_env(local_env);
 			break ;
 		}
+		syntax_check(input);
 		if (*input)
 		{
 			add_history(input);

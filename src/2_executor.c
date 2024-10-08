@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/01 10:59:20 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/04 13:08:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,56 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env)
 		waitpid(pid, NULL, 0);
 }
 
+void	redirect_cmd(t_redircmd *redircmd, char *envp[])
+{
+	t_execcmd	*execcmd;
+	int	saved_fd;
+
+	if (redircmd->mode == (O_WRONLY | O_CREAT))
+	{
+		redircmd->fd = open(redircmd->file, redircmd->mode, 0777);
+		if (redircmd->fd < 0)
+		{
+			perror("redir");
+			exit (0);
+		}
+		saved_fd = dup(STDOUT_FILENO);
+		dup2(redircmd->fd, STDOUT_FILENO);
+		close(redircmd->fd);
+		execcmd = (t_execcmd *)redircmd->cmd;
+		nulterminate((t_cmd *)execcmd);
+		execute_commands(execcmd, envp);
+		dup2(saved_fd, STDOUT_FILENO);
+		close(saved_fd);
+	}
+	else
+	{
+		redircmd->fd = open(redircmd->file, O_RDONLY);
+		if (redircmd->fd < 0)
+		{
+			perror("redir");
+			exit (0);
+		}
+		saved_fd = dup(STDIN_FILENO);
+		dup2(redircmd->fd, STDIN_FILENO);
+		close(redircmd->fd);
+		execcmd = (t_execcmd *)redircmd->cmd;
+		nulterminate((t_cmd *)execcmd);
+		execute_commands(execcmd, envp);
+		dup2(saved_fd, STDIN_FILENO);
+		close(saved_fd);
+	}
+}
+
 void	runcmd(t_cmd *cmd, char ***local_env)
 {
 	t_execcmd	*execcmd;
 	t_pipecmd	*pipecmd;
+	t_redircmd	*redircmd;
 
+	execcmd = (t_execcmd *)cmd;
+	pipecmd = (t_pipecmd *)cmd;
+	redircmd = (t_redircmd *)cmd;
 	if (cmd->type == EXEC)
 	{
 		execcmd = (t_execcmd *)cmd;
@@ -106,7 +151,6 @@ void	runcmd(t_cmd *cmd, char ***local_env)
 	}
 	else if (cmd->type == PIPE)
 	{
-		pipecmd = (t_pipecmd *)cmd;
 		if (pipe(pipecmd->pipefd) == -1)
 		{
 			perror("pipe error");
@@ -114,5 +158,9 @@ void	runcmd(t_cmd *cmd, char ***local_env)
 		}
 		fork_function(pipecmd, *local_env);
 		close_all(pipecmd);
+	}
+	else if (cmd->type == REDIR)
+	{
+		redirect_cmd(redircmd, envp);
 	}
 }
