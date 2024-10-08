@@ -29,59 +29,66 @@ static int	has_options(char **argv)
 	return (0);
 }
 
-static char	**remove_var(char **local_env, char *var)
+static int	is_var(char **local_env, char *var)
 {
 	int	i;
-	int	var_size;
 
-	var_size = 0;
-	while (var[var_size] && var[var_size] != '=')
-		var_size++;
+	i = 0;
+	while (var[i])
+	{
+		if (var[i] == '=')
+			return (0);
+		i++;
+	}
 	i = 0;
 	while (local_env[i])
 	{
-		if (ft_strncmp(local_env[i], var, var_size + 1) == 0)
-		{
-			free (local_env[i]);
-			local_env[i] = ft_strdup(local_env[env_size(local_env)]);
-			free (local_env[env_size(local_env)]);
-			return (local_env);
-		}
+		if (ft_strncmp(local_env[i], var, ft_strlen(var)) == 0)
+			return (1);
 		i++;
 	}
-	return (local_env);
+	return (0);
+}
+
+static char	**remove_var(char **local_env, char *var)
+{
+	int		i;
+	int		j;
+	int		size;
+	char	**new_env;
+
+	size = env_size(local_env);
+	new_env = malloc(size * sizeof(char *));
+	if (!new_env)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (local_env[i])
+	{
+		if (ft_strncmp(local_env[i], var, ft_strlen(var)) == 0
+			&& local_env[i][ft_strlen(var)] == '=')
+			i++;
+		else
+			new_env[j++] = ft_strdup(local_env[i++]);
+	}
+	new_env[j] = NULL;
+	free_env(local_env);
+	return (new_env);
 }
 
 void	ft_unset(char **argv, char ***local_env)
 {
-	int		i;
+	int	i;
 
-	/*--------------------------------------------------------*/
-	/* i = 0;
-	while (local_env[i])
-	{
-		if (ft_strncmp(local_env[i], "MAIL=", 5) == 0)
-			printf("BEFORE -> %s\n", local_env[i]);
-		i++;
-	}*/
-	/*--------------------------------------------------------*/
-	if (argv[1] == NULL)
+	if (!argv[1])
 		return ;
 	if (has_options(argv))
 		return ;
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		*local_env = remove_var(*local_env, argv[i]);
+		if (is_var(*local_env, argv[i]))
+			*local_env = remove_var(*local_env, argv[i]);
 		i++;
 	}
-	/*--------------------------------------------------------*/
-	/* i = 0;
-	while (local_env[i])
-	{
-		if (ft_strncmp(local_env[i], "MAIL=", 5) == 0)
-			printf("AFTER -> %s\n", local_env[i]);
-		i++;
-	} */
-	/*--------------------------------------------------------*/
 }
