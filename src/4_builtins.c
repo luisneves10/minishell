@@ -54,11 +54,4 @@ void	exec_builtin(char **argv, char *builtin, char ***local_env)
 		ft_env(argv, *local_env);
 	else if (ft_strncmp(builtin, "exit", ft_strlen(builtin)) == 0)
 		ft_exit();
-	/* printf("###############################################\n\n");
-	int	i = 0;
-	while (***local_env[i])
-	{
-		printf("%s\n", ***local_env[i]);
-		i++;
-	} */
 }
