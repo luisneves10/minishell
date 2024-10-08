@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   1_copy_env.c                                       :+:      :+:    :+:   */
+/*   1_env_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 10:51:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/01 11:47:04 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:46:19 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,20 @@ char	**copy_env(char **env)
 	}
 	new_env[i] = NULL;
 	return (new_env);
+}
+
+int	var_search(char **env, char *var)
+{
+	int	i;
+	int	size;
+
+	size = ft_strlen(var);
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], var, size) == 0 && env[i][size] == '=')
+			return (i);
+		i++;
+	}
+	return (-1);
 }

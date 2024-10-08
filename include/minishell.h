@@ -79,16 +79,20 @@ typedef struct	token
 	char	*end;
 }	t_token;
 
-/* =========================================================================== */
-/*	FUNCTIONS                                                                  */
-/* =========================================================================== */
+/* ========================================================================== */
+/*	FUNCTIONS                                                                 */
+/* ========================================================================== */
 
 void	init_minishell(char *envp[]);
 void	signals(void);
 
+/* ---------------------------------------------------------- ENV UTILS ----- */
 char	**copy_env(char **env);
 int		env_size(char **env);
 void	free_env(char **env);
+int		var_search(char **env, char *var);
+
+/* ---------------------------------------------------------- _________ ----- */
 t_cmd	*parsecmd(char *str);
 int		gettoken(char **ptr_str, char *end_str,
 			char **start_token, char **end_token);
@@ -101,6 +105,7 @@ t_cmd	*redircmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd);
 t_token	*create_token(void);
 void	syntax_check(char *input);
 
+/* ---------------------------------------------------------- _________ ----- */
 void	runcmd(t_cmd *cmd, char ***local_env);
 void	execute_commands(t_execcmd *execcmd, char ***local_env);
 
@@ -112,15 +117,18 @@ void	fork_function(t_pipecmd *pipecmd, char ***local_env);
 
 void	close_all(t_pipecmd *pipecmd);
 
+/* ----------------------------------------------------------- BUILTINS ----- */
 char	*is_builtin(t_execcmd *execcmd);
 void	exec_builtin(char **argv, char *builtin, char ***local_env);
 int		ft_echo(char **argv);
 int		ft_pwd(char **argv);
-int		ft_cd(char **argv, char **local_env);
+int		ft_cd(char **argv, char ***local_env);
 int		ft_export(char **argv, char ***local_env);
 void	ft_export_no_args(char **local_env);
 void	ft_unset(char **argv, char ***local_env);
-void	ft_env(char **argv, char **local_env);
+int		ft_env(char **argv, char **local_env);
 int		ft_exit(void);
+/* ------------------------------------------------------ BUILTIN UTILS ----- */
+int		has_options(char **argv, char *command);
 
 #endif

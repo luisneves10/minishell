@@ -33,7 +33,7 @@ char	*get_cmds_path(char	*path, char	*cmd)
 			return (full_path);
 		}
 		free(full_path);
-		i ++;
+		i++;
 	}
 	free(true_cmd);
 	return (NULL);
@@ -54,7 +54,7 @@ char	*get_cmd_path(char **env, char *cmd)
 			path = ft_strdup(env[i] + 5);
 			break ;
 		}
-		i ++;
+		i++;
 	}
 	real_path = get_cmds_path(path, cmd);
 	free(path);
@@ -65,8 +65,8 @@ char	*get_cmd_path(char **env, char *cmd)
 
 void	execute_commands(t_execcmd *execcmd, char ***local_env)
 {
-	int	pid;
-	char *path;
+	int		pid;
+	char	*path;
 
 	if (is_builtin(execcmd) != NULL)
 	{
@@ -97,7 +97,7 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env)
 void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
 {
 	t_execcmd	*execcmd;
-	int	saved_fd;
+	int			saved_fd;
 
 	if (redircmd->mode == (O_WRONLY | O_CREAT))
 	{
