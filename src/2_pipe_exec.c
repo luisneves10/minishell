@@ -12,8 +12,7 @@
 
 #include "minishell.h"
 
-
-void	child1_process(t_pipecmd *pipecmd, char *envp[], int prev_pipe, int *pi)
+void	child1_process(t_pipecmd *pipecmd, char ***local_env, int prev_pipe, int *pi)
 {
 	if (prev_pipe != -1)
 	{
@@ -24,15 +23,16 @@ void	child1_process(t_pipecmd *pipecmd, char *envp[], int prev_pipe, int *pi)
 	close(pi[0]);
 	close(pi[1]);
 	t_execcmd *left = (t_execcmd *)pipecmd->left;
-	char *path = get_cmd_path(envp, left->argv[0]);
-	if (execve(path, left->argv, envp) == -1)
+	char *path = get_cmd_path(*local_env, left->argv[0]);
+	// PASSAR PARA execute_commands()
+	if (execve(path, left->argv, *local_env) == -1)
 	{
 		perror("execve error");
 		exit(1);
 	}
 }
 
-void	final_cmd(t_cmd *curr_cmd, char *envp[], int prev_pipe)
+void	final_cmd(t_cmd *curr_cmd, char ***local_env, int prev_pipe)
 {
 	t_execcmd	*execcmd = (t_execcmd *)curr_cmd;
 	int	pid;
@@ -50,8 +50,9 @@ void	final_cmd(t_cmd *curr_cmd, char *envp[], int prev_pipe)
 			dup2(prev_pipe, STDIN_FILENO);
 			close(prev_pipe);
 		}
-		char *path = get_cmd_path(envp, execcmd->argv[0]);
-		if (execve(path, execcmd->argv, envp) == -1)
+		char *path = get_cmd_path(*local_env, execcmd->argv[0]);
+		// PASSAR PARA execute_commands()
+		if (execve(path, execcmd->argv, *local_env) == -1)
 		{
 			perror("execve error");
 			exit(1);
@@ -61,7 +62,7 @@ void	final_cmd(t_cmd *curr_cmd, char *envp[], int prev_pipe)
 	}
 }
 
-void	fork_loop(t_cmd **curr_cmd, int *pipefd, int *pid, int *prev_pipe, char *envp[])
+void	fork_loop(t_cmd **curr_cmd, int *pipefd, int *pid, int *prev_pipe, char ***local_env)
 {
 	t_pipecmd *pipecmd;
 	pipecmd = (t_pipecmd *)*curr_cmd;
@@ -78,7 +79,7 @@ void	fork_loop(t_cmd **curr_cmd, int *pipefd, int *pid, int *prev_pipe, char *en
 	}
 	if (*pid == 0)
 	{
-		child1_process(pipecmd, envp, *prev_pipe, pipefd);
+		child1_process(pipecmd, local_env, *prev_pipe, pipefd);
 		exit(1);
 	}
 	else
@@ -91,7 +92,7 @@ void	fork_loop(t_cmd **curr_cmd, int *pipefd, int *pid, int *prev_pipe, char *en
 	}
 }
 
-void	fork_function(t_pipecmd *pipecmd, char **local_env)
+void	fork_function(t_pipecmd *pipecmd, char ***local_env)
 {
 	t_cmd	*curr_cmd;
 	int	prev_pipe;
@@ -100,8 +101,8 @@ void	fork_function(t_pipecmd *pipecmd, char **local_env)
 	int		pid;
 	curr_cmd = (t_cmd *)pipecmd;
 	while (curr_cmd->type == PIPE)
-		fork_loop(&curr_cmd, pipefd, &pid, &prev_pipe, envp);
-	final_cmd(curr_cmd, envp, prev_pipe);
+		fork_loop(&curr_cmd, pipefd, &pid, &prev_pipe, local_env);
+	final_cmd(curr_cmd, local_env, prev_pipe);
 	while (wait(NULL) > 0);
 }
 

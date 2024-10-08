@@ -29,7 +29,7 @@ void	init_minishell(char *envp[])
 			free_env(local_env);
 			break ;
 		}
-		syntax_check(input);
+		// syntax_check(input);
 		if (*input)
 		{
 			add_history(input);

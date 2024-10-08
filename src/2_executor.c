@@ -94,7 +94,7 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env)
 		waitpid(pid, NULL, 0);
 }
 
-void	redirect_cmd(t_redircmd *redircmd, char *envp[])
+void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
 {
 	t_execcmd	*execcmd;
 	int	saved_fd;
@@ -112,7 +112,7 @@ void	redirect_cmd(t_redircmd *redircmd, char *envp[])
 		close(redircmd->fd);
 		execcmd = (t_execcmd *)redircmd->cmd;
 		nulterminate((t_cmd *)execcmd);
-		execute_commands(execcmd, envp);
+		execute_commands(execcmd, local_env);
 		dup2(saved_fd, STDOUT_FILENO);
 		close(saved_fd);
 	}
@@ -129,7 +129,7 @@ void	redirect_cmd(t_redircmd *redircmd, char *envp[])
 		close(redircmd->fd);
 		execcmd = (t_execcmd *)redircmd->cmd;
 		nulterminate((t_cmd *)execcmd);
-		execute_commands(execcmd, envp);
+		execute_commands(execcmd, local_env);
 		dup2(saved_fd, STDIN_FILENO);
 		close(saved_fd);
 	}
@@ -156,11 +156,9 @@ void	runcmd(t_cmd *cmd, char ***local_env)
 			perror("pipe error");
 			exit(1);
 		}
-		fork_function(pipecmd, *local_env);
+		fork_function(pipecmd, local_env);
 		close_all(pipecmd);
 	}
 	else if (cmd->type == REDIR)
-	{
-		redirect_cmd(redircmd, envp);
-	}
+		redirect_cmd(redircmd, local_env);
 }

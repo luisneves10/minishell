@@ -40,7 +40,7 @@ SRC_FILES	= 0_main.c \
 			  1_parse_utils.c 1_copy_env.c\
 			  2_executor.c 2_pipe_exec.c \
 			  3_signals.c \
-			  4_builtins.c 4_echo.c 4_pwd.c 4_cd.c 4_export.c 4_export2.c \
+			  4_builtins.c 4_echo.c 4_pwd.c 4_export.c 4_export2.c \
 			  4_unset.c 4_env.c 4_exit.c\
 
 SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))

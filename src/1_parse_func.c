@@ -74,11 +74,13 @@ static t_cmd	*parseexec(char **ptr_str, char *end_str)
 
 static t_cmd	*parsepipe(char **ptr_str, char *end_str)
 {
-	t_cmd	*cmd;
+	t_cmd		*cmd;
 	t_execcmd	*test;
-	char	*s = NULL;
-	char	*es = NULL;
+	char		*s;
+	char		*es;
 
+	s = NULL;
+	es = NULL;
 	cmd = parseexec(ptr_str, end_str);
 	test = (t_execcmd *)cmd;
 	while (find_char(ptr_str, end_str, "|"))
