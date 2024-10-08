@@ -65,8 +65,7 @@ static char	**remove_var(char **local_env, char *var)
 	j = 0;
 	while (local_env[i])
 	{
-		if (ft_strncmp(local_env[i], var, ft_strlen(var)) == 0
-			&& local_env[i][ft_strlen(var)] == '=')
+		if (ft_strncmp(local_env[i], var, ft_strlen(var)) == 0)
 			i++;
 		else
 			new_env[j++] = ft_strdup(local_env[i++]);

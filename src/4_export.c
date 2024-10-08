@@ -76,26 +76,22 @@ static char	**update_env(char **local_env, char *var)
 	return (new_env);
 }
 
-void	ft_export(char **argv, char ***local_env)
+int	ft_export(char **argv, char ***local_env)
 {
-	char	*arg;
-	char	*equal;
-	int		i;
+	int	i;
 
 	if (argv[1] == NULL)
 	{
 		ft_export_no_args(*local_env);
-		return ;
+		return (0);
 	}
 	if (has_options(argv))
-		return ;
+		return (1);
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		arg = argv[i];
-		equal = ft_strchr(arg, '=');
-		if (equal)
-			*local_env = update_env(*local_env, argv[i]);
+		*local_env = update_env(*local_env, argv[i]);
 		i++;
 	}
+	return (0);
 }

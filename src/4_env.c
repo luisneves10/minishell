@@ -14,7 +14,9 @@
 
 void	ft_env(char **argv, char **local_env)
 {
-	int	i;
+	int		i;
+	char	*equal;
+	char	*arg;
 
 	if (argv[1])
 	{
@@ -23,5 +25,11 @@ void	ft_env(char **argv, char **local_env)
 	}
 	i = 0;
 	while (local_env[i])
-		printf("%s\n", local_env[i++]);
+	{
+		arg = local_env[i];
+		equal = ft_strchr(arg, '=');
+		if (equal)
+			printf("%s\n", local_env[i]);
+		i++;
+	}
 }

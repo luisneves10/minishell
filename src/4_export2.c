@@ -65,23 +65,26 @@ void	ft_export_no_args(char **local_env)
 
 	env_copy = copy_env(local_env);
 	sort_env(env_copy);
-	i = 0;
-	while (env_copy[i])
+	i = -1;
+	while (env_copy[++i])
 	{
 		j = 0;
 		printf("declare -x ");
 		while (env_copy[i][j] && env_copy[i][j] != '=')
 			printf("%c", env_copy[i][j++]);
-		printf("%c", env_copy[i][j++]);
-		printf("\"");
-		while (env_copy[i][j])
+		if (env_copy[i][j] != '\0')
 		{
-			if (env_copy[i][j] == '$')
-				printf("\\");
 			printf("%c", env_copy[i][j++]);
+			printf("\"");
+			while (env_copy[i][j])
+			{
+				if (env_copy[i][j] == '$')
+					printf("\\");
+				printf("%c", env_copy[i][j++]);
+			}
+			printf("\"");
 		}
-		printf("\"\n");
-		i++;
+		printf("\n");
 	}
 	free_env(env_copy);
 }

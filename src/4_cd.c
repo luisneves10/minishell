@@ -13,14 +13,18 @@
 #include "minishell.h"
 
 /*
- * see "man cd" to complete this builtin.
- * */
+ * $HOME not defined: se executar "cd" --> "bash: cd: HOME not set"
+ * $HOME defined : se executar "cd" --> vai para o HOME
+ * "cd <arg1> <arg2> <arg3>" --> muda para o caminho definido em <arg1>
+ * todos os args a frente do primeiro sao ignorados
+ * se o comando for executado com sucesso, $PWD e $OLD_PWD levam update
+ */
 
-int	ft_cd(char **argv)
+int	ft_cd(char **argv, char **local_env)
 {
 	if (!argv[1])
 	{
-		chdir(getenv("HOME"));
+		// chdir();
 		return (1);
 	}
 	else
