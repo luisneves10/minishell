@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/30 16:25:39 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/08 11:00:38 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,8 @@ char	*is_builtin(t_execcmd *execcmd);
 void	exec_builtin(char **argv, char *builtin, char ***local_env);
 int		ft_echo(char **argv);
 int		ft_pwd(char **argv);
-int		ft_cd(char **argv);
-void	ft_export(char **argv, char ***local_env);
+int		ft_cd(char **argv, char **local_env);
+int		ft_export(char **argv, char ***local_env);
 void	ft_export_no_args(char **local_env);
 void	ft_unset(char **argv, char ***local_env);
 void	ft_env(char **argv, char **local_env);
