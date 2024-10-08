@@ -8,8 +8,7 @@
     │   ├── 1_parser.c
     │   ├── 2_executor.c
     │   ├── 3_signals.c
-    │   ├── 4_utils.c
-    │   └── builtins/
+    │   └── 4_builtins/
     ├── includes/
     │   └── minishell.h
     └── Makefile

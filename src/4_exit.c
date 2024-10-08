@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   3_signals.c                                        :+:      :+:    :+:   */
+/*   4_exit.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/17 10:41:36 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/30 15:25:45 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/09/20 14:28:33 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/10/02 11:42:32 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	signal_handler(int sig)
-{
-	if (sig == SIGINT)
-	{
-		printf("\n");
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
+/*
+ * subject does not require additional arguments in exit
+ */
 
-void	signals(void)
+int	ft_exit(void)
 {
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
+	printf("exit\n");
+	// clear desta merda toda
+	exit (0);
 }

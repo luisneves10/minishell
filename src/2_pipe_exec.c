@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+
 void	child1_process(t_pipecmd *pipecmd, char *envp[], int prev_pipe, int *pi)
 {
 	if (prev_pipe != -1)
@@ -90,7 +91,7 @@ void	fork_loop(t_cmd **curr_cmd, int *pipefd, int *pid, int *prev_pipe, char *en
 	}
 }
 
-void	fork_function(t_pipecmd *pipecmd, char *envp[])
+void	fork_function(t_pipecmd *pipecmd, char **local_env)
 {
 	t_cmd	*curr_cmd;
 	int	prev_pipe;

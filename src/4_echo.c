@@ -1,30 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   3_signals.c                                        :+:      :+:    :+:   */
+/*   4_echo.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/17 10:41:36 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/09/30 15:25:45 by luibarbo         ###   ########.fr       */
+/*   Created: 2024/09/20 15:35:17 by luibarbo          #+#    #+#             */
+/*   Updated: 2024/10/02 11:42:19 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	signal_handler(int sig)
+static int	is_echo_flag(char *arg)
 {
-	if (sig == SIGINT)
-	{
-		printf("\n");
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-	}
+	if (arg[0] == '-' && arg[1] == 'n' && arg[2] == '\0')
+		return (1);
+	return (0);
 }
 
-void	signals(void)
+int	ft_echo(char **argv)
 {
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
+	int	i;
+
+	i = 1;
+	if (is_echo_flag(argv[1]))
+		i++;
+	while (argv[i] && argv[i + 1] != NULL)
+		printf("%s ", argv[i++]);
+	if (is_echo_flag(argv[1]))
+		printf("%s", argv[i]);
+	else
+		printf("%s\n", argv[i]);
+	return (0);
 }

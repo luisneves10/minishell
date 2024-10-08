@@ -15,23 +15,25 @@
 void	init_minishell(char *envp[])
 {
 	char	*input;
+	char	**local_env;
 
+	local_env = copy_env(envp);
 	signals();
 	while (1)
 	{
-		print_user_and_cwd();
-		input = readline("$\033[0m ");
-		if (!input || ft_strncmp(input, "exit", 4) == 0)
+		input = readline("\033[1;34mminishell$\033[0m ");
+		if (!input)
 		{
 			printf("exit\n");
 			free (input);
+			free_env(local_env);
 			break ;
 		}
 		syntax_check(input);
 		if (*input)
 		{
 			add_history(input);
-			runcmd(parsecmd(input), envp);
+			runcmd(parsecmd(input), &local_env);
 		}
 		free (input);
 	}
