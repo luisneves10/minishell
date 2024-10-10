@@ -6,7 +6,7 @@
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 10:51:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/08 15:46:19 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:20:54 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,30 @@ char	**copy_env(char **env)
 	return (new_env);
 }
 
+int	var_name_len(char *var)
+{
+	int	i;
+
+	i = 0;
+	if (ft_strchr(var, '='))
+		while (var[i] != '=')
+			i++;
+	else
+		while (var[i])
+			i++;
+	return (i);
+}
+
 int	var_search(char **env, char *var)
 {
 	int	i;
 	int	size;
 
-	size = ft_strlen(var);
 	i = 0;
 	while (env[i])
 	{
-		if (ft_strncmp(env[i], var, size) == 0 && env[i][size] == '=')
+		size = var_name_len(env[i]);
+		if (ft_strncmp(env[i], var, size) == 0)
 			return (i);
 		i++;
 	}

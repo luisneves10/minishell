@@ -90,6 +90,7 @@ void	signals(void);
 char	**copy_env(char **env);
 int		env_size(char **env);
 void	free_env(char **env);
+int		var_name_len(char *var);
 int		var_search(char **env, char *var);
 
 /* ---------------------------------------------------------- _________ ----- */
@@ -125,7 +126,7 @@ int		ft_pwd(char **argv);
 int		ft_cd(char **argv, char ***local_env);
 int		ft_export(char **argv, char ***local_env);
 void	ft_export_no_args(char **local_env);
-void	ft_unset(char **argv, char ***local_env);
+int		ft_unset(char **argv, char ***local_env);
 int		ft_env(char **argv, char **local_env);
 int		ft_exit(void);
 /* ------------------------------------------------------ BUILTIN UTILS ----- */

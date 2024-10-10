@@ -6,27 +6,33 @@
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:06:17 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/02 15:39:14 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:18:37 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	print_var_value(char **env_copy, int i, int j)
+{
+	if (env_copy[i][j] != '\0')
+	{
+		printf("%c", env_copy[i][j++]);
+		printf("\"");
+		while (env_copy[i][j])
+		{
+			if (env_copy[i][j] == '$')
+				printf("\\");
+			printf("%c", env_copy[i][j++]);
+		}
+		printf("\"");
+	}
+}
 
 static int	smaller_var(int size1, int size2)
 {
 	if (size1 < size2)
 		return (size1);
 	return (size2);
-}
-
-static int	var_name_len(char *var)
-{
-	int	i;
-
-	i = 0;
-	while (var[i] != '=')
-		i++;
-	return (i);
 }
 
 static void	sort_env(char **env)
@@ -72,18 +78,7 @@ void	ft_export_no_args(char **local_env)
 		printf("declare -x ");
 		while (env_copy[i][j] && env_copy[i][j] != '=')
 			printf("%c", env_copy[i][j++]);
-		if (env_copy[i][j] != '\0')
-		{
-			printf("%c", env_copy[i][j++]);
-			printf("\"");
-			while (env_copy[i][j])
-			{
-				if (env_copy[i][j] == '$')
-					printf("\\");
-				printf("%c", env_copy[i][j++]);
-			}
-			printf("\"");
-		}
+		print_var_value(env_copy, i, j);
 		printf("\n");
 	}
 	free_env(env_copy);

@@ -58,14 +58,14 @@ static char	**remove_var(char **local_env, char *var)
 	return (new_env);
 }
 
-void	ft_unset(char **argv, char ***local_env)
+int	ft_unset(char **argv, char ***local_env)
 {
 	int	i;
 
 	if (!argv[1])
-		return ;
+		return (1);
 	if (has_options(argv, argv[0]))
-		return ;
+		return (0);
 	i = 1;
 	while (argv[i] != NULL)
 	{
@@ -73,4 +73,5 @@ void	ft_unset(char **argv, char ***local_env)
 			*local_env = remove_var(*local_env, argv[i]);
 		i++;
 	}
+	return (0);
 }
