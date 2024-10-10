@@ -6,7 +6,7 @@
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:01:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/10 15:29:57 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/10 16:11:33 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,32 @@ static int	update_var(char **local_env, char *var_name, char *var_value)
 		new_var = ft_strjoin_free(new_var, var_value);
 		free (local_env[index]);
 		local_env[index] = new_var;
+		free (new_var);
+	}
+	return (0);
+}
+
+static int	change_dir(char **argv, char **local_env)
+{
+	char	**env;
+	char	*path;
+
+	env = local_env;
+	if (argv[1][0] == '~')
+	{
+		argv[1]++;
+		path = ft_strjoin(env[var_search(local_env, "HOME")] + 5, argv[1]);
+		if (chdir(path) == -1)
+		{
+			perror("minishell: cd");
+			free (path);
+			return (1);
+		}
+	}
+	else if (chdir(argv[1]) == -1)
+	{
+		perror("minishell: cd");
+		return (1);
 	}
 	return (0);
 }
@@ -73,16 +99,8 @@ int	ft_cd(char **argv, char ***local_env)
 	}
 	else
 	{
-		// TRATAR DO PATH ~
-		// TRATAR DO PATH ~
-		// TRATAR DO PATH ~
-		// if (argv[1][0] == '~')
-		// 	argv[1]++;
-		if (chdir(argv[1]) == -1)
-		{
-			perror("minishell: cd");
+		if (change_dir(argv, *local_env) == 1)
 			return (1);
-		}
 		update_var(*local_env, "OLDPWD", env[var_search(*local_env, "PWD")] + 4);
 		update_var(*local_env, "PWD", getcwd(path, sizeof(path)));
 	}
