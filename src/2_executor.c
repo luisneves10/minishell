@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/04 13:08:47 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/10 16:42:34 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env)
 		// TRATAR EXECUTAVEIS
 		/* if (execve(execcmd->argv[0], execcmd->argv, local_env) == -1)
 			perror("execve error"); */
+		printf("path: %s\n", path);
 		if (execve(path, execcmd->argv, *local_env) == -1)
 			perror("execve error");
 	}
@@ -98,6 +99,7 @@ void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
 {
 	t_execcmd	*execcmd;
 	int	saved_fd;
+	printf("type: %d\n", redircmd->cmd->type);
 
 	if (redircmd->mode == (O_WRONLY | O_CREAT))
 	{
@@ -105,7 +107,6 @@ void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
 		if (redircmd->fd < 0)
 		{
 			perror("redir");
-			exit (0);
 		}
 		saved_fd = dup(STDOUT_FILENO);
 		dup2(redircmd->fd, STDOUT_FILENO);
@@ -119,10 +120,10 @@ void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
 	else
 	{
 		redircmd->fd = open(redircmd->file, O_RDONLY);
+		printf("file: %s\n", redircmd->file);
 		if (redircmd->fd < 0)
 		{
 			perror("redir");
-			exit (0);
 		}
 		saved_fd = dup(STDIN_FILENO);
 		dup2(redircmd->fd, STDIN_FILENO);

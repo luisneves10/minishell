@@ -6,7 +6,7 @@
 #    By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/13 14:19:16 by luibarbo          #+#    #+#              #
-#    Updated: 2024/10/04 15:08:41 by daduarte         ###   ########.fr        #
+#    Updated: 2024/10/10 10:18:30 by daduarte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ VALGRINDFLAGS	= -s --suppressions=$(READLINE_SUPP) \
 
 SRC_FILES	= 0_main.c \
 			  1_init_minishell.c 1_constructors.c 1_parse_func.c \
-			  1_parse_utils.c 1_copy_env.c\
+			  1_parse_utils.c 1_copy_env.c 1_sintax_check.c\
 			  2_executor.c 2_pipe_exec.c \
 			  3_signals.c \
 			  4_builtins.c 4_echo.c 4_pwd.c 4_export.c 4_export2.c \
