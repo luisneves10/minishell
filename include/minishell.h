@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/10 16:16:38 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:32:09 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ int		special_chars(char *str);
 void	nulterminate(t_cmd *cmd);
 int		find_char(char **ptr_str, char *end_str, char *set);
 t_cmd	*execcmd(void);
+void	redirect_cmd(t_redircmd *redircmd, char ***local_env);
 t_cmd	*pipecmd(t_cmd *left, t_cmd *right);
 t_cmd	*redircmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd);
 t_token	*create_token(void);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_executor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/10 16:42:34 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/15 12:26:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,15 +81,18 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env)
 	}
 	pid = fork();
 	if (pid < 0)
+	{
 		perror("error fork");
+		exit(1);
+	}
 	if (pid == 0)
 	{
 		// TRATAR EXECUTAVEIS
 		/* if (execve(execcmd->argv[0], execcmd->argv, local_env) == -1)
 			perror("execve error"); */
-		printf("path: %s\n", path);
 		if (execve(path, execcmd->argv, *local_env) == -1)
 			perror("execve error");
+		exit(1);
 	}
 	if (pid > 0)
 		waitpid(pid, NULL, 0);
@@ -98,24 +101,25 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env)
 void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
 {
 	t_execcmd	*execcmd;
-	int	saved_fd;
-	printf("type: %d\n", redircmd->cmd->type);
+	int	saved_fd_in;
+	int	saved_fd_out;
 
-	if (redircmd->mode == (O_WRONLY | O_CREAT))
+	saved_fd_in = dup(STDIN_FILENO);
+	saved_fd_out = dup(STDOUT_FILENO);
+
+	if (redircmd->mode & O_WRONLY)
 	{
-		redircmd->fd = open(redircmd->file, redircmd->mode, 0777);
+		redircmd->fd = open(redircmd->file, redircmd->mode, 0644);
 		if (redircmd->fd < 0)
 		{
 			perror("redir");
+			return ;
 		}
-		saved_fd = dup(STDOUT_FILENO);
+		execcmd = (t_execcmd *)redircmd->cmd;
 		dup2(redircmd->fd, STDOUT_FILENO);
 		close(redircmd->fd);
-		execcmd = (t_execcmd *)redircmd->cmd;
 		nulterminate((t_cmd *)execcmd);
 		execute_commands(execcmd, local_env);
-		dup2(saved_fd, STDOUT_FILENO);
-		close(saved_fd);
 	}
 	else
 	{
@@ -124,16 +128,18 @@ void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
 		if (redircmd->fd < 0)
 		{
 			perror("redir");
+			return ;
 		}
-		saved_fd = dup(STDIN_FILENO);
 		dup2(redircmd->fd, STDIN_FILENO);
 		close(redircmd->fd);
 		execcmd = (t_execcmd *)redircmd->cmd;
 		nulterminate((t_cmd *)execcmd);
 		execute_commands(execcmd, local_env);
-		dup2(saved_fd, STDIN_FILENO);
-		close(saved_fd);
 	}
+	dup2(saved_fd_out, STDOUT_FILENO);
+	dup2(saved_fd_in, STDIN_FILENO);
+	close(saved_fd_in);
+	close(saved_fd_out);
 }
 
 void	runcmd(t_cmd *cmd, char ***local_env)
@@ -145,6 +151,8 @@ void	runcmd(t_cmd *cmd, char ***local_env)
 	execcmd = (t_execcmd *)cmd;
 	pipecmd = (t_pipecmd *)cmd;
 	redircmd = (t_redircmd *)cmd;
+	if (cmd == NULL)
+		return ;
 	if (cmd->type == EXEC)
 	{
 		execcmd = (t_execcmd *)cmd;

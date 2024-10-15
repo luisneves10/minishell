@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_pipe_exec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:18:03 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/10 10:23:34 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/15 12:26:05 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,44 +23,71 @@ void	child1_process(t_pipecmd *pipecmd, char ***local_env, int prev_pipe, int *p
 	close(pi[0]);
 	close(pi[1]);
 	t_execcmd *left = (t_execcmd *)pipecmd->left;
-	char *path = get_cmd_path(*local_env, left->argv[0]);
-	// PASSAR PARA execute_commands()
-	if (execve(path, left->argv, *local_env) == -1)
-	{
-		perror("execve error");
-		exit(1);
-	}
+	execute_commands(left, local_env);
 }
 
-void	final_cmd(t_cmd *curr_cmd, char ***local_env, int prev_pipe)
+void handle_redirection(t_redircmd *redircmd, char ***local_env, int prev_pipe)
 {
-	t_execcmd	*execcmd = (t_execcmd *)curr_cmd;
-	int	pid;
+    if (prev_pipe != -1)
+	{
+        dup2(prev_pipe, STDIN_FILENO);
+        close(prev_pipe);
+    }
+    redirect_cmd(redircmd, local_env);
+}
+
+void execute_final_cmd(t_execcmd *execcmd, char ***local_env, int prev_pipe)
+{
+    int		pid;
+	char	*path;
 
 	pid = fork();
-	if (pid == -1)
+    if (pid == -1)
 	{
-		perror("fork error");
-		exit(1);
-	}
+        perror("fork error");
+        exit(1);
+    }
 	else if (pid == 0)
 	{
-		if (prev_pipe != -1)
+        if (prev_pipe != -1)
 		{
-			dup2(prev_pipe, STDIN_FILENO);
-			close(prev_pipe);
-		}
-		char *path = get_cmd_path(*local_env, execcmd->argv[0]);
-		// PASSAR PARA execute_commands()
-		if (execve(path, execcmd->argv, *local_env) == -1)
+            dup2(prev_pipe, STDIN_FILENO);
+            close(prev_pipe);
+        }
+        path = get_cmd_path(*local_env, execcmd->argv[0]);
+        if (execve(path, execcmd->argv, *local_env) == -1)
 		{
-			perror("execve error");
-			exit(1);
-		}
-		if (prev_pipe != -1)
-		close(prev_pipe);
-	}
+            perror("execve error");
+            exit(1);
+        }
+    }
+    close(prev_pipe);
+    wait(NULL);
 }
+
+void final_cmd(t_cmd *curr_cmd, char ***local_env, int prev_pipe)
+{
+    if (curr_cmd->type == REDIR)
+	{
+        t_redircmd *redircmd = (t_redircmd *)curr_cmd;
+        int pid = fork();
+        if (pid == 0)
+		{
+            handle_redirection(redircmd, local_env, prev_pipe);
+            exit(0);
+        }
+        close(prev_pipe);
+        wait(NULL);
+    }
+	else if (curr_cmd->type == EXEC)
+	{
+        t_execcmd *execcmd = (t_execcmd *)curr_cmd;
+        execute_final_cmd(execcmd, local_env, prev_pipe);
+    }
+	else
+        printf("Unknown command type\n");
+}
+
 
 void	fork_loop(t_cmd **curr_cmd, int *pipefd, int *pid, int *prev_pipe, char ***local_env)
 {
