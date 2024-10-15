@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_constructors.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/04 13:06:45 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/15 12:52:22 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ t_cmd	*redircmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd)
 		exit(0); // DAR HANDLE
 	ft_memset(cmd, 0, sizeof(t_redircmd));
 	cmd->type = REDIR;
-	cmd->cmd = next_cmd;
+	if (next_cmd == NULL)
+		cmd->cmd = NULL;
+	else
+		cmd->cmd = next_cmd;
 	cmd->file = tok->start;
 	cmd->end_file = tok->end;
 	cmd->mode = mode;
