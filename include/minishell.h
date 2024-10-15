@@ -113,7 +113,8 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env);
 char	*get_cmd_path(char **env, char *cmd);
 
 char	*get_cmds_path(char *path, char *cmd);
-void	child1_process(t_pipecmd *pipecmd, char ***local_env, int prev_pipe, int *pi);
+void	child1_process(t_pipecmd *pipecmd, char ***local_env,
+			int prev_pipe, int *pi);
 void	fork_function(t_pipecmd *pipecmd, char ***local_env);
 
 void	close_all(t_pipecmd *pipecmd);
