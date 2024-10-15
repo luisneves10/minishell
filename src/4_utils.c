@@ -21,7 +21,7 @@ int	has_options(char **argv, char *command)
 	{
 		if (argv[i][0] == '-')
 		{
-			printf("minishell: %s: No options are allowed\n", command);
+			printf("minishell: %s: %s: Invalid option\n", command, argv[i]);
 			return (1);
 		}
 		i++;

@@ -12,20 +12,42 @@
 
 #include "minishell.h"
 
+static void	free_input(char *input, char *prompt)
+{
+	free (input);
+	free (prompt);
+}
+
+static char	*get_prompt(char **local_env)
+{
+	char	*prompt;
+	char	*user;
+	char	*pwd;
+
+	user = local_env[var_search(local_env, "USER")] + 5;
+	pwd = local_env[var_search(local_env, "PWD")] + 4;
+	prompt = ft_strjoin_free(ft_strdup("\033[1;34m"), user);
+	prompt = ft_strjoin_free(prompt, ":\033[0m");
+	prompt = ft_strjoin_free(prompt, pwd);
+	prompt = ft_strjoin_free(prompt, "$ ");
+	return (prompt);
+}
+
 void	init_minishell(char *envp[])
 {
 	char	*input;
+	char	*prompt;
 	char	**local_env;
 
 	local_env = copy_env(envp);
-	signals();
 	while (1)
 	{
-		input = readline("\033[1;34mminishell$\033[0m ");
+		prompt = get_prompt(local_env);
+		input = readline(prompt);
 		if (!input)
 		{
 			printf("exit\n");
-			free (input);
+			free_input(input, prompt);
 			free_env(local_env);
 			break ;
 		}
@@ -35,6 +57,6 @@ void	init_minishell(char *envp[])
 			add_history(input);
 			runcmd(parsecmd(input), &local_env);
 		}
-		free (input);
+		free_input(input, prompt);
 	}
 }
