@@ -90,5 +90,6 @@ re: fclean all
 
 leaks: re
 	valgrind $(VALGRINDFLAGS) ./$(NAME)
+	cat $(LEAKS_LOG)
 
 .PHONY: all clean fclean re leaks

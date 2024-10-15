@@ -26,6 +26,8 @@ void	free_env(char **env)
 {
 	int	i;
 
+	if (!env)
+		return ;
 	i = 0;
 	while (env[i])
 		free (env[i++]);
@@ -61,6 +63,8 @@ int	var_name_len(char *var)
 {
 	int	i;
 
+	if (!var || !var[0])
+		return (0);
 	i = 0;
 	if (ft_strchr(var, '='))
 		while (var[i] != '=')
@@ -77,6 +81,8 @@ int	var_search(char **env, char *var)
 	int	size;
 
 	i = 0;
+	if (!env || !var)
+		return (-1);
 	while (env[i])
 	{
 		size = var_name_len(env[i]);

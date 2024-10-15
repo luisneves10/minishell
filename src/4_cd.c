@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
-#include <unistd.h>
 
 /*
  * $HOME not defined: se executar "cd" --> "bash: cd: HOME not set"
@@ -37,23 +35,20 @@ static int	home_is_set(char **local_env)
 static int	update_var(char **local_env, char *var_name, char *var_value)
 {
 	int		index;
-	int		len;
 	char	*new_var;
+	char	*tmp;
 
-	len = ft_strlen(var_name) + ft_strlen(var_value) + 2;
+	if (!var_value)
+		return (1);
 	index = var_search(local_env, var_name);
 	if (index >= 0)
 	{
-		new_var = ft_calloc(sizeof(char), len);
-		if (!new_var)
-			return (1);
-		new_var[len] = '\0';
-		new_var = ft_strjoin_free(new_var, var_name);
+		new_var = ft_strjoin_free(ft_strdup(""), var_name);
 		new_var = ft_strjoin_free(new_var, "=");
 		new_var = ft_strjoin_free(new_var, var_value);
-		free (local_env[index]);
+		tmp = local_env[index];
 		local_env[index] = new_var;
-		free (new_var);
+		free (tmp);
 	}
 	return (0);
 }
@@ -95,14 +90,15 @@ int	ft_cd(char **argv, char ***local_env)
 	{
 		if (home_is_set(*local_env))
 			chdir(env[var_search(*local_env, "HOME")] + 5);
-		return (0);
+		else
+			return (1);
 	}
 	else
 	{
 		if (change_dir(argv, *local_env) == 1)
 			return (1);
-		update_var(*local_env, "OLDPWD", env[var_search(*local_env, "PWD")] + 4);
-		update_var(*local_env, "PWD", getcwd(path, sizeof(path)));
 	}
+	update_var(*local_env, "OLDPWD", env[var_search(*local_env, "PWD")] + 4);
+	update_var(*local_env, "PWD", getcwd(path, sizeof(path)));
 	return (0);
 }
