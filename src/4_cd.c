@@ -57,12 +57,14 @@ static int	change_dir(char **argv, char **local_env)
 {
 	char	**env;
 	char	*path;
+	int		home_index;
 
 	env = local_env;
+	home_index = var_search(local_env, "HOME");
 	if (argv[1][0] == '~')
 	{
 		argv[1]++;
-		path = ft_strjoin(env[var_search(local_env, "HOME")] + 5, argv[1]);
+		path = ft_strjoin(env[home_index] + 5, argv[1]);
 		if (chdir(path) == -1)
 		{
 			perror("minishell: cd");

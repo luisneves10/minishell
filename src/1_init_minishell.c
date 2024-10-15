@@ -23,12 +23,23 @@ static char	*get_prompt(char **local_env)
 	char	*prompt;
 	char	*user;
 	char	*pwd;
+	int		home_index;
+	int		len_home;
 
+	home_index = var_search(local_env, "HOME");
+	if (home_index >= 0)
+		len_home = ft_strlen(local_env[home_index]) - 5;
 	user = local_env[var_search(local_env, "USER")] + 5;
 	pwd = local_env[var_search(local_env, "PWD")] + 4;
 	prompt = ft_strjoin_free(ft_strdup("\033[1;34m"), user);
 	prompt = ft_strjoin_free(prompt, ":\033[0m");
-	prompt = ft_strjoin_free(prompt, pwd);
+	if (var_search(local_env, "HOME") >= 0)
+	{
+		prompt = ft_strjoin_free(prompt, "~");
+		prompt = ft_strjoin_free(prompt, pwd + len_home);
+	}
+	else
+		prompt = ft_strjoin_free(prompt, pwd);
 	prompt = ft_strjoin_free(prompt, "$ ");
 	return (prompt);
 }
