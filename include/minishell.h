@@ -67,13 +67,13 @@ typedef struct pipecmd
 	int		type;
 	int		pipefd[2];
 	int		prev_pipe;
-	t_cmd *left;
-	t_cmd *right;
+	t_cmd	*left;
+	t_cmd	*right;
 	pid_t	pid1;
 	pid_t	pid2;
 }	t_pipecmd;
 
-typedef struct	token
+typedef struct token
 {
 	char	*start;
 	char	*end;
