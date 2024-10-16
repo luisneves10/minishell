@@ -6,28 +6,11 @@
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 15:21:52 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/02 15:40:46 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:49:50 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	has_options(char **argv)
-{
-	int	i;
-
-	i = 1;
-	while (argv[i])
-	{
-		if (argv[i][0] == '-')
-		{
-			printf("export: No options are allowed.\n");
-			return (1);
-		}
-		i++;
-	}
-	return (0);
-}
 
 static int	var_update(char **local_env, char *var)
 {
@@ -40,7 +23,7 @@ static int	var_update(char **local_env, char *var)
 	i = 0;
 	while (local_env[i])
 	{
-		if (ft_strncmp(local_env[i], var, var_size + 1) == 0)
+		if (ft_strncmp(local_env[i], var, var_size) == 0)
 		{
 			free (local_env[i]);
 			local_env[i] = NULL;
@@ -85,7 +68,7 @@ int	ft_export(char **argv, char ***local_env)
 		ft_export_no_args(*local_env);
 		return (0);
 	}
-	if (has_options(argv))
+	if (has_options(argv, argv[0]))
 		return (1);
 	i = 1;
 	while (argv[i] != NULL)

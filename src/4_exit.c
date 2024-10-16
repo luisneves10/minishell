@@ -12,10 +12,6 @@
 
 #include "minishell.h"
 
-/*
- * subject does not require additional arguments in exit
- */
-
 int	ft_exit(void)
 {
 	printf("exit\n");

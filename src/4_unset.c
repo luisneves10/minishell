@@ -6,28 +6,11 @@
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:42:31 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/03 15:59:52 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:49:38 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	has_options(char **argv)
-{
-	int	i;
-
-	i = 1;
-	while (argv[i])
-	{
-		if (argv[i][0] == '-')
-		{
-			printf("unset: No options are allowed.\n");
-			return (1);
-		}
-		i++;
-	}
-	return (0);
-}
 
 static int	is_var(char **local_env, char *var)
 {
@@ -75,14 +58,14 @@ static char	**remove_var(char **local_env, char *var)
 	return (new_env);
 }
 
-void	ft_unset(char **argv, char ***local_env)
+int	ft_unset(char **argv, char ***local_env)
 {
 	int	i;
 
 	if (!argv[1])
-		return ;
-	if (has_options(argv))
-		return ;
+		return (1);
+	if (has_options(argv, argv[0]))
+		return (0);
 	i = 1;
 	while (argv[i] != NULL)
 	{
@@ -90,4 +73,5 @@ void	ft_unset(char **argv, char ***local_env)
 			*local_env = remove_var(*local_env, argv[i]);
 		i++;
 	}
+	return (0);
 }

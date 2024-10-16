@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   1_copy_env.c                                       :+:      :+:    :+:   */
+/*   1_env_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 10:51:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/01 11:47:04 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/10 12:20:54 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	free_env(char **env)
 {
 	int	i;
 
+	if (!env)
+		return ;
 	i = 0;
 	while (env[i])
 		free (env[i++]);
@@ -55,4 +57,38 @@ char	**copy_env(char **env)
 	}
 	new_env[i] = NULL;
 	return (new_env);
+}
+
+int	var_name_len(char *var)
+{
+	int	i;
+
+	if (!var || !var[0])
+		return (0);
+	i = 0;
+	if (ft_strchr(var, '='))
+		while (var[i] != '=')
+			i++;
+	else
+		while (var[i])
+			i++;
+	return (i);
+}
+
+int	var_search(char **env, char *var)
+{
+	int	i;
+	int	size;
+
+	i = 0;
+	if (!env || !var)
+		return (-1);
+	while (env[i])
+	{
+		size = var_name_len(env[i]);
+		if (ft_strncmp(env[i], var, size) == 0)
+			return (i);
+		i++;
+	}
+	return (-1);
 }
