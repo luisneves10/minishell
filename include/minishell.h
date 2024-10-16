@@ -89,7 +89,6 @@ t_shell	*init_struct(char **envp);
 char	**copy_env(char **env);
 int		env_size(char **env);
 void	free_env(char **env);
-
 int		var_name_len(char *var);
 int		var_search(char **env, char *var);
 
@@ -103,7 +102,7 @@ int		find_char(char **ptr_str, char *end_str, char *set);
 t_cmd	*exec_cmd(void);
 void	redirect_cmd(t_redircmd *redircmd, t_shell *shell);
 t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
-t_cmd	*redir_cmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd);
+t_cmd	*redir_cmd(t_cmd *next_cmd, t_token *tok, int mode, int fd);
 t_token	*create_token(void);
 int		syntax_check(char *input);
 

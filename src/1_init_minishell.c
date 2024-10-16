@@ -20,26 +20,22 @@ static void	free_input(char *input, char *prompt)
 
 static char	*get_prompt(t_shell *shell)
 {
+	char	path[1024];
 	char	*prompt;
 	char	*user;
-	char	*pwd;
-	int		home_index;
 	int		len_home;
 
-	home_index = var_search(shell->env, "HOME");
-	if (home_index >= 0)
-		len_home = ft_strlen(shell->env[home_index]) - 5;
-	user = shell->env[var_search(shell->env, "USER")] + 5;
-	pwd = shell->env[var_search(shell->env, "PWD")] + 4;
+	user = getenv("USER");
 	prompt = ft_strjoin_free(ft_strdup("\033[1;34m"), user);
 	prompt = ft_strjoin_free(prompt, ":\033[0m");
 	if (var_search(shell->env, "HOME") >= 0)
 	{
+		len_home = ft_strlen(shell->env[var_search(shell->env, "HOME")]) - 5;
 		prompt = ft_strjoin_free(prompt, "~");
-		prompt = ft_strjoin_free(prompt, pwd + len_home);
+		prompt = ft_strjoin_free(prompt, getcwd(path, sizeof(path)) + len_home);
 	}
 	else
-		prompt = ft_strjoin_free(prompt, pwd);
+		prompt = ft_strjoin_free(prompt, getcwd(path, sizeof(path)));
 	prompt = ft_strjoin_free(prompt, "$ ");
 	return (prompt);
 }

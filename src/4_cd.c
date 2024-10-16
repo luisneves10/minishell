@@ -44,8 +44,11 @@ static int	update_var(t_shell *shell, char *var_name, char *var_value)
 	if (index >= 0)
 	{
 		new_var = ft_strjoin_free(ft_strdup(""), var_name);
-		new_var = ft_strjoin_free(new_var, "=");
-		new_var = ft_strjoin_free(new_var, var_value);
+		if (var_value)
+		{
+			new_var = ft_strjoin_free(new_var, "=");
+			new_var = ft_strjoin_free(new_var, var_value);
+		}
 		tmp = shell->env[index];
 		shell->env[index] = new_var;
 		free (tmp);
@@ -61,7 +64,7 @@ static int	change_dir(char **argv, t_shell *shell)
 
 	env = shell->env;
 	home_index = var_search(shell->env, "HOME");
-	if (argv[1][0] == '~' && argv[1][1] == '\0')
+	if (argv[1][0] == '~')
 	{
 		argv[1]++;
 		path = ft_strjoin(env[home_index] + 5, argv[1]);
@@ -101,7 +104,8 @@ int	ft_cd(char **argv, t_shell *shell)
 		if (change_dir(argv, shell) == 1)
 			return (1);
 	}
-	update_var(shell, "OLDPWD", env[var_search(shell->env, "PWD")] + 4);
+	if (var_search(shell->env, "PWD") >= 0)
+		update_var(shell, "OLDPWD", env[var_search(shell->env, "PWD")] + 4);
 	update_var(shell, "PWD", getcwd(path, sizeof(path)));
 	return (0);
 }
