@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 11:36:21 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:27:36 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void handle_in(t_redircmd *redircmd)
 	close(redircmd->fd);
 }
 
-void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
+void	redirect_cmd(t_redircmd *redircmd, t_shell *shell)
 {
 	t_execcmd *execcmd;
 	int saved_fd_in;
@@ -53,7 +53,7 @@ void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
 		return ;
 	execcmd = (t_execcmd *)redircmd->cmd;
 	null_terminate((t_cmd *)execcmd);
-	execute_commands(execcmd, local_env);
+	execute_commands(execcmd, shell);
 	dup2(saved_fd_out, STDOUT_FILENO);
 	dup2(saved_fd_in, STDIN_FILENO);
 	close(saved_fd_in);

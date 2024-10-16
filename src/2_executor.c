@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/16 10:28:42 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:42:19 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,11 @@ char	*get_cmd_path(char **env, char *cmd)
 	return (real_path);
 }
 
-void	command_type(t_execcmd *execcmd, char ***local_env, char **path)
+void	command_type(t_execcmd *execcmd, t_shell *shell, char **path)
 {
 	if (is_builtin(execcmd) != NULL)
 	{
-		exec_builtin(execcmd->argv, is_builtin(execcmd), local_env);
+		exec_builtin(execcmd->argv, is_builtin(execcmd), shell);
 		*path = NULL;
 		return ;
 	}
@@ -94,7 +94,7 @@ void	command_type(t_execcmd *execcmd, char ***local_env, char **path)
 		*path = execcmd->argv[0]; //usa o comando como path (ex: ./minishell)
 	else
 	{
-		*path = get_cmd_path(*local_env, execcmd->argv[0]);
+		*path = get_cmd_path(shell->env, execcmd->argv[0]);
 		if (!path)
 		{
 			printf("%s: command not found\n", execcmd->argv[0]);
@@ -103,12 +103,12 @@ void	command_type(t_execcmd *execcmd, char ***local_env, char **path)
 	}
 }
 
-void	execute_commands(t_execcmd *execcmd, char ***local_env)
+void	execute_commands(t_execcmd *execcmd, t_shell *shell)
 {
 	int		pid;
 	char	*path;
 
-	command_type(execcmd, local_env, &path);
+	command_type(execcmd, shell, &path);
 	if (path == NULL)
 		return ;
 	pid = fork();
@@ -119,7 +119,7 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env)
 	}
 	if (pid == 0)
 	{
-		if (execve(path, execcmd->argv, *local_env) == -1)
+		if (execve(path, execcmd->argv, shell->env) == -1)
 			perror("execve error");
 		exit(1);
 	}
@@ -131,7 +131,7 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env)
 	}
 }
 
-void	run_cmd(t_cmd *cmd, char ***local_env)
+void	run_cmd(t_cmd *cmd, t_shell *shell)
 {
 	t_execcmd	*execcmd;
 	t_pipecmd	*pipecmd;
@@ -143,10 +143,7 @@ void	run_cmd(t_cmd *cmd, char ***local_env)
 	if (cmd == NULL)
 		return ;
 	if (cmd->type == EXEC)
-	{
-		execcmd = (t_execcmd *)cmd;
-		execute_commands(execcmd, local_env);
-	}
+		execute_commands(execcmd, shell);
 	else if (cmd->type == PIPE)
 	{
 		if (pipe(pipecmd->pipefd) == -1)
@@ -154,10 +151,10 @@ void	run_cmd(t_cmd *cmd, char ***local_env)
 			perror("pipe error");
 			exit(1);
 		}
-		fork_function(pipecmd, local_env);
+		fork_function(pipecmd, shell);
 		close_all(pipecmd);
 	}
 	else if (cmd->type == REDIR)
-		redirect_cmd(redircmd, local_env);
+		redirect_cmd(redircmd, shell);
 	free_cmd(cmd);
 }

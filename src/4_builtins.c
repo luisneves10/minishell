@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   4_builtins.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 11:58:25 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/10 12:11:31 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:18:08 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,20 @@ char	*is_builtin(t_execcmd *execcmd)
 	return (NULL);
 }
 
-void	exec_builtin(char **argv, char *builtin, char ***local_env)
+void	exec_builtin(char **argv, char *builtin, t_shell *shell)
 {
 	if (ft_strncmp(builtin, "echo", ft_strlen(builtin)) == 0)
 		ft_echo(argv);
 	else if (ft_strncmp(builtin, "cd", ft_strlen(builtin)) == 0)
-		ft_cd(argv, local_env);
+		ft_cd(argv, shell);
 	else if (ft_strncmp(builtin, "pwd", ft_strlen(builtin)) == 0)
 		ft_pwd(argv);
 	else if (ft_strncmp(builtin, "export", ft_strlen(builtin)) == 0)
-		ft_export(argv, local_env);
+		ft_export(argv, shell);
 	else if (ft_strncmp(builtin, "unset", ft_strlen(builtin)) == 0)
-		ft_unset(argv, local_env);
+		ft_unset(argv, shell);
 	else if (ft_strncmp(builtin, "env", ft_strlen(builtin)) == 0)
-		ft_env(argv, *local_env);
+		ft_env(argv, shell);
 	else if (ft_strncmp(builtin, "exit", ft_strlen(builtin)) == 0)
 		ft_exit();
 }

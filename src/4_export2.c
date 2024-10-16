@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   4_export2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:06:17 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/10 12:18:37 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:22:07 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,13 @@ static void	sort_env(char **env)
 	}
 }
 
-void	ft_export_no_args(char **local_env)
+void	ft_export_no_args(t_shell *shell)
 {
 	char	**env_copy;
 	int		i;
 	int		j;
 
-	env_copy = copy_env(local_env);
+	env_copy = copy_env(shell->env);
 	sort_env(env_copy);
 	i = -1;
 	while (env_copy[++i])

@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/16 09:46:04 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:44:31 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	free_input(char *input, char *prompt)
 	free (prompt);
 }
 
-static char	*get_prompt(char **local_env)
+static char	*get_prompt(t_shell *shell)
 {
 	char	*prompt;
 	char	*user;
@@ -26,14 +26,14 @@ static char	*get_prompt(char **local_env)
 	int		home_index;
 	int		len_home;
 
-	home_index = var_search(local_env, "HOME");
+	home_index = var_search(shell->env, "HOME");
 	if (home_index >= 0)
-		len_home = ft_strlen(local_env[home_index]) - 5;
-	user = local_env[var_search(local_env, "USER")] + 5;
-	pwd = local_env[var_search(local_env, "PWD")] + 4;
+		len_home = ft_strlen(shell->env[home_index]) - 5;
+	user = shell->env[var_search(shell->env, "USER")] + 5;
+	pwd = shell->env[var_search(shell->env, "PWD")] + 4;
 	prompt = ft_strjoin_free(ft_strdup("\033[1;34m"), user);
 	prompt = ft_strjoin_free(prompt, ":\033[0m");
-	if (var_search(local_env, "HOME") >= 0)
+	if (var_search(shell->env, "HOME") >= 0)
 	{
 		prompt = ft_strjoin_free(prompt, "~");
 		prompt = ft_strjoin_free(prompt, pwd + len_home);
@@ -44,22 +44,20 @@ static char	*get_prompt(char **local_env)
 	return (prompt);
 }
 
-void	init_minishell(char *envp[])
+void	init_minishell(t_shell *shell)
 {
 	char	*input;
 	char	*prompt;
-	char	**local_env;
 
-	local_env = copy_env(envp);
 	while (1)
 	{
-		prompt = get_prompt(local_env);
+		prompt = get_prompt(shell);
 		input = readline(prompt);
 		if (!input)
 		{
 			printf("exit\n");
 			free_input(input, prompt);
-			free_env(local_env);
+			free_env(shell->env); //free struct
 			break ;
 		}
 		if (syntax_check(input) == 0)
@@ -67,7 +65,7 @@ void	init_minishell(char *envp[])
 			if (*input)
 			{
 				add_history(input);
-				run_cmd(parse_cmd(input), &local_env);
+				run_cmd(parse_cmd(input), shell);
 			}
 		}
 		free_input(input, prompt);

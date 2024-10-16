@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   4_cd.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:01:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/10 16:11:33 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:21:15 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	home_is_set(char **local_env)
 	return (0);
 }
 
-static int	update_var(char **local_env, char *var_name, char *var_value)
+static int	update_var(t_shell *shell, char *var_name, char *var_value)
 {
 	int		index;
 	char	*new_var;
@@ -40,27 +40,27 @@ static int	update_var(char **local_env, char *var_name, char *var_value)
 
 	if (!var_value)
 		return (1);
-	index = var_search(local_env, var_name);
+	index = var_search(shell->env, var_name);
 	if (index >= 0)
 	{
 		new_var = ft_strjoin_free(ft_strdup(""), var_name);
 		new_var = ft_strjoin_free(new_var, "=");
 		new_var = ft_strjoin_free(new_var, var_value);
-		tmp = local_env[index];
-		local_env[index] = new_var;
+		tmp = shell->env[index];
+		shell->env[index] = new_var;
 		free (tmp);
 	}
 	return (0);
 }
 
-static int	change_dir(char **argv, char **local_env)
+static int	change_dir(char **argv, t_shell *shell)
 {
 	char	**env;
 	char	*path;
 	int		home_index;
 
-	env = local_env;
-	home_index = var_search(local_env, "HOME");
+	env = shell->env;
+	home_index = var_search(shell->env, "HOME");
 	if (argv[1][0] == '~' && argv[1][1] == '\0')
 	{
 		argv[1]++;
@@ -81,27 +81,27 @@ static int	change_dir(char **argv, char **local_env)
 	return (0);
 }
 
-int	ft_cd(char **argv, char ***local_env)
+int	ft_cd(char **argv, t_shell *shell)
 {
 	char	**env;
 	char	path[1024];
 
-	env = *local_env;
+	env = shell->env;
 	if (has_options(argv, "cd"))
 		return (1);
 	if (!argv[1])
 	{
-		if (home_is_set(*local_env))
-			chdir(env[var_search(*local_env, "HOME")] + 5);
+		if (home_is_set(shell->env))
+			chdir(env[var_search(shell->env, "HOME")] + 5);
 		else
 			return (1);
 	}
 	else
 	{
-		if (change_dir(argv, *local_env) == 1)
+		if (change_dir(argv, shell) == 1)
 			return (1);
 	}
-	update_var(*local_env, "OLDPWD", env[var_search(*local_env, "PWD")] + 4);
-	update_var(*local_env, "PWD", getcwd(path, sizeof(path)));
+	update_var(shell, "OLDPWD", env[var_search(shell->env, "PWD")] + 4);
+	update_var(shell, "PWD", getcwd(path, sizeof(path)));
 	return (0);
 }

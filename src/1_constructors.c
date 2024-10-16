@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 09:45:07 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:09:04 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,17 @@ t_token	*create_token(void)
 		exit(0); // DAR HANDLE
 	ft_memset(token, 0, sizeof(t_token));
 	return (token);
+}
+
+t_shell	*init_struct(char **envp)
+{
+	t_shell	*shell;
+
+	shell = malloc(sizeof(t_shell));
+	if (!shell)
+		return (NULL);
+	shell->env = copy_env(envp);
+	if (!shell->env)
+		return (NULL);
+	return (shell);
 }
