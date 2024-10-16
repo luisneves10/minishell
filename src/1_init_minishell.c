@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/10 16:42:45 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 09:46:04 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	init_minishell(char *envp[])
 			if (*input)
 			{
 				add_history(input);
-				runcmd(parsecmd(input), &local_env);
+				run_cmd(parse_cmd(input), &local_env);
 			}
 		}
 		free (input);

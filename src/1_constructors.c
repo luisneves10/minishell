@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   1_constructors.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/15 12:52:22 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 09:45:07 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd	*execcmd(void)
+t_cmd	*exec_cmd(void)
 {
 	t_execcmd	*cmd;
 
@@ -24,7 +24,7 @@ t_cmd	*execcmd(void)
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*pipecmd(t_cmd *left, t_cmd *right)
+t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right)
 {
 	t_pipecmd	*cmd;
 
@@ -38,12 +38,10 @@ t_cmd	*pipecmd(t_cmd *left, t_cmd *right)
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*redircmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd)
+t_cmd	*redir_cmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd)
 {
 	t_redircmd	*cmd;
-	//t_execcmd	*execcmd;
 
-	//execcmd = (t_execcmd *)next_cmd;
 	cmd = malloc(sizeof(t_redircmd));
 	if (!cmd)
 		exit(0); // DAR HANDLE

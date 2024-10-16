@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/15 12:46:19 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 10:24:41 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,6 @@ typedef struct cmd
 {
 	int	type;
 }	t_cmd;
-
-typedef struct execexec
-{
-	int		type;
-	char	*argv[20];
-	char	*end_argv[20];
-}	t_execexec;
 
 typedef struct execcmd
 {
@@ -89,20 +82,20 @@ void	signals(void);
 char	**copy_env(char **env);
 int		env_size(char **env);
 void	free_env(char **env);
-t_cmd	*parsecmd(char *str);
-int		gettoken(char **ptr_str, char *end_str,
+t_cmd	*parse_cmd(char *str);
+int		get_token(char **ptr_str, char *end_str,
 			char **start_token, char **end_token);
 int		special_chars(char *str);
-void	nulterminate(t_cmd *cmd);
+void	null_terminate(t_cmd *cmd);
 int		find_char(char **ptr_str, char *end_str, char *set);
-t_cmd	*execcmd(void);
+t_cmd	*exec_cmd(void);
 void	redirect_cmd(t_redircmd *redircmd, char ***local_env);
-t_cmd	*pipecmd(t_cmd *left, t_cmd *right);
-t_cmd	*redircmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd);
+t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
+t_cmd	*redir_cmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd);
 t_token	*create_token(void);
 int		syntax_check(char *input);
 
-void	runcmd(t_cmd *cmd, char ***local_env);
+void	run_cmd(t_cmd *cmd, char ***local_env);
 void	execute_commands(t_execcmd *execcmd, char ***local_env);
 
 char	*get_cmd_path(char **env, char *cmd);
@@ -110,7 +103,7 @@ char	*get_cmd_path(char **env, char *cmd);
 char	*get_cmds_path(char *path, char *cmd);
 void	child1_process(t_pipecmd *pipecmd, char ***local_env, int prev_pipe, int *pi);
 void	fork_function(t_pipecmd *pipecmd, char ***local_env);
-
+void	free_cmd(t_cmd *cmd);
 void	close_all(t_pipecmd *pipecmd);
 
 char	*is_builtin(t_execcmd *execcmd);

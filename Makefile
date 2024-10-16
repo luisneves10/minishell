@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+         #
+#    By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/13 14:19:16 by luibarbo          #+#    #+#              #
-#    Updated: 2024/10/15 22:47:06 by daduarte         ###   ########.fr        #
+#    Updated: 2024/10/16 11:12:38 by daduarte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ SRC_FILES	= 0_main.c \
 			  3_signals.c \
 			  4_builtins.c 4_echo.c 4_pwd.c 4_export.c 4_export2.c \
 			  4_unset.c 4_env.c 4_exit.c\
+			  5_free_functions.c
 
 SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
 
@@ -88,7 +89,8 @@ fclean: clean
 
 re: fclean all
 
-leaks: all
+leaks: re
 	valgrind $(VALGRINDFLAGS) ./$(NAME)
+	cat $(LEAKS_LOG)
 
 .PHONY: all clean fclean re leaks

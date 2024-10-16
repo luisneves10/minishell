@@ -6,13 +6,13 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/10 16:32:33 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 09:46:24 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parsequotes(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
+int	parse_quotes(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 {
 	char	*str;
 	int		flag;
@@ -34,7 +34,7 @@ int	parsequotes(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 	return ('a');
 }
 
-int	gettoken(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
+int	get_token(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 {
 	char	*str;
 	int		ret;
@@ -44,7 +44,7 @@ int	gettoken(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 	while (str < end_str && *str == ' ')
 		str ++;
 	if (*str == '"' || *str == '\'')
-		return (parsequotes(ptr_str, end_str, start_tok, end_tok));
+		return (parse_quotes(ptr_str, end_str, start_tok, end_tok));
 	if (start_tok)
 		*start_tok = str;
 	ret = special_chars(str);
@@ -83,7 +83,7 @@ int	special_chars(char *str)
 	return ('a');
 }
 
-void	nulterminate(t_cmd *cmd)
+void	null_terminate(t_cmd *cmd)
 {
 	t_execcmd	*ecmd;
 	t_pipecmd	*pcmd;
@@ -105,13 +105,13 @@ void	nulterminate(t_cmd *cmd)
 	if (cmd->type == PIPE)
 	{
 		pcmd = (t_pipecmd *)cmd;
-		nulterminate(pcmd->left);
-		nulterminate(pcmd->right);
+		null_terminate(pcmd->left);
+		null_terminate(pcmd->right);
 	}
 	if (cmd->type == REDIR)
 	{
 		rcmd = (t_redircmd *)cmd;
-		//nulterminate(rcmd->cmd);
+		//null_terminate(rcmd->cmd);
 		while (rcmd->file[i])
 		{
 			rcmd->end_file[i] = '\0';

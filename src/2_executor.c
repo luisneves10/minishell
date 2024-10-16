@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   2_executor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/15 22:46:21 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 10:28:42 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void free_split(char **split)
+{
+	int i = 0;
+
+	if (split)
+	{
+		while (split[i])
+		{
+			free(split[i]);
+			i++;
+		}
+		free(split);
+	}
+}
+
 
 char	*get_cmds_path(char	*path, char	*cmd)
 {
@@ -30,12 +46,14 @@ char	*get_cmds_path(char	*path, char	*cmd)
 		if (access(full_path, X_OK) == 0)
 		{
 			free(true_cmd);
+			free_split(directory);
 			return (full_path);
 		}
 		free(full_path);
 		i ++;
 	}
 	free(true_cmd);
+	free_split(directory);
 	return (NULL);
 }
 
@@ -63,22 +81,36 @@ char	*get_cmd_path(char **env, char *cmd)
 	return (real_path);
 }
 
-void	execute_commands(t_execcmd *execcmd, char ***local_env)
+void	command_type(t_execcmd *execcmd, char ***local_env, char **path)
 {
-	int	pid;
-	char *path;
-
 	if (is_builtin(execcmd) != NULL)
 	{
 		exec_builtin(execcmd->argv, is_builtin(execcmd), local_env);
+		*path = NULL;
 		return ;
 	}
-	path = get_cmd_path(*local_env, execcmd->argv[0]);
-	if (!path)
+	if (execcmd->argv[0][0] == '/' || ft_strncmp(execcmd->argv[0], "./", 2) == 0
+		|| ft_strncmp(execcmd->argv[0], "../", 3) == 0)
+		*path = execcmd->argv[0]; //usa o comando como path (ex: ./minishell)
+	else
 	{
-		printf("%s: command not found\n", execcmd->argv[0]);
-		return ;
+		*path = get_cmd_path(*local_env, execcmd->argv[0]);
+		if (!path)
+		{
+			printf("%s: command not found\n", execcmd->argv[0]);
+			return;
+		}
 	}
+}
+
+void	execute_commands(t_execcmd *execcmd, char ***local_env)
+{
+	int		pid;
+	char	*path;
+
+	command_type(execcmd, local_env, &path);
+	if (path == NULL)
+		return ;
 	pid = fork();
 	if (pid < 0)
 	{
@@ -87,18 +119,19 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env)
 	}
 	if (pid == 0)
 	{
-		// TRATAR EXECUTAVEIS
-		/* if (execve(execcmd->argv[0], execcmd->argv, local_env) == -1)
-			perror("execve error"); */
 		if (execve(path, execcmd->argv, *local_env) == -1)
 			perror("execve error");
 		exit(1);
 	}
 	if (pid > 0)
+	{
 		waitpid(pid, NULL, 0);
+		if (path != execcmd->argv[0]) //free se o path for criado com malloc
+			free(path);
+	}
 }
 
-void	runcmd(t_cmd *cmd, char ***local_env)
+void	run_cmd(t_cmd *cmd, char ***local_env)
 {
 	t_execcmd	*execcmd;
 	t_pipecmd	*pipecmd;
@@ -126,4 +159,5 @@ void	runcmd(t_cmd *cmd, char ***local_env)
 	}
 	else if (cmd->type == REDIR)
 		redirect_cmd(redircmd, local_env);
+	free_cmd(cmd);
 }

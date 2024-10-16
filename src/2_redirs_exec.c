@@ -3,39 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   2_redirs_exec.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/15 22:46:50 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 11:36:21 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void handle_redirs(t_redircmd *redircmd, int in_out_flag)
+static void handle_out(t_redircmd *redircmd)
 {
-	if (in_out_flag == 0)
+	redircmd->fd = open(redircmd->file, redircmd->mode, 0644);
+	if (redircmd->fd < 0)
 	{
-		redircmd->fd = open(redircmd->file, O_RDONLY);
-		if (redircmd->fd < 0)
-		{
-			perror("redir");
-			return;
-		}
-		dup2(redircmd->fd, STDIN_FILENO);
-		close(redircmd->fd);
+		perror("redir");
+		return;
 	}
-	else
+	dup2(redircmd->fd, STDOUT_FILENO);
+	close(redircmd->fd);
+}
+
+static void handle_in(t_redircmd *redircmd)
+{
+	redircmd->fd = open(redircmd->file, O_RDONLY);
+	if (redircmd->fd < 0)
 	{
-		redircmd->fd = open(redircmd->file, redircmd->mode, 0644);
-		if (redircmd->fd < 0)
-		{
-			perror("redir");
-			return;
-		}
-		dup2(redircmd->fd, STDOUT_FILENO);
-		close(redircmd->fd);
+		perror("redir");
+		return;
 	}
+	dup2(redircmd->fd, STDIN_FILENO);
+	close(redircmd->fd);
 }
 
 void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
@@ -47,11 +45,14 @@ void	redirect_cmd(t_redircmd *redircmd, char ***local_env)
 	saved_fd_in = dup(STDIN_FILENO);
 	saved_fd_out = dup(STDOUT_FILENO);
 	if (redircmd->mode & O_WRONLY)
-		handle_redirs(redircmd, 1);
+		handle_out(redircmd);
 	else
-		handle_redirs(redircmd, 0);
+		handle_in(redircmd);
+	//SE NAO HOUVER COMANDO NAO EXECUTA
+	if (((t_execcmd *)redircmd->cmd)->argv[0] == NULL)
+		return ;
 	execcmd = (t_execcmd *)redircmd->cmd;
-	nulterminate((t_cmd *)execcmd);
+	null_terminate((t_cmd *)execcmd);
 	execute_commands(execcmd, local_env);
 	dup2(saved_fd_out, STDOUT_FILENO);
 	dup2(saved_fd_in, STDIN_FILENO);
