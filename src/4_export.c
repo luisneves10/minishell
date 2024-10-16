@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   4_export.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 15:21:52 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/08 15:49:50 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:21:53 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ static char	**update_env(char **local_env, char *var)
 	return (new_env);
 }
 
-int	ft_export(char **argv, char ***local_env)
+int	ft_export(char **argv, t_shell *shell)
 {
 	int	i;
 
 	if (argv[1] == NULL)
 	{
-		ft_export_no_args(*local_env);
+		ft_export_no_args(shell);
 		return (0);
 	}
 	if (has_options(argv, argv[0]))
@@ -73,7 +73,7 @@ int	ft_export(char **argv, char ***local_env)
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		*local_env = update_env(*local_env, argv[i]);
+		shell->env = update_env(shell->env, argv[i]);
 		i++;
 	}
 	return (0);

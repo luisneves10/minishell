@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   4_unset.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:42:31 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/08 15:49:38 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:22:50 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static char	**remove_var(char **local_env, char *var)
 	return (new_env);
 }
 
-int	ft_unset(char **argv, char ***local_env)
+int	ft_unset(char **argv, t_shell *shell)
 {
 	int	i;
 
@@ -69,8 +69,8 @@ int	ft_unset(char **argv, char ***local_env)
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		if (is_var(*local_env, argv[i]))
-			*local_env = remove_var(*local_env, argv[i]);
+		if (is_var(shell->env, argv[i]))
+			shell->env = remove_var(shell->env, argv[i]);
 		i++;
 	}
 	return (0);

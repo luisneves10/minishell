@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/16 10:24:41 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:29:28 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@
 # define PIPE  3
 # define LIST  4
 # define BACK  5
+
+typedef struct shell
+{
+	char	**env;
+}	t_shell;
 
 typedef struct cmd
 {
@@ -76,8 +81,9 @@ typedef struct token
 /*	FUNCTIONS                                                                 */
 /* ========================================================================== */
 
-void	init_minishell(char *envp[]);
+void	init_minishell(t_shell *shell);
 void	signals(void);
+t_shell	*init_struct(char **envp);
 
 /* ---------------------------------------------------------- ENV UTILS ----- */
 char	**copy_env(char **env);
@@ -95,34 +101,34 @@ int		special_chars(char *str);
 void	null_terminate(t_cmd *cmd);
 int		find_char(char **ptr_str, char *end_str, char *set);
 t_cmd	*exec_cmd(void);
-void	redirect_cmd(t_redircmd *redircmd, char ***local_env);
+void	redirect_cmd(t_redircmd *redircmd, t_shell *shell);
 t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 t_cmd	*redir_cmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd);
 t_token	*create_token(void);
 int		syntax_check(char *input);
 
-void	run_cmd(t_cmd *cmd, char ***local_env);
-void	execute_commands(t_execcmd *execcmd, char ***local_env);
+void	run_cmd(t_cmd *cmd, t_shell *shell);
+void	execute_commands(t_execcmd *execcmd, t_shell *shell);
 
 char	*get_cmd_path(char **env, char *cmd);
 
 char	*get_cmds_path(char *path, char *cmd);
-void	child1_process(t_pipecmd *pipecmd, char ***local_env,
+void	child1_process(t_pipecmd *pipecmd, t_shell *shell,
 			int prev_pipe, int *pi);
-void	fork_function(t_pipecmd *pipecmd, char ***local_env);
+void	fork_function(t_pipecmd *pipecmd, t_shell *shell);
 void	free_cmd(t_cmd *cmd);
 void	close_all(t_pipecmd *pipecmd);
 
 /* ----------------------------------------------------------- BUILTINS ----- */
 char	*is_builtin(t_execcmd *execcmd);
-void	exec_builtin(char **argv, char *builtin, char ***local_env);
+void	exec_builtin(char **argv, char *builtin, t_shell *shell);
 int		ft_echo(char **argv);
 int		ft_pwd(char **argv);
-int		ft_cd(char **argv, char ***local_env);
-int		ft_export(char **argv, char ***local_env);
-void	ft_export_no_args(char **local_env);
-int		ft_unset(char **argv, char ***local_env);
-int		ft_env(char **argv, char **local_env);
+int		ft_cd(char **argv, t_shell *shell);
+int		ft_export(char **argv, t_shell *shell);
+void	ft_export_no_args(t_shell *shell);
+int		ft_unset(char **argv, t_shell *shell);
+int		ft_env(char **argv, t_shell *shell);
 int		ft_exit(void);
 /* ------------------------------------------------------ BUILTIN UTILS ----- */
 int		has_options(char **argv, char *command);
