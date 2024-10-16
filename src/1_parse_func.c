@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 10:01:57 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:19:17 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, char *end_str)
 	int		token;
 	char	*end_tok;
 	char	*start_tok;
-	//t_execcmd *execcmd;
 
 	tok = create_token();
 	while (find_char(ptr_str, end_str, "<>"))
 	{
+		printf("str: %s\n", *ptr_str);
 		token = get_token(ptr_str, end_str, 0, 0);
 		if (get_token(ptr_str, end_str, &start_tok, &end_tok) != 'a')
 		{
@@ -46,41 +46,45 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, char *end_str)
 		tok->end = end_tok;
 		cmd = handle_redirection(cmd, tok, token);
 	}
-	//if (cmd && cmd->type == REDIR && ((t_redircmd *)cmd)->cmd == NULL)
-		//((t_redircmd *)cmd)->cmd = parse_exec(ptr_str, end_str);
-	//execcmd = (t_execcmd *)((t_redircmd *)cmd)->cmd;
-	//printf("command: %s\n", execcmd->argv[0]);
 	return (cmd);
+}
+
+static int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
+{
+	int	tok_type;
+
+	tok_type = get_token(str, end, &token->start, &token->end);
+	if (tok_type == 0)
+		return (0);
+	if (tok_type != 'a')
+		exit(0);
+	cmd->argv[token->argc] = token->start;
+	cmd->end_argv[token->argc] = token->end;
+	return (1);
 }
 
 static t_cmd	*parse_exec(char **ptr_str, char *end_str)
 {
 	int			tok;
-	int			argc;
 	t_cmd		*ret;
 	t_execcmd	*cmd;
-	char		*end_token;
-	char		*start_token;
+	t_token		*token;
 
 	tok = 0;
-	argc = 0;
 	ret = exec_cmd();
 	cmd = (t_execcmd *)ret;
+	token = create_token();
 	ret = parse_redirs(ret, ptr_str, end_str);
 	while (!find_char(ptr_str, end_str, "|"))
 	{
-		tok = get_token(ptr_str, end_str, &start_token, &end_token);
-		if (tok == 0)
+		if (!deal_token(cmd, ptr_str, end_str, token))
 			break ;
-		if (tok != 'a')
-			exit(0);
-		cmd->argv[argc] = start_token;
-		cmd->end_argv[argc] = end_token;
-		argc ++;
+		token->argc++;
 		ret = parse_redirs(ret, ptr_str, end_str);
 	}
-	cmd->argv[argc] = NULL;
-	cmd->end_argv[argc] = NULL;
+	cmd->argv[token->argc] = NULL;
+	cmd->end_argv[token->argc] = NULL;
+	free(token);
 	return (ret);
 }
 
@@ -109,5 +113,8 @@ t_cmd	*parse_cmd(char *str)
 	end_str = str + ft_strlen(str);
 	cmd = parse_pipe(&str, end_str);
 	null_terminate(cmd);
+	// < test2 wc > test3
+	printf("type: %d\n", ((t_redircmd *)cmd)->cmd->type);
+	printf("type2: %d\n", ((t_redircmd *)cmd)->type);
 	return (cmd);
 }

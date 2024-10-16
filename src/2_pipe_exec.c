@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:18:03 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 12:30:19 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 14:19:32 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void handle_redirection(t_redircmd *redircmd, t_shell *shell, int prev_pipe)
 void execute_final_cmd(t_execcmd *execcmd, t_shell *shell, int prev_pipe)
 {
 	int		pid;
-	char	*path;
 
 	pid = fork();
 	if (pid == -1)
@@ -54,12 +53,8 @@ void execute_final_cmd(t_execcmd *execcmd, t_shell *shell, int prev_pipe)
 			dup2(prev_pipe, STDIN_FILENO);
 			close(prev_pipe);
 		}
-		path = get_cmd_path(shell->env, execcmd->argv[0]);
-		if (execve(path, execcmd->argv, shell->env) == -1)
-		{
-			perror("execve error");
-			exit(1);
-		}
+		execute_commands(execcmd, shell);
+		exit (1);
 	}
 	close(prev_pipe);
 	wait(NULL);

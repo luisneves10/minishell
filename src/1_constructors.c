@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 12:09:04 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 14:59:31 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_cmd	*exec_cmd(void)
 	if (!cmd)
 		exit(0); // DAR HANDLE
 	ft_memset(cmd, 0, sizeof(t_execcmd));
+	ft_memset(cmd->argv, 0, (sizeof(char *) * 20));
 	cmd->type = EXEC;
 	return ((t_cmd *)cmd);
 }
@@ -38,7 +39,7 @@ t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right)
 	return ((t_cmd *)cmd);
 }
 
-t_cmd	*redir_cmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd)
+t_cmd	*redir_cmd(t_cmd *next_cmd, t_token *tok, int mode, int fd)
 {
 	t_redircmd	*cmd;
 
@@ -66,6 +67,7 @@ t_token	*create_token(void)
 	if (!token)
 		exit(0); // DAR HANDLE
 	ft_memset(token, 0, sizeof(t_token));
+	token->argc = 0;
 	return (token);
 }
 

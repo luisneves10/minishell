@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 09:46:24 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:13:25 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,21 +102,17 @@ void	null_terminate(t_cmd *cmd)
 			i ++;
 		}
 	}
-	if (cmd->type == PIPE)
+	else if (cmd->type == PIPE)
 	{
 		pcmd = (t_pipecmd *)cmd;
 		null_terminate(pcmd->left);
 		null_terminate(pcmd->right);
 	}
-	if (cmd->type == REDIR)
+	else if (cmd->type == REDIR)
 	{
 		rcmd = (t_redircmd *)cmd;
-		//null_terminate(rcmd->cmd);
-		while (rcmd->file[i])
-		{
-			rcmd->end_file[i] = '\0';
-			i++;
-		}
+		null_terminate(rcmd->cmd);
+		*rcmd->end_file = '\0';
 	}
 }
 
