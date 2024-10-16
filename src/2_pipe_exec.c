@@ -41,6 +41,7 @@ void execute_final_cmd(t_execcmd *execcmd, char ***local_env, int prev_pipe)
 	int		pid;
 	char	*path;
 
+	execcmd = (t_execcmd *)curr_cmd;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -92,6 +93,7 @@ void final_cmd(t_cmd *curr_cmd, char ***local_env, int prev_pipe)
 void	fork_loop(t_cmd **curr_cmd, int *pipefd, int *pid, int *prev_pipe, char ***local_env)
 {
 	t_pipecmd *pipecmd;
+
 	pipecmd = (t_pipecmd *)*curr_cmd;
 	if (pipe(pipefd) == -1)
 	{
@@ -122,10 +124,11 @@ void	fork_loop(t_cmd **curr_cmd, int *pipefd, int *pid, int *prev_pipe, char ***
 void	fork_function(t_pipecmd *pipecmd, char ***local_env)
 {
 	t_cmd	*curr_cmd;
-	int	prev_pipe;
+	int		prev_pipe;
 	int		pipefd[2];
-	prev_pipe = -1;
 	int		pid;
+
+	prev_pipe = -1;
 	curr_cmd = (t_cmd *)pipecmd;
 	while (curr_cmd->type == PIPE)
 		fork_loop(&curr_cmd, pipefd, &pid, &prev_pipe, local_env);

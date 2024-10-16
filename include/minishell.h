@@ -60,28 +60,34 @@ typedef struct pipecmd
 	int		type;
 	int		pipefd[2];
 	int		prev_pipe;
-	t_cmd *left;
-	t_cmd *right;
+	t_cmd	*left;
+	t_cmd	*right;
 	pid_t	pid1;
 	pid_t	pid2;
 }	t_pipecmd;
 
-typedef struct	token
+typedef struct token
 {
 	char	*start;
 	char	*end;
 }	t_token;
 
-/* =========================================================================== */
-/*	FUNCTIONS                                                                  */
-/* =========================================================================== */
+/* ========================================================================== */
+/*	FUNCTIONS                                                                 */
+/* ========================================================================== */
 
 void	init_minishell(char *envp[]);
 void	signals(void);
 
+/* ---------------------------------------------------------- ENV UTILS ----- */
 char	**copy_env(char **env);
 int		env_size(char **env);
 void	free_env(char **env);
+
+int		var_name_len(char *var);
+int		var_search(char **env, char *var);
+
+/* ---------------------------------------------------------- _________ ----- */
 t_cmd	*parse_cmd(char *str);
 int		get_token(char **ptr_str, char *end_str,
 			char **start_token, char **end_token);
@@ -101,20 +107,24 @@ void	execute_commands(t_execcmd *execcmd, char ***local_env);
 char	*get_cmd_path(char **env, char *cmd);
 
 char	*get_cmds_path(char *path, char *cmd);
-void	child1_process(t_pipecmd *pipecmd, char ***local_env, int prev_pipe, int *pi);
+void	child1_process(t_pipecmd *pipecmd, char ***local_env,
+			int prev_pipe, int *pi);
 void	fork_function(t_pipecmd *pipecmd, char ***local_env);
 void	free_cmd(t_cmd *cmd);
 void	close_all(t_pipecmd *pipecmd);
 
+/* ----------------------------------------------------------- BUILTINS ----- */
 char	*is_builtin(t_execcmd *execcmd);
 void	exec_builtin(char **argv, char *builtin, char ***local_env);
 int		ft_echo(char **argv);
 int		ft_pwd(char **argv);
-int		ft_cd(char **argv, char **local_env);
+int		ft_cd(char **argv, char ***local_env);
 int		ft_export(char **argv, char ***local_env);
 void	ft_export_no_args(char **local_env);
-void	ft_unset(char **argv, char ***local_env);
-void	ft_env(char **argv, char **local_env);
+int		ft_unset(char **argv, char ***local_env);
+int		ft_env(char **argv, char **local_env);
 int		ft_exit(void);
+/* ------------------------------------------------------ BUILTIN UTILS ----- */
+int		has_options(char **argv, char *command);
 
 #endif

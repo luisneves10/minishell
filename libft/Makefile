@@ -38,7 +38,7 @@ SRC_FILES =	ft_isalpha ft_isdigit ft_isalnum ft_isascii \
 	ft_memmove ft_strlcpy ft_strlcat ft_toupper ft_tolower \
 	ft_strchr ft_strrchr ft_strncmp ft_memchr ft_memcmp \
 	ft_strnstr ft_atoi ft_calloc ft_strdup ft_substr \
-	ft_strjoin ft_strtrim ft_putchar_fd ft_putstr_fd \
+	ft_strjoin ft_strjoin_free ft_strtrim ft_putchar_fd ft_putstr_fd \
 	ft_putendl_fd ft_split ft_itoa ft_putnbr_fd ft_strmapi \
 	ft_striteri get_next_line get_next_line_utils \
 	ft_printf ft_putchar_pf ft_putstr_pf ft_putnbr_pf \

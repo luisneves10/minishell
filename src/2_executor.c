@@ -50,7 +50,7 @@ char	*get_cmds_path(char	*path, char	*cmd)
 			return (full_path);
 		}
 		free(full_path);
-		i ++;
+		i++;
 	}
 	free(true_cmd);
 	free_split(directory);
@@ -72,7 +72,7 @@ char	*get_cmd_path(char **env, char *cmd)
 			path = ft_strdup(env[i] + 5);
 			break ;
 		}
-		i ++;
+		i++;
 	}
 	real_path = get_cmds_path(path, cmd);
 	free(path);

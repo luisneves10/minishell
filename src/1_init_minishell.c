@@ -12,20 +12,53 @@
 
 #include "minishell.h"
 
+static void	free_input(char *input, char *prompt)
+{
+	free (input);
+	free (prompt);
+}
+
+static char	*get_prompt(char **local_env)
+{
+	char	*prompt;
+	char	*user;
+	char	*pwd;
+	int		home_index;
+	int		len_home;
+
+	home_index = var_search(local_env, "HOME");
+	if (home_index >= 0)
+		len_home = ft_strlen(local_env[home_index]) - 5;
+	user = local_env[var_search(local_env, "USER")] + 5;
+	pwd = local_env[var_search(local_env, "PWD")] + 4;
+	prompt = ft_strjoin_free(ft_strdup("\033[1;34m"), user);
+	prompt = ft_strjoin_free(prompt, ":\033[0m");
+	if (var_search(local_env, "HOME") >= 0)
+	{
+		prompt = ft_strjoin_free(prompt, "~");
+		prompt = ft_strjoin_free(prompt, pwd + len_home);
+	}
+	else
+		prompt = ft_strjoin_free(prompt, pwd);
+	prompt = ft_strjoin_free(prompt, "$ ");
+	return (prompt);
+}
+
 void	init_minishell(char *envp[])
 {
 	char	*input;
+	char	*prompt;
 	char	**local_env;
 
 	local_env = copy_env(envp);
-	signals();
 	while (1)
 	{
-		input = readline("\033[1;34mminishell$\033[0m ");
+		prompt = get_prompt(local_env);
+		input = readline(prompt);
 		if (!input)
 		{
 			printf("exit\n");
-			free (input);
+			free_input(input, prompt);
 			free_env(local_env);
 			break ;
 		}
@@ -37,6 +70,6 @@ void	init_minishell(char *envp[])
 				run_cmd(parse_cmd(input), &local_env);
 			}
 		}
-		free (input);
+		free_input(input, prompt);
 	}
 }
