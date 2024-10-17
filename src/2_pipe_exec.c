@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:18:03 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 14:19:32 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/17 09:22:50 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	child1_process(t_pipecmd *pipecmd, t_shell *shell, int prev_pipe, int *pi)
 	execute_commands(left, shell);
 }
 
-void handle_redirection(t_redircmd *redircmd, t_shell *shell, int prev_pipe)
+/* void handle_redirection(t_redircmd *redircmd, t_shell *shell, int prev_pipe)
 {
 	if (prev_pipe != -1)
 	{
@@ -34,7 +34,7 @@ void handle_redirection(t_redircmd *redircmd, t_shell *shell, int prev_pipe)
 		close(prev_pipe);
 	}
 	redirect_cmd(redircmd, shell);
-}
+} */
 
 void execute_final_cmd(t_execcmd *execcmd, t_shell *shell, int prev_pipe)
 {
@@ -62,7 +62,7 @@ void execute_final_cmd(t_execcmd *execcmd, t_shell *shell, int prev_pipe)
 
 void final_cmd(t_cmd *curr_cmd, t_shell *shell, int prev_pipe)
 {
-	if (curr_cmd->type == REDIR)
+	/* if (curr_cmd->type == REDIR)
 	{
 		t_redircmd *redircmd = (t_redircmd *)curr_cmd;
 		int pid = fork();
@@ -73,8 +73,8 @@ void final_cmd(t_cmd *curr_cmd, t_shell *shell, int prev_pipe)
 		}
 		close(prev_pipe);
 		wait(NULL);
-	}
-	else if (curr_cmd->type == EXEC)
+	} */
+	if (curr_cmd->type == EXEC)
 	{
 		t_execcmd *execcmd = (t_execcmd *)curr_cmd;
 		execute_final_cmd(execcmd, shell, prev_pipe);

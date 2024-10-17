@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/16 14:35:46 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:21:05 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,13 @@
 # define LIST  4
 # define BACK  5
 
+/* ---------------------------------------------------------- ERROR MACROS ----- */
+# define S_Q     41
+# define D_Q     42
+# define ERROR_P 43
+# define ER_TOK  44
+# define E_NWL   45
+
 typedef struct shell
 {
 	char	**env;
@@ -43,22 +50,23 @@ typedef struct cmd
 	int	type;
 }	t_cmd;
 
+typedef struct s_redir
+{
+	int				type;
+	char			*file;
+	char			*end_file;
+	struct s_redir	*next;
+}	t_redir;
+
 typedef struct execcmd
 {
 	int		type;
 	char	*argv[20];
 	char	*end_argv[20];
+	t_redir	*redir;
+	int		fd_out;
+	int		fd_in;
 }	t_execcmd;
-
-typedef struct redircmd
-{
-	int		type;
-	t_cmd	*cmd;
-	char	*file;
-	char	*end_file;
-	int		mode;
-	int		fd;
-}	t_redircmd;
 
 typedef struct pipecmd
 {
@@ -78,49 +86,71 @@ typedef struct token
 	int		argc;
 }	t_token;
 
+typedef struct file_descriptors
+{
+	int	in_fd;
+	int	out_fd;
+	int	saved_in;
+	int	saved_out;
+}	t_fds;
+
 /* ========================================================================== */
 /*	FUNCTIONS                                                                 */
 /* ========================================================================== */
 
+/* ========================================================================== */
+/*	INITIALIZATION AND SIGNALS                                                */
+/* ========================================================================== */
 void	init_minishell(t_shell *shell);
 void	signals(void);
 t_shell	*init_struct(char **envp);
 
-/* ---------------------------------------------------------- ENV UTILS ----- */
+/* ========================================================================== */
+/*	ENVIRONMENT UTILS                                                         */
+/* ========================================================================== */
 char	**copy_env(char **env);
 int		env_size(char **env);
 void	free_env(char **env);
-
 int		var_name_len(char *var);
 int		var_search(char **env, char *var);
 
-/* ---------------------------------------------------------- _________ ----- */
+/* ========================================================================== */
+/*	PARSING                                                                   */
+/* ========================================================================== */
 t_cmd	*parse_cmd(char *str);
-int		get_token(char **ptr_str, char *end_str,
-			char **start_token, char **end_token);
-int		special_chars(char *str);
+int		get_token(char **ptr_str, char *end_str, char **start_token, char **end_token);
+int		special_chars(char **str);
 void	null_terminate(t_cmd *cmd);
 int		find_char(char **ptr_str, char *end_str, char *set);
 t_cmd	*exec_cmd(void);
-void	redirect_cmd(t_redircmd *redircmd, t_shell *shell);
-t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
-t_cmd	*redir_cmd(t_cmd	*next_cmd, t_token *tok, int mode, int fd);
-t_token	*create_token(void);
 int		syntax_check(char *input);
 
+/* ========================================================================== */
+/*	COMMANDS AND REDIRECTIONS                                                 */
+/* ========================================================================== */
 void	run_cmd(t_cmd *cmd, t_shell *shell);
+void	handle_redirs(t_execcmd *execcmd, t_shell *shell);
 void	execute_commands(t_execcmd *execcmd, t_shell *shell);
+t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
+t_token	*create_token(void);
 
+/* ========================================================================== */
+/*	EXECUTION AND PROCESS HANDLING                                            */
+/* ========================================================================== */
 char	*get_cmd_path(char **env, char *cmd);
-
 char	*get_cmds_path(char *path, char *cmd);
-void	child1_process(t_pipecmd *pipecmd, t_shell *shell,
-			int prev_pipe, int *pi);
+void	child1_process(t_pipecmd *pipecmd, t_shell *shell, int prev_pipe, int *pi);
 void	fork_function(t_pipecmd *pipecmd, t_shell *shell);
-void	free_cmd(t_cmd *cmd);
 void	close_all(t_pipecmd *pipecmd);
 
-/* ----------------------------------------------------------- BUILTINS ----- */
+/* ========================================================================== */
+/*	MEMORY MANAGEMENT                                                         */
+/* ========================================================================== */
+void	free_cmd(t_cmd *cmd);
+
+/* ========================================================================== */
+/*	BUILTINS                                                                  */
+/* ========================================================================== */
 char	*is_builtin(t_execcmd *execcmd);
 void	exec_builtin(char **argv, char *builtin, t_shell *shell);
 int		ft_echo(char **argv);
@@ -131,7 +161,11 @@ void	ft_export_no_args(t_shell *shell);
 int		ft_unset(char **argv, t_shell *shell);
 int		ft_env(char **argv, t_shell *shell);
 int		ft_exit(void);
-/* ------------------------------------------------------ BUILTIN UTILS ----- */
+
+/* ========================================================================== */
+/*	BUILTIN UTILS                                                             */
+/* ========================================================================== */
 int		has_options(char **argv, char *command);
+
 
 #endif

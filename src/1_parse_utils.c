@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 16:13:25 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:18:43 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	get_token(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 		return (parse_quotes(ptr_str, end_str, start_tok, end_tok));
 	if (start_tok)
 		*start_tok = str;
-	ret = special_chars(str);
+	ret = special_chars(&str);
 	if (ret != 'a')
 		str ++;
 	while (str < end_str && *str != ' ' && *str != '|' && *str != '>'
@@ -59,26 +59,31 @@ int	get_token(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 	return (ret);
 }
 
-int	special_chars(char *str)
+int	special_chars(char **str)
 {
-	if (*str == '|')
+	if (**str == '|')
 		return ('|');
-	else if (*str == '(')
+	else if (**str == '(')
 		return ('(');
-	else if (*str == ')')
+	else if (**str == ')')
 		return (')');
-	else if (*str == ';')
+	else if (**str == ';')
 		return (';');
-	else if (*str == '<')
+	else if (**str == '<')
 		return ('<');
-	else if (*str == '>')
+	else if (**str == '>' || **str == '<')
 	{
-		str++;
-		if (*str == '>')
+		(*str)++;
+		if (**str == '>')
 			return ('+');
+		if (**str == '<')
+			return ('-');
+		(*str)--;
+		if (**str == '<')
+			return ('<');
 		return ('>');
 	}
-	else if (*str == 0)
+	else if (**str == 0)
 		return (0);
 	return ('a');
 }
@@ -87,7 +92,6 @@ void	null_terminate(t_cmd *cmd)
 {
 	t_execcmd	*ecmd;
 	t_pipecmd	*pcmd;
-	t_redircmd	*rcmd;
 	int			i;
 
 	i = 0;
@@ -107,12 +111,6 @@ void	null_terminate(t_cmd *cmd)
 		pcmd = (t_pipecmd *)cmd;
 		null_terminate(pcmd->left);
 		null_terminate(pcmd->right);
-	}
-	else if (cmd->type == REDIR)
-	{
-		rcmd = (t_redircmd *)cmd;
-		null_terminate(rcmd->cmd);
-		*rcmd->end_file = '\0';
 	}
 }
 
