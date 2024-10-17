@@ -76,6 +76,9 @@ t_shell	*init_struct(char **envp)
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
 		return (NULL);
+	shell->prompt = NULL;
+	shell->input = NULL;
+	shell->cmd = NULL;
 	shell->env = copy_env(envp);
 	if (!shell->env)
 		return (NULL);

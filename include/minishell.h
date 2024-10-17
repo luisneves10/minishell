@@ -33,11 +33,6 @@
 # define LIST  4
 # define BACK  5
 
-typedef struct shell
-{
-	char	**env;
-}	t_shell;
-
 typedef struct cmd
 {
 	int	type;
@@ -77,6 +72,14 @@ typedef struct token
 	char	*end;
 }	t_token;
 
+typedef struct shell
+{
+	char	**env;
+	char	*input;
+	char	*prompt;
+	t_cmd	*cmd;
+}	t_shell;
+
 /* ========================================================================== */
 /*	FUNCTIONS                                                                 */
 /* ========================================================================== */
@@ -84,6 +87,7 @@ typedef struct token
 void	init_minishell(t_shell *shell);
 void	signals(void);
 t_shell	*init_struct(char **envp);
+void	free_shell(t_shell *shell, int i);
 
 /* ---------------------------------------------------------- ENV UTILS ----- */
 char	**copy_env(char **env);
@@ -128,7 +132,7 @@ int		ft_export(char **argv, t_shell *shell);
 void	ft_export_no_args(t_shell *shell);
 int		ft_unset(char **argv, t_shell *shell);
 int		ft_env(char **argv, t_shell *shell);
-int		ft_exit(void);
+void	ft_exit(char **argv, t_shell *shell);
 /* ------------------------------------------------------ BUILTIN UTILS ----- */
 int		has_options(char **argv, char *command);
 

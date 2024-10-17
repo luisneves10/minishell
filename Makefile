@@ -72,7 +72,12 @@ $(NAME): $(OBJ_DIR) $(OBJ)
 	@ make -C $(LIBFT_DIR)
 	@ echo "Compilation of ${YELLOW}$(NAME) ${CLR_RMV}..."
 	@ $(CC) $(CFLAGS) $(INCLUDE) $(SRC) -o $(NAME) $(LIBFLAGS) $(LIBFT)
-	@ echo "$(GREEN)$(NAME) created!${CLR_RMV}"
+	@ echo "${GREEN}           _       _     _          _ _"
+	@ echo " _ __ ___ (_)_ __ (_)___| |__   ___| | |"
+	@ echo "| '_ \` _ \\| | '_ \\| / __| '_ \\ / _ \\ | |"
+	@ echo "| | | | | | | | | | \\__ \\ | | |  __/ | |"
+	@ echo "|_| |_| |_|_|_| |_|_|___/_| |_|\\___|_|_|"
+	@ echo "${CLR_RMV}"
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
