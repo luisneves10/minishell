@@ -16,7 +16,7 @@ int	main(int argc, char **argv, char *envp[])
 {
 	t_shell	*shell;
 
-	shell = init_struct(envp);
+	shell = init_struct(argv, envp);
 	if (!shell)
 		return (1);
 	if (argc != 1 || argv[1])

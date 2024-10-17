@@ -69,7 +69,7 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 $(NAME): $(OBJ_DIR) $(OBJ)
-	@ make -C $(LIBFT_DIR)
+	@ make -C $(LIBFT_DIR) -s
 	@ echo "Compilation of ${YELLOW}$(NAME) ${CLR_RMV}..."
 	@ $(CC) $(CFLAGS) $(INCLUDE) $(SRC) -o $(NAME) $(LIBFLAGS) $(LIBFT)
 	@ echo "${GREEN}           _       _     _          _ _"
@@ -83,12 +83,12 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 clean:
-	@ make clean -C $(LIBFT_DIR)
+	@ make clean -C $(LIBFT_DIR) -s
 	@ $(RM) $(OBJ_DIR)
 	@ echo "$(RED)Deleting $(CLR_RMV)object files"
 
 fclean: clean
-	@ make fclean -C $(LIBFT_DIR)
+	@ make fclean -C $(LIBFT_DIR) -s
 	@ $(RM) $(NAME)
 	@ echo "$(RED)Deleting $(CLR_RMV)binary"
 

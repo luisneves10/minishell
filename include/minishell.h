@@ -74,10 +74,11 @@ typedef struct token
 
 typedef struct shell
 {
+	char	*name;
 	char	**env;
 	char	*input;
 	char	*prompt;
-	t_cmd	*cmd;
+	int		exit_status;
 }	t_shell;
 
 /* ========================================================================== */
@@ -86,7 +87,7 @@ typedef struct shell
 
 void	init_minishell(t_shell *shell);
 void	signals(void);
-t_shell	*init_struct(char **envp);
+t_shell	*init_struct(char **argv, char **envp);
 void	free_shell(t_shell *shell, int i);
 
 /* ---------------------------------------------------------- ENV UTILS ----- */
