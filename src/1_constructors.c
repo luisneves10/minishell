@@ -51,13 +51,17 @@ t_token	*create_token(void)
 	return (token);
 }
 
-t_shell	*init_struct(char **envp)
+t_shell	*init_struct(char **argv, char **envp)
 {
 	t_shell	*shell;
 
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
 		return (NULL);
+	shell->name = argv[0] + 2;
+	shell->exit_status = 0;
+	shell->prompt = NULL;
+	shell->input = NULL;
 	shell->env = copy_env(envp);
 	if (!shell->env)
 		return (NULL);

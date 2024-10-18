@@ -27,6 +27,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
+/* ----------------------------------------------------- CCOMAND MACROS ----- */
 # define EXEC  1
 # define REDIR 2
 # define PIPE  3
@@ -40,10 +41,9 @@
 # define ER_TOK  44
 # define E_NWL   45
 
-typedef struct shell
-{
-	char	**env;
-}	t_shell;
+/* ------------------------------------------------------ EXPAND MACROS ----- */
+# define EXPAND_NEW  1
+# define EXPAND_APPEND 2
 
 typedef struct cmd
 {
@@ -94,6 +94,15 @@ typedef struct file_descriptors
 	int	saved_out;
 }	t_fds;
 
+typedef struct shell
+{
+	char	*name;
+	char	**env;
+	char	*input;
+	char	*prompt;
+	int		exit_status;
+}	t_shell;
+
 /* ========================================================================== */
 /*	FUNCTIONS                                                                 */
 /* ========================================================================== */
@@ -103,7 +112,8 @@ typedef struct file_descriptors
 /* ========================================================================== */
 void	init_minishell(t_shell *shell);
 void	signals(void);
-t_shell	*init_struct(char **envp);
+t_shell	*init_struct(char **argv, char **envp);
+void	free_shell(t_shell *shell, int i);
 
 /* ========================================================================== */
 /*	ENVIRONMENT UTILS                                                         */
@@ -118,7 +128,8 @@ int		var_search(char **env, char *var);
 /*	PARSING                                                                   */
 /* ========================================================================== */
 t_cmd	*parse_cmd(char *str);
-int		get_token(char **ptr_str, char *end_str, char **start_token, char **end_token);
+int		get_token(char **ptr_str, char *end_str,
+                char **start_token, char **end_token);
 int		special_chars(char **str);
 void	null_terminate(t_cmd *cmd);
 int		find_char(char **ptr_str, char *end_str, char *set);
@@ -157,15 +168,16 @@ int		ft_echo(char **argv);
 int		ft_pwd(char **argv);
 int		ft_cd(char **argv, t_shell *shell);
 int		ft_export(char **argv, t_shell *shell);
+char	**update_env(char **local_env, char *var);
 void	ft_export_no_args(t_shell *shell);
+void	append_var(t_shell *shell, char *var);
 int		ft_unset(char **argv, t_shell *shell);
 int		ft_env(char **argv, t_shell *shell);
-int		ft_exit(void);
+void	ft_exit(char **argv, t_shell *shell);
 
 /* ========================================================================== */
 /*	BUILTIN UTILS                                                             */
 /* ========================================================================== */
 int		has_options(char **argv, char *command);
-
 
 #endif
