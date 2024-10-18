@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:18:03 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 12:30:19 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/17 09:22:50 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	child1_process(t_pipecmd *pipecmd, t_shell *shell, int prev_pipe, int *pi)
 	execute_commands(left, shell);
 }
 
-void handle_redirection(t_redircmd *redircmd, t_shell *shell, int prev_pipe)
+/* void handle_redirection(t_redircmd *redircmd, t_shell *shell, int prev_pipe)
 {
 	if (prev_pipe != -1)
 	{
@@ -34,12 +34,11 @@ void handle_redirection(t_redircmd *redircmd, t_shell *shell, int prev_pipe)
 		close(prev_pipe);
 	}
 	redirect_cmd(redircmd, shell);
-}
+} */
 
 void execute_final_cmd(t_execcmd *execcmd, t_shell *shell, int prev_pipe)
 {
 	int		pid;
-	char	*path;
 
 	pid = fork();
 	if (pid == -1)
@@ -54,12 +53,8 @@ void execute_final_cmd(t_execcmd *execcmd, t_shell *shell, int prev_pipe)
 			dup2(prev_pipe, STDIN_FILENO);
 			close(prev_pipe);
 		}
-		path = get_cmd_path(shell->env, execcmd->argv[0]);
-		if (execve(path, execcmd->argv, shell->env) == -1)
-		{
-			perror("execve error");
-			exit(1);
-		}
+		execute_commands(execcmd, shell);
+		exit (1);
 	}
 	close(prev_pipe);
 	wait(NULL);
@@ -67,7 +62,7 @@ void execute_final_cmd(t_execcmd *execcmd, t_shell *shell, int prev_pipe)
 
 void final_cmd(t_cmd *curr_cmd, t_shell *shell, int prev_pipe)
 {
-	if (curr_cmd->type == REDIR)
+	/* if (curr_cmd->type == REDIR)
 	{
 		t_redircmd *redircmd = (t_redircmd *)curr_cmd;
 		int pid = fork();
@@ -78,8 +73,8 @@ void final_cmd(t_cmd *curr_cmd, t_shell *shell, int prev_pipe)
 		}
 		close(prev_pipe);
 		wait(NULL);
-	}
-	else if (curr_cmd->type == EXEC)
+	} */
+	if (curr_cmd->type == EXEC)
 	{
 		t_execcmd *execcmd = (t_execcmd *)curr_cmd;
 		execute_final_cmd(execcmd, shell, prev_pipe);

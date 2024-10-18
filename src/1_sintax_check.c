@@ -6,15 +6,25 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 14:59:05 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/10 15:01:58 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/17 15:05:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	mini_error(char *str)
+int	mini_error(char *str, int error)
 {
-	printf("minishell: %s\n", str);
+	printf("minishell: sintax error%s\n", str);
+	if (error == S_Q)
+		return (S_Q);
+	else if (error == D_Q)
+		return (D_Q);
+	else if (error == ERROR_P)
+		return (ERROR_P);
+	else if (error == ER_TOK)
+		return (ER_TOK);
+	else if (error == E_NWL)
+		return (E_NWL);
 	return (1);
 }
 
@@ -34,9 +44,9 @@ int	check_quotes(char *input)
 		input++;
 	}
 	if (single_quotes % 2 != 0)
-		return (mini_error("sintax error: missing single quotes \'\'\'"));
+		return (mini_error(": missing single quotes \'\'\'", S_Q));
 	if (double_quotes % 2 != 0)
-		return (mini_error("sintax error: missing double quotes \'\"\'"));
+		return (mini_error(": missing double quotes \'\"\'", D_Q));
 	return (0);
 }
 
@@ -45,7 +55,7 @@ int	check_pipes(char *input)
 	while (*input == ' ')
 		input++;
 	if (*input == '|')
-		return (mini_error("syntax error near unexpected token `|'"));
+		return (mini_error(" near unexpected token `|'", ERROR_P));
 	while (*input)
 	{
 		if (*input == '|')
@@ -54,7 +64,7 @@ int	check_pipes(char *input)
 			while (*input == ' ')
 				input++;
 			if (*input == '|' || *input == '\0')
-				return (mini_error("syntax error near unexpected token `|'"));
+				return (mini_error(" near unexpected token `|'", 43));
 		}
 		input++;
 	}
@@ -77,9 +87,9 @@ int	check_redirs(char *input)
 			while (*input == ' ')
 				input++;
 			if (*input == '\0')
-				return (mini_error("syntax error near unexpected token `newline'"));
+				return (mini_error(" near unexpected token `newline'", E_NWL));
 			if (find_char(&input, end_str, "<>|"))
-				return (mini_error("syntax error near unexpected token")); //need to have the token to error??
+				return (mini_error(" near unexpected token", ER_TOK)); //need to have the token to error??
 		}
 		input++;
 	}

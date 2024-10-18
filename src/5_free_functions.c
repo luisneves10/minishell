@@ -6,52 +6,57 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 10:31:27 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/17 13:08:44 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void free_redirections(t_redir *redir)
+{
+	t_redir	*next;
+
+	while (redir)
+	{
+		next = redir->next;
+		free(redir->file);
+		free(redir);
+		redir = NULL;
+		redir = next;
+	}
+}
+
 void	free_execcmd(t_execcmd *cmd)
 {
-	//int i = 0;
+	t_execcmd	*ecmd;
 
 	if (!cmd)
 		return;
-	//while (cmd->argv[i])
-	//{
-	//	free(cmd->argv[i]);
-	//	i++;
-	//}
-	//free(cmd);
+	ecmd = (t_execcmd *)cmd;
+	free_redirections(ecmd->redir);
+	free(cmd);
 	return;
 }
 
-void	free_pipecmd(t_pipecmd *cmd)
+void free_cmd(t_cmd *cmd)
 {
-	if (!cmd)
-		return;
-	free_cmd(cmd->left);
-	free_cmd(cmd->right);
-	//free(cmd);
-}
-void	free_redircmd(t_redircmd *cmd)
-{
-	if (!cmd)
-		return;
-	free_cmd(cmd->cmd);
-	//free(cmd);
-}
+	t_execcmd *execcmd;
+	t_pipecmd *pipecmd;
 
-void	free_cmd(t_cmd *cmd)
-{
-	if (!cmd)
+	if (cmd == NULL)
 		return;
 	if (cmd->type == EXEC)
-		free_execcmd((t_execcmd *)cmd);
+	{
+		execcmd = (t_execcmd *)cmd;
+		if (execcmd->redir)
+			free_redirections(execcmd->redir);
+	}
 	else if (cmd->type == PIPE)
-		free_pipecmd((t_pipecmd *)cmd);
-	else if (cmd->type == REDIR)
-		free_redircmd((t_redircmd *)cmd);
+	{
+		pipecmd = (t_pipecmd *)cmd;
+		free_cmd(pipecmd->left);
+		free_cmd(pipecmd->right);
+	}
 	free(cmd);
+	cmd = NULL;
 }

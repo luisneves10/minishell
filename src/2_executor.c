@@ -6,15 +6,16 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/16 12:42:19 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:22:26 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_split(char **split)
+void	free_split(char **split)
 {
-	int i = 0;
+	int	i;
+	i = 0;
 
 	if (split)
 	{
@@ -26,7 +27,6 @@ void free_split(char **split)
 		free(split);
 	}
 }
-
 
 char	*get_cmds_path(char	*path, char	*cmd)
 {
@@ -119,11 +119,11 @@ void	execute_commands(t_execcmd *execcmd, t_shell *shell)
 	}
 	if (pid == 0)
 	{
-		if (execve(path, execcmd->argv, shell->env) == -1)
-			perror("execve error");
-		exit(1);
+		execve(path, execcmd->argv, shell->env);
+		perror("execve error");
+		exit(1); //free aqui em caso de erro
 	}
-	if (pid > 0)
+	else
 	{
 		waitpid(pid, NULL, 0);
 		if (path != execcmd->argv[0]) //free se o path for criado com malloc
@@ -131,19 +131,17 @@ void	execute_commands(t_execcmd *execcmd, t_shell *shell)
 	}
 }
 
-void	run_cmd(t_cmd *cmd, t_shell *shell)
+void run_cmd(t_cmd *cmd, t_shell *shell)
 {
 	t_execcmd	*execcmd;
 	t_pipecmd	*pipecmd;
-	t_redircmd	*redircmd;
 
 	execcmd = (t_execcmd *)cmd;
 	pipecmd = (t_pipecmd *)cmd;
-	redircmd = (t_redircmd *)cmd;
-	if (cmd == NULL)
-		return ;
+	if (!cmd)
+		return;
 	if (cmd->type == EXEC)
-		execute_commands(execcmd, shell);
+		handle_redirs(execcmd, shell);
 	else if (cmd->type == PIPE)
 	{
 		if (pipe(pipecmd->pipefd) == -1)
@@ -151,10 +149,30 @@ void	run_cmd(t_cmd *cmd, t_shell *shell)
 			perror("pipe error");
 			exit(1);
 		}
-		fork_function(pipecmd, shell);
-		close_all(pipecmd);
+		if (fork() == 0)
+		{
+			close(pipecmd->pipefd[0]);
+			dup2(pipecmd->pipefd[1], STDOUT_FILENO);
+			close(pipecmd->pipefd[1]);
+			run_cmd(pipecmd->left, shell);// RECURSAO LADO ESQUERDO PIPE
+			free_cmd(cmd);
+			exit(0);
+		}
+		if (fork() == 0)
+		{
+			close(pipecmd->pipefd[1]);
+			dup2(pipecmd->pipefd[0], STDIN_FILENO);
+			close(pipecmd->pipefd[0]);
+			run_cmd(pipecmd->right, shell);// RECURSAO LADO DIREITO PIPE
+			free_cmd(cmd);
+			exit(0);
+		}
+		close(pipecmd->pipefd[0]);
+		close(pipecmd->pipefd[1]);
+		wait(NULL);
+		wait(NULL);
 	}
-	else if (cmd->type == REDIR)
-		redirect_cmd(redircmd, shell);
-	free_cmd(cmd);
 }
+
+
+

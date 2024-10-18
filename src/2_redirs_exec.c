@@ -6,56 +6,129 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/16 12:27:36 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:13:14 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void handle_out(t_redircmd *redircmd)
+static void	handle_in(t_fds *fds)
 {
-	redircmd->fd = open(redircmd->file, redircmd->mode, 0644);
-	if (redircmd->fd < 0)
+	if (fds->saved_in == -1)
+		fds->saved_in = dup(STDIN_FILENO);  // GUARDAR O STDIN ORIGINAL
+	if (fds->saved_in < 0)
 	{
-		perror("redir");
-		return;
+		perror("dup error (saving original stdout)");
+		exit(1);
 	}
-	dup2(redircmd->fd, STDOUT_FILENO);
-	close(redircmd->fd);
+	if (dup2(fds->in_fd, STDIN_FILENO) < 0 || fds->saved_in < 0)
+	{
+		perror("dup2 error (input redirection)");
+		exit(1);
+	}
 }
 
-static void handle_in(t_redircmd *redircmd)
+static void	handle_out(t_fds *fds)
 {
-	redircmd->fd = open(redircmd->file, O_RDONLY);
-	if (redircmd->fd < 0)
+	if (fds->saved_out == -1)
+		fds->saved_out = dup(STDOUT_FILENO); // GUARDAR O STDOUT ORIGINAL
+	if (fds->saved_out < 0)
 	{
-		perror("redir");
-		return;
+		perror("dup error (saving original stdout)");
+		exit(1);
 	}
-	dup2(redircmd->fd, STDIN_FILENO);
-	close(redircmd->fd);
+	if (dup2(fds->out_fd, STDOUT_FILENO) < 0 || fds->saved_out < 0)
+	{
+		perror("dup2 error (output redirection)");
+		exit(1);
+	}
 }
 
-void	redirect_cmd(t_redircmd *redircmd, t_shell *shell)
+int	redirs_conditions(t_fds *fds, t_redir *redir)
 {
-	t_execcmd *execcmd;
-	int saved_fd_in;
-	int saved_fd_out;
+	if (redir->type == '<')
+	{
+		fds->in_fd = open(redir->file, O_RDONLY);
+		if (fds->in_fd < 0)
+		{
+			perror("open error (input redirection)");
+			return (-1); //tirei daqui o exit
+		}
+		handle_in(fds);
+	}
+	if (redir->type == '>')
+	{
+		fds->out_fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fds->out_fd < 0)
+		{
+			perror("open error (output redirection)");
+			return (-1);
+		}
+		handle_out(fds);
+	}
+	if (redir->type == '+')
+	{
+		fds->out_fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fds->out_fd < 0)
+		{
+			perror("open error (append redirection)");
+			return (-1);
+		}
+		handle_out(fds);
+	}
+	if (redir->type == '-') //when it is used the '<<'
+	{
+		fds->in_fd = open(redir->file, O_RDONLY);
+		if (fds->in_fd < 0)
+		{
+			perror("open error (heredoc)");
+			return (-1);
+		}
+		handle_in(fds);
+	}
+	return (1);
+}
 
-	saved_fd_in = dup(STDIN_FILENO);
-	saved_fd_out = dup(STDOUT_FILENO);
-	if (redircmd->mode & O_WRONLY)
-		handle_out(redircmd);
-	else
-		handle_in(redircmd);
-	//SE NAO HOUVER COMANDO NAO EXECUTA
-	if (((t_execcmd *)redircmd->cmd)->argv[0] == NULL)
-		return ;
-	execcmd = (t_execcmd *)redircmd->cmd;
-	null_terminate((t_cmd *)execcmd);
-	execute_commands(execcmd, shell);
-	dup2(saved_fd_out, STDOUT_FILENO);
-	dup2(saved_fd_in, STDIN_FILENO);
-	close(saved_fd_in);
-	close(saved_fd_out);
+t_fds	*init_fds(void)
+{
+	t_fds	*fds;
+
+	fds = malloc(sizeof(t_fds));
+	fds->in_fd = -1;
+	fds->out_fd = -1;
+	fds->saved_in = -1;
+	fds->saved_out = -1;
+	return (fds);
+}
+
+void	handle_redirs(t_execcmd *execcmd, t_shell *shell)
+{
+	t_redir	*redir;
+	t_fds	*fds;
+
+	fds = init_fds();
+	redir = execcmd->redir;
+	while (redir)
+	{
+		if (redirs_conditions(fds, redir) < 0)
+			return ;
+		redir = redir->next;
+	}
+	if (execcmd->argv[0])
+		execute_commands(execcmd, shell);
+	if (fds->saved_in != -1)
+	{
+		dup2(fds->saved_in, STDIN_FILENO);
+		close(fds->saved_in);
+	}
+	if (fds->saved_out != -1)
+	{
+		dup2(fds->saved_out, STDOUT_FILENO);
+		close(fds->saved_out);
+	}
+	if (fds->out_fd != -1)
+		close(fds->out_fd);// FECHAR OUTPUT FD
+	if (fds->in_fd != -1)
+		close(fds->in_fd);// FECHAR INPUT FD
+	free(fds);
 }
