@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_executor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/17 16:22:26 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:24:10 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,7 @@ void run_cmd(t_cmd *cmd, t_shell *shell)
 			close(pipecmd->pipefd[1]);
 			run_cmd(pipecmd->left, shell);// RECURSAO LADO ESQUERDO PIPE
 			free_cmd(cmd);
+			free_shell(shell, 1);
 			exit(0);
 		}
 		if (fork() == 0)
@@ -165,6 +166,7 @@ void run_cmd(t_cmd *cmd, t_shell *shell)
 			close(pipecmd->pipefd[0]);
 			run_cmd(pipecmd->right, shell);// RECURSAO LADO DIREITO PIPE
 			free_cmd(cmd);
+			free_shell(shell, 1);
 			exit(0);
 		}
 		close(pipecmd->pipefd[0]);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_init_minishell.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/17 15:03:52 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:19:50 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	init_minishell(t_shell *shell)
 			if (*shell->input)
 			{
 				add_history(shell->input);
-        cmd = parse_cmd(shell->input);
+        		cmd = parse_cmd(shell->input);
 				run_cmd(cmd, shell);
 			}
 		}

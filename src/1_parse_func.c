@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_parse_func.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/17 16:19:33 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:15:57 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,10 @@ static int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
 
 static t_cmd	*parse_exec(char **ptr_str, char *end_str)
 {
-	int			tok;
 	t_cmd		*ret;
 	t_execcmd	*cmd;
 	t_token		*token;
 
-	tok = 0;
 	ret = exec_cmd();
 	cmd = (t_execcmd *)ret;
 	token = create_token();
