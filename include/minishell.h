@@ -27,11 +27,16 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
+/* ----------------------------------------------------- CCOMAND MACROS ----- */
 # define EXEC  1
 # define REDIR 2
 # define PIPE  3
 # define LIST  4
 # define BACK  5
+
+/* ------------------------------------------------------ EXPAND MACROS ----- */
+# define EXPAND_NEW  1
+# define EXPAND_APPEND 2
 
 typedef struct cmd
 {
@@ -130,7 +135,9 @@ int		ft_echo(char **argv);
 int		ft_pwd(char **argv);
 int		ft_cd(char **argv, t_shell *shell);
 int		ft_export(char **argv, t_shell *shell);
+char	**update_env(char **local_env, char *var);
 void	ft_export_no_args(t_shell *shell);
+void	append_var(t_shell *shell, char *var);
 int		ft_unset(char **argv, t_shell *shell);
 int		ft_env(char **argv, t_shell *shell);
 void	ft_exit(char **argv, t_shell *shell);

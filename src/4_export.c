@@ -6,36 +6,33 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 15:21:52 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/16 12:21:53 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:33:24 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	valid_var_name(char *arg)
+static int	valid_name_len(char *arg)
 {
 	int	i;
 
 	i = 0;
 	if (!ft_isalpha(arg[i]) && arg[i] != '_')
-	{
-		printf("minishell: export: '%s': not a valid identifier\n", arg);
 		return (0);
-	}
 	i++;
 	while (arg[i])
 	{
+		if (arg[i] == '+' && arg[i + 1] == '=')
+			return (EXPAND_APPEND);
 		if (arg[i] == '=')
 			break ;
 		if (!ft_isalnum(arg[i]) && arg[i] != '_')
-		{
-			printf("minishell: export: '%s': not a valid identifier\n", arg);
 			return (0);
-		}
 		i++;
 	}
-	return (1);
+	return (EXPAND_NEW);
 }
+
 
 static int	var_update(char **local_env, char *var)
 {
@@ -60,7 +57,7 @@ static int	var_update(char **local_env, char *var)
 	return (0);
 }
 
-static char	**update_env(char **local_env, char *var)
+char	**update_env(char **local_env, char *var)
 {
 	int		i;
 	int		local_env_size;
@@ -98,8 +95,15 @@ int	ft_export(char **argv, t_shell *shell)
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		if (valid_var_name(argv[i]))
+		if (valid_name_len(argv[i]) == EXPAND_NEW)
 			shell->env = update_env(shell->env, argv[i]);
+		else if (valid_name_len(argv[i]) == EXPAND_APPEND)
+			append_var(shell, argv[i]);
+		else if (!valid_name_len(argv[i]))
+		{
+			printf("minishell: export: ");
+			printf("'%s': not a valid identifier\n", argv[i]);
+		}
 		i++;
 	}
 	return (0);
