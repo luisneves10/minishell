@@ -12,6 +12,31 @@
 
 #include "minishell.h"
 
+static int	valid_var_name(char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (!ft_isalpha(arg[i]) && arg[i] != '_')
+	{
+		printf("minishell: export: '%s': not a valid identifier\n", arg);
+		return (0);
+	}
+	i++;
+	while (arg[i])
+	{
+		if (arg[i] == '=')
+			break ;
+		if (!ft_isalnum(arg[i]) && arg[i] != '_')
+		{
+			printf("minishell: export: '%s': not a valid identifier\n", arg);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
 static int	var_update(char **local_env, char *var)
 {
 	int	i;
@@ -73,7 +98,8 @@ int	ft_export(char **argv, t_shell *shell)
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		shell->env = update_env(shell->env, argv[i]);
+		if (valid_var_name(argv[i]))
+			shell->env = update_env(shell->env, argv[i]);
 		i++;
 	}
 	return (0);
