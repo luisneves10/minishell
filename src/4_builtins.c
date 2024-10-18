@@ -53,5 +53,5 @@ void	exec_builtin(char **argv, char *builtin, t_shell *shell)
 	else if (ft_strncmp(builtin, "env", ft_strlen(builtin)) == 0)
 		ft_env(argv, shell);
 	else if (ft_strncmp(builtin, "exit", ft_strlen(builtin)) == 0)
-		ft_exit();
+		ft_exit(argv, shell);
 }

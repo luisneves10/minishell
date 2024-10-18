@@ -12,9 +12,33 @@
 
 #include "minishell.h"
 
-int	ft_exit(void)
+static int	ft_isnumber(char *arg)
 {
+	int	i;
+
+	i = 0;
+	while (arg[i])
+	{
+		if (arg[i] >= 0 && arg[i] <= 9)
+			i++;
+		else
+			return (0);
+	}
+	return (1);
+}
+
+void	ft_exit(char **argv, t_shell *shell)
+{
+	free_shell(shell, 1);
+	// free_cmd(shell->cmd);
 	printf("exit\n");
-	// clear desta merda toda
-	exit (0);
+	if (argv[1] == NULL)
+		exit (0);
+	if (ft_isnumber(argv[1]))
+		exit (ft_atoi(argv[1]));
+	else
+	{
+		printf("minishell: exit: %s: numeric argument required\n", argv[1]);
+		exit (255);
+	}
 }

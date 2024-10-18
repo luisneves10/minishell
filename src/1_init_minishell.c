@@ -12,62 +12,59 @@
 
 #include "minishell.h"
 
-static void	free_input(char *input, char *prompt)
+void	free_shell(t_shell *shell, int i)
 {
-	free (input);
-	free (prompt);
+	free (shell->prompt);
+	free (shell->input);
+	if (i)
+	{
+		free_env(shell->env);
+		free (shell);
+		return ;
+	}
+	shell->prompt = NULL;
+	shell->input = NULL;
 }
 
-static char	*get_prompt(t_shell *shell)
+static char	*get_prompt(void)
 {
+	char	path[1024];
 	char	*prompt;
 	char	*user;
-	char	*pwd;
-	int		home_index;
-	int		len_home;
 
-	home_index = var_search(shell->env, "HOME");
-	if (home_index >= 0)
-		len_home = ft_strlen(shell->env[home_index]) - 5;
-	user = shell->env[var_search(shell->env, "USER")] + 5;
-	pwd = shell->env[var_search(shell->env, "PWD")] + 4;
-	prompt = ft_strjoin_free(ft_strdup("\033[1;34m"), user);
-	prompt = ft_strjoin_free(prompt, ":\033[0m");
-	if (var_search(shell->env, "HOME") >= 0)
-	{
-		prompt = ft_strjoin_free(prompt, "~");
-		prompt = ft_strjoin_free(prompt, pwd + len_home);
-	}
+	prompt = ft_strjoin_free(ft_strdup("\033[1;34m"), "");
+	user = getenv("USER");
+	if (user)
+		prompt = ft_strjoin_free(prompt, user);
 	else
-		prompt = ft_strjoin_free(prompt, pwd);
+		prompt = ft_strjoin_free(prompt, "minishell");
+	prompt = ft_strjoin_free(prompt, ":\033[0m");
+	prompt = ft_strjoin_free(prompt, getcwd(path, sizeof(path)));
 	prompt = ft_strjoin_free(prompt, "$ ");
 	return (prompt);
 }
 
 void	init_minishell(t_shell *shell)
 {
-	char	*input;
-	char	*prompt;
-
 	while (1)
 	{
-		prompt = get_prompt(shell);
-		input = readline(prompt);
-		if (!input)
+		shell->prompt = get_prompt();
+		shell->input = readline(shell->prompt);
+		if (!shell->input)
 		{
+			free_shell(shell, 1);
 			printf("exit\n");
-			free_input(input, prompt);
-			free_env(shell->env); //free struct
 			break ;
 		}
-		if (syntax_check(input) == 0)
+		if (syntax_check(shell->input) == 0)
 		{
-			if (*input)
+			if (*shell->input)
 			{
-				add_history(input);
-				run_cmd(parse_cmd(input), shell);
+				add_history(shell->input);
+				run_cmd(parse_cmd(shell->input), shell);
 			}
 		}
-		free_input(input, prompt);
+		free_shell(shell, 0);
+		// free_cmd(shell->cmd);
 	}
 }

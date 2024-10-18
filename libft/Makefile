@@ -54,7 +54,7 @@ ${OBJ_DIR}%.o : ${SRC_DIR}%.c
 
 ${NAME} : ${OBJ_DIR} ${OBJ}
 	@${AR} ${NAME} ${OBJ}
-	@echo "[$(CYAN)libft$(DEF_COLOR)] ${NAME} created successfully!"
+	@echo "[$(CYAN)libft$(DEF_COLOR)] Created successfully!"
 
 ${OBJ_DIR} :
 	@mkdir -p ${OBJ_DIR}
@@ -65,11 +65,12 @@ clean :
 	@${RM} ${OBJ_DIR}
 	@echo "[$(CYAN)libft$(DEF_COLOR)] .o files cleaned!"
 
-fclean : clean
+fclean :
+	@${RM} ${OBJ_DIR}
 	@${RM} ${NAME}
-	@echo "[$(CYAN)libft$(DEF_COLOR)] ${NAME} cleaned!"
+	@echo "[$(CYAN)libft$(DEF_COLOR)] Cleaned!"
 
 re : fclean all
-	@echo "[$(CYAN)libft$(DEF_COLOR)] Cleaned and rebuilt successfully!"
+	@echo "[$(CYAN)libft$(DEF_COLOR)] Rebuilt successfully!"
 
 .PHONY : all clean fclean re
