@@ -65,7 +65,7 @@ int	ft_unset(char **argv, t_shell *shell)
 	if (!argv[1])
 		return (1);
 	if (has_options(argv, argv[0]))
-		return (0);
+		return (2);
 	i = 1;
 	while (argv[i] != NULL)
 	{

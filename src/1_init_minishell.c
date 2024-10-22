@@ -47,7 +47,7 @@ static char	*get_prompt(void)
 void	init_minishell(t_shell *shell)
 {
 	t_cmd	*cmd;
-  
+
 	while (1)
 	{
 		shell->prompt = get_prompt();
@@ -63,8 +63,9 @@ void	init_minishell(t_shell *shell)
 			if (*shell->input)
 			{
 				add_history(shell->input);
-        		cmd = parse_cmd(shell->input);
+				cmd = parse_cmd(shell->input);
 				run_cmd(cmd, shell);
+				printf("EXIT STATUS -> %d\n", shell->exit_status);
 			}
 		}
 		free_shell(shell, 0);

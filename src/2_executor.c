@@ -119,7 +119,7 @@ void	execute_commands(t_execcmd *execcmd, t_shell *shell)
 	}
 	if (pid == 0)
 	{
-		execve(path, execcmd->argv, shell->env);
+		shell->exit_status = execve(path, execcmd->argv, shell->env);
 		perror("execve error");
 		exit(1); //free aqui em caso de erro
 	}
@@ -131,7 +131,7 @@ void	execute_commands(t_execcmd *execcmd, t_shell *shell)
 	}
 }
 
-void run_cmd(t_cmd *cmd, t_shell *shell)
+void	run_cmd(t_cmd *cmd, t_shell *shell)
 {
 	t_execcmd	*execcmd;
 	t_pipecmd	*pipecmd;
@@ -154,7 +154,7 @@ void run_cmd(t_cmd *cmd, t_shell *shell)
 			close(pipecmd->pipefd[0]);
 			dup2(pipecmd->pipefd[1], STDOUT_FILENO);
 			close(pipecmd->pipefd[1]);
-			run_cmd(pipecmd->left, shell);// RECURSAO LADO ESQUERDO PIPE
+			run_cmd(pipecmd->left, shell); // RECURSAO LADO ESQUERDO PIPE
 			free_cmd(cmd);
 			free_shell(shell, 1);
 			exit(0);
@@ -164,7 +164,7 @@ void run_cmd(t_cmd *cmd, t_shell *shell)
 			close(pipecmd->pipefd[1]);
 			dup2(pipecmd->pipefd[0], STDIN_FILENO);
 			close(pipecmd->pipefd[0]);
-			run_cmd(pipecmd->right, shell);// RECURSAO LADO DIREITO PIPE
+			run_cmd(pipecmd->right, shell); // RECURSAO LADO DIREITO PIPE
 			free_cmd(cmd);
 			free_shell(shell, 1);
 			exit(0);
@@ -175,6 +175,3 @@ void run_cmd(t_cmd *cmd, t_shell *shell)
 		wait(NULL);
 	}
 }
-
-
-

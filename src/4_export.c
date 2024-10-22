@@ -91,9 +91,9 @@ int	ft_export(char **argv, t_shell *shell)
 		return (0);
 	}
 	if (has_options(argv, argv[0]))
-		return (1);
-	i = 1;
-	while (argv[i] != NULL)
+		return (2);
+	i = 0;
+	while (argv[++i] != NULL)
 	{
 		if (valid_name_len(argv[i]) == EXPAND_NEW)
 			shell->env = update_env(shell->env, argv[i]);
@@ -103,8 +103,8 @@ int	ft_export(char **argv, t_shell *shell)
 		{
 			printf("minishell: export: ");
 			printf("'%s': not a valid identifier\n", argv[i]);
+			shell->exit_status = 1;
 		}
-		i++;
 	}
-	return (0);
+	return (shell->exit_status);
 }

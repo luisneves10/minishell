@@ -22,7 +22,6 @@ static void	create_var(t_shell *shell, char *var)
 	new_var = malloc(sizeof(char) * ft_strlen(var));
 	if (!new_var)
 		return ;
-	new_var[ft_strlen(var)] = '\0';
 	flag = 1;
 	i = 0;
 	j = 0;
@@ -35,6 +34,7 @@ static void	create_var(t_shell *shell, char *var)
 		}
 		new_var[j++] = var[i++];
 	}
+	new_var[j] = '\0';
 	shell->env = update_env(shell->env, new_var);
 	free (new_var);
 }

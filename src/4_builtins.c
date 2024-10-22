@@ -41,17 +41,17 @@ char	*is_builtin(t_execcmd *execcmd)
 void	exec_builtin(char **argv, char *builtin, t_shell *shell)
 {
 	if (ft_strncmp(builtin, "echo", ft_strlen(builtin)) == 0)
-		ft_echo(argv);
+		shell->exit_status = ft_echo(argv);
 	else if (ft_strncmp(builtin, "cd", ft_strlen(builtin)) == 0)
-		ft_cd(argv, shell);
+		shell->exit_status = ft_cd(argv, shell);
 	else if (ft_strncmp(builtin, "pwd", ft_strlen(builtin)) == 0)
-		ft_pwd(argv);
+		shell->exit_status = ft_pwd(argv);
 	else if (ft_strncmp(builtin, "export", ft_strlen(builtin)) == 0)
-		ft_export(argv, shell);
+		shell->exit_status = ft_export(argv, shell);
 	else if (ft_strncmp(builtin, "unset", ft_strlen(builtin)) == 0)
-		ft_unset(argv, shell);
+		shell->exit_status = ft_unset(argv, shell);
 	else if (ft_strncmp(builtin, "env", ft_strlen(builtin)) == 0)
-		ft_env(argv, shell);
+		shell->exit_status = ft_env(argv, shell);
 	else if (ft_strncmp(builtin, "exit", ft_strlen(builtin)) == 0)
 		ft_exit(argv, shell);
 }
