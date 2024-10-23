@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_executor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/18 15:24:10 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/23 12:12:19 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	command_type(t_execcmd *execcmd, t_shell *shell, char **path)
 	else
 	{
 		*path = get_cmd_path(shell->env, execcmd->argv[0]);
-		if (!path)
+		if (!(*path))
 		{
 			printf("%s: command not found\n", execcmd->argv[0]);
 			return;
@@ -131,15 +131,18 @@ void	execute_commands(t_execcmd *execcmd, t_shell *shell)
 	}
 }
 
-void run_cmd(t_cmd *cmd, t_shell *shell)
+void	run_cmd(t_cmd *cmd, t_shell *shell)
 {
 	t_execcmd	*execcmd;
 	t_pipecmd	*pipecmd;
 
 	execcmd = (t_execcmd *)cmd;
 	pipecmd = (t_pipecmd *)cmd;
+	//printf("heredoc: %s\n", shell->delimiter);
 	if (!cmd)
 		return;
+	if (shell->delimiter)
+		handle_heredoc();
 	if (cmd->type == EXEC)
 		handle_redirs(execcmd, shell);
 	else if (cmd->type == PIPE)
@@ -147,28 +150,10 @@ void run_cmd(t_cmd *cmd, t_shell *shell)
 		if (pipe(pipecmd->pipefd) == -1)
 		{
 			perror("pipe error");
-			exit(1);
+			exit(77);
 		}
-		if (fork() == 0)
-		{
-			close(pipecmd->pipefd[0]);
-			dup2(pipecmd->pipefd[1], STDOUT_FILENO);
-			close(pipecmd->pipefd[1]);
-			run_cmd(pipecmd->left, shell);// RECURSAO LADO ESQUERDO PIPE
-			free_cmd(cmd);
-			free_shell(shell, 1);
-			exit(0);
-		}
-		if (fork() == 0)
-		{
-			close(pipecmd->pipefd[1]);
-			dup2(pipecmd->pipefd[0], STDIN_FILENO);
-			close(pipecmd->pipefd[0]);
-			run_cmd(pipecmd->right, shell);// RECURSAO LADO DIREITO PIPE
-			free_cmd(cmd);
-			free_shell(shell, 1);
-			exit(0);
-		}
+		fork_function1(pipecmd, shell);
+		fork_function2(pipecmd, shell);
 		close(pipecmd->pipefd[0]);
 		close(pipecmd->pipefd[1]);
 		wait(NULL);

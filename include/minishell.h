@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/17 16:21:05 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/23 12:07:29 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ typedef struct shell
 	char	*input;
 	char	*prompt;
 	int		exit_status;
+	int		heredoc;
+	char	*delimiter;
 }	t_shell;
 
 /* ========================================================================== */
@@ -127,7 +129,7 @@ int		var_search(char **env, char *var);
 /* ========================================================================== */
 /*	PARSING                                                                   */
 /* ========================================================================== */
-t_cmd	*parse_cmd(char *str);
+t_cmd	*parse_cmd(char *str, t_shell *shell);
 int		get_token(char **ptr_str, char *end_str,
                 char **start_token, char **end_token);
 int		special_chars(char **str);
@@ -143,7 +145,11 @@ void	run_cmd(t_cmd *cmd, t_shell *shell);
 void	handle_redirs(t_execcmd *execcmd, t_shell *shell);
 void	execute_commands(t_execcmd *execcmd, t_shell *shell);
 t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
+void	fork_function1(t_pipecmd *pipecmd, t_shell *shell);
+void	fork_function2(t_pipecmd *pipecmd, t_shell *shell);
 t_token	*create_token(void);
+void	handle_heredoc(void);
+char	*get_delimiter(char *start_tok, char *end_tok);
 
 /* ========================================================================== */
 /*	EXECUTION AND PROCESS HANDLING                                            */

@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/17 13:08:44 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:20:11 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,6 @@ void free_redirections(t_redir *redir)
 		redir = NULL;
 		redir = next;
 	}
-}
-
-void	free_execcmd(t_execcmd *cmd)
-{
-	t_execcmd	*ecmd;
-
-	if (!cmd)
-		return;
-	ecmd = (t_execcmd *)cmd;
-	free_redirections(ecmd->redir);
-	free(cmd);
-	return;
 }
 
 void free_cmd(t_cmd *cmd)
