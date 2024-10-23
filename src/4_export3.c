@@ -34,7 +34,7 @@ static void	create_var(t_shell *shell, char *var)
 		}
 		new_var[j++] = var[i++];
 	}
-	new_var[i] = '\0';
+	new_var[j] = '\0';
 	shell->env = update_env(shell->env, new_var);
 	free (new_var);
 }

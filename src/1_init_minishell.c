@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/18 15:19:50 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/23 12:12:14 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static char	*get_prompt(void)
 void	init_minishell(t_shell *shell)
 {
 	t_cmd	*cmd;
-  
+
 	while (1)
 	{
 		shell->prompt = get_prompt();
@@ -63,11 +63,11 @@ void	init_minishell(t_shell *shell)
 			if (*shell->input)
 			{
 				add_history(shell->input);
-        		cmd = parse_cmd(shell->input);
+				cmd = parse_cmd(shell->input);
 				run_cmd(cmd, shell);
+				free_cmd(cmd);
 			}
 		}
 		free_shell(shell, 0);
-		free_cmd(cmd); //condicao para ver se o sintax check deu certo
 	}
 }

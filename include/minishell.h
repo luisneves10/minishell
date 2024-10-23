@@ -34,7 +34,7 @@
 # define LIST  4
 # define BACK  5
 
-/* ---------------------------------------------------------- ERROR MACROS ----- */
+/* ------------------------------------------------------- ERROR MACROS ----- */
 # define S_Q     41
 # define D_Q     42
 # define ERROR_P 43
@@ -104,7 +104,7 @@ typedef struct shell
 }	t_shell;
 
 /* ========================================================================== */
-/*	FUNCTIONS                                                                 */
+/* ------------------------------ FUNCTIONS --------------------------------- */
 /* ========================================================================== */
 
 /* ========================================================================== */
@@ -129,7 +129,7 @@ int		var_search(char **env, char *var);
 /* ========================================================================== */
 t_cmd	*parse_cmd(char *str);
 int		get_token(char **ptr_str, char *end_str,
-                char **start_token, char **end_token);
+			char **start_token, char **end_token);
 int		special_chars(char **str);
 void	null_terminate(t_cmd *cmd);
 int		find_char(char **ptr_str, char *end_str, char *set);
@@ -142,6 +142,10 @@ int		syntax_check(char *input);
 void	run_cmd(t_cmd *cmd, t_shell *shell);
 void	handle_redirs(t_execcmd *execcmd, t_shell *shell);
 void	execute_commands(t_execcmd *execcmd, t_shell *shell);
+void	free_split(char **split);
+void	handle_child_process(char *path, t_execcmd *execcmd, t_shell *shell);
+void	handle_parent_process(int pid, char *path,
+			t_execcmd *execcmd, t_shell *shell);
 t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 t_token	*create_token(void);
 
@@ -150,7 +154,8 @@ t_token	*create_token(void);
 /* ========================================================================== */
 char	*get_cmd_path(char **env, char *cmd);
 char	*get_cmds_path(char *path, char *cmd);
-void	child1_process(t_pipecmd *pipecmd, t_shell *shell, int prev_pipe, int *pi);
+void	child1_process(t_pipecmd *pipecmd, t_shell *shell,
+			int prev_pipe, int *pi);
 void	fork_function(t_pipecmd *pipecmd, t_shell *shell);
 void	close_all(t_pipecmd *pipecmd);
 
@@ -169,7 +174,7 @@ int		ft_pwd(char **argv);
 int		ft_cd(char **argv, t_shell *shell);
 int		ft_export(char **argv, t_shell *shell);
 char	**update_env(char **local_env, char *var);
-void	ft_export_no_args(t_shell *shell);
+int		ft_export_no_args(t_shell *shell);
 void	append_var(t_shell *shell, char *var);
 int		ft_unset(char **argv, t_shell *shell);
 int		ft_env(char **argv, t_shell *shell);
