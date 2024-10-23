@@ -26,7 +26,7 @@ void free_redirections(t_redir *redir)
 	}
 }
 
-void free_cmd(t_cmd *cmd)
+/* void free_cmd(t_cmd *cmd)
 {
 	t_execcmd *execcmd;
 	t_pipecmd *pipecmd;
@@ -47,4 +47,46 @@ void free_cmd(t_cmd *cmd)
 	}
 	free(cmd);
 	cmd = NULL;
+} */
+void free_cmd(t_cmd *cmd)
+{
+    t_execcmd   *exec_cmd;
+    t_pipecmd   *pipe_cmd;
+
+    if (!cmd)
+        return;
+
+    if (cmd->type == EXEC)
+    {
+        exec_cmd = (t_execcmd *)cmd;
+
+        // Free redir structure if it's allocated
+        if (exec_cmd->redir)
+        {
+            free(exec_cmd->redir);
+            exec_cmd->redir = NULL;
+        }
+
+        // Free the command structure itself
+        free(exec_cmd);
+    }
+    else if (cmd->type == PIPE)
+    {
+        pipe_cmd = (t_pipecmd *)cmd;
+
+        // Free left and right commands in the pipe
+        if (pipe_cmd->left)
+        {
+            free_cmd(pipe_cmd->left);
+            pipe_cmd->left = NULL;
+        }
+        if (pipe_cmd->right)
+        {
+            free_cmd(pipe_cmd->right);
+            pipe_cmd->right = NULL;
+        }
+
+        // Free the pipe command structure
+        free(pipe_cmd);
+    }
 }

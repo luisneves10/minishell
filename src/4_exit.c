@@ -19,7 +19,7 @@ static int	ft_isnumber(char *arg)
 	i = 0;
 	while (arg[i])
 	{
-		if (arg[i] >= 0 && arg[i] <= 9)
+		if (arg[i] >= '0' && arg[i] <= '9')
 			i++;
 		else
 			return (0);

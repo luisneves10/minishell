@@ -63,7 +63,7 @@ static void	sort_env(char **env)
 	}
 }
 
-void	ft_export_no_args(t_shell *shell)
+int	ft_export_no_args(t_shell *shell)
 {
 	char	**env_copy;
 	int		i;
@@ -82,4 +82,5 @@ void	ft_export_no_args(t_shell *shell)
 		printf("\n");
 	}
 	free_env(env_copy);
+	return (0);
 }

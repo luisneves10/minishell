@@ -12,13 +12,16 @@
 
 #include "minishell.h"
 
-static int	valid_name_len(char *arg)
+static int	valid_name_len(t_shell *shell, char *arg)
 {
 	int	i;
 
 	i = 0;
 	if (!ft_isalpha(arg[i]) && arg[i] != '_')
+	{
+		shell->exit_status = 1;
 		return (0);
+	}
 	i++;
 	while (arg[i])
 	{
@@ -27,7 +30,10 @@ static int	valid_name_len(char *arg)
 		if (arg[i] == '=')
 			break ;
 		if (!ft_isalnum(arg[i]) && arg[i] != '_')
+		{
+			shell->exit_status = 1;
 			return (0);
+		}
 		i++;
 	}
 	return (EXPAND_NEW);
@@ -84,27 +90,28 @@ char	**update_env(char **local_env, char *var)
 int	ft_export(char **argv, t_shell *shell)
 {
 	int	i;
+	int	flag;
 
 	if (argv[1] == NULL)
-	{
-		ft_export_no_args(shell);
-		return (0);
-	}
+		return (ft_export_no_args(shell));
 	if (has_options(argv, argv[0]))
-		return (1);
-	i = 1;
-	while (argv[i] != NULL)
+		return (2);
+	i = 0;
+	flag = 0;
+	while (argv[++i] != NULL)
 	{
-		if (valid_name_len(argv[i]) == EXPAND_NEW)
+		if (valid_name_len(shell, argv[i]) == EXPAND_NEW)
 			shell->env = update_env(shell->env, argv[i]);
-		else if (valid_name_len(argv[i]) == EXPAND_APPEND)
+		else if (valid_name_len(shell, argv[i]) == EXPAND_APPEND)
 			append_var(shell, argv[i]);
-		else if (!valid_name_len(argv[i]))
+		else if (!valid_name_len(shell, argv[i]))
 		{
 			printf("minishell: export: ");
 			printf("'%s': not a valid identifier\n", argv[i]);
+			flag = 1;
 		}
-		i++;
 	}
+	if (flag)
+		return (1);
 	return (0);
 }

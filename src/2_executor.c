@@ -12,35 +12,20 @@
 
 #include "minishell.h"
 
-void	free_split(char **split)
-{
-	int	i;
-	i = 0;
-
-	if (split)
-	{
-		while (split[i])
-		{
-			free(split[i]);
-			i++;
-		}
-		free(split);
-	}
-}
-
 char	*get_cmds_path(char	*path, char	*cmd)
 {
 	int		i;
-	char	*true_cmd = NULL;
+	char	*true_cmd;
 	char	*full_path;
 	char	**directory;
 
-	i = 0;
+	true_cmd = NULL;
 	true_cmd = ft_strjoin("/", cmd);
 	directory = ft_split(path, ':');
 	if (!directory)
 		return (NULL);
-	while (directory[i])
+	i = -1;
+	while (directory[++i])
 	{
 		full_path = ft_strjoin(directory[i], true_cmd);
 		if (access(full_path, X_OK) == 0)
@@ -50,7 +35,6 @@ char	*get_cmds_path(char	*path, char	*cmd)
 			return (full_path);
 		}
 		free(full_path);
-		i++;
 	}
 	free(true_cmd);
 	free_split(directory);
@@ -98,7 +82,8 @@ void	command_type(t_execcmd *execcmd, t_shell *shell, char **path)
 		if (!(*path))
 		{
 			printf("%s: command not found\n", execcmd->argv[0]);
-			return;
+			shell->exit_status = 127;
+			return ;
 		}
 	}
 }
@@ -118,17 +103,9 @@ void	execute_commands(t_execcmd *execcmd, t_shell *shell)
 		exit(1);
 	}
 	if (pid == 0)
-	{
-		execve(path, execcmd->argv, shell->env);
-		perror("execve error");
-		exit(1); //free aqui em caso de erro
-	}
+		handle_child_process(path, execcmd, shell);
 	else
-	{
-		waitpid(pid, NULL, 0);
-		if (path != execcmd->argv[0]) //free se o path for criado com malloc
-			free(path);
-	}
+		handle_parent_process(pid, path, execcmd, shell);
 }
 
 void	run_cmd(t_cmd *cmd, t_shell *shell)
@@ -160,6 +137,3 @@ void	run_cmd(t_cmd *cmd, t_shell *shell)
 		wait(NULL);
 	}
 }
-
-
-
