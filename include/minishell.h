@@ -61,7 +61,7 @@ typedef struct s_redir
 typedef struct execcmd
 {
 	int		type;
-	char	*argv[20];
+	char	**argv;
 	char	*end_argv[20];
 	t_redir	*redir;
 	int		fd_out;
@@ -100,6 +100,7 @@ typedef struct shell
 	char	**env;
 	char	*input;
 	char	*prompt;
+	int		argc;
 	int		exit_status;
 	int		heredoc;
 	char	*delimiter;
@@ -136,7 +137,8 @@ int		special_chars(char **str);
 void	null_terminate(t_cmd *cmd);
 int		find_char(char **ptr_str, char *end_str, char *set);
 t_cmd	*exec_cmd(void);
-int		syntax_check(char *input);
+int		syntax_check(t_shell *shell);
+void	token_count(char *input, t_shell *argc);
 
 /* ========================================================================== */
 /*	COMMANDS AND REDIRECTIONS                                                 */

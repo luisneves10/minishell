@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/23 10:25:16 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:33:56 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,14 @@ void	init_minishell(t_shell *shell)
 		shell->delimiter = NULL;
 		shell->prompt = get_prompt();
 		shell->input = readline(shell->prompt);
+		printf("TRATAR DO STRNSUP -> PARSE_FUNC\n");
 		if (!shell->input)
 		{
 			free_shell(shell, 1);
 			printf("exit\n");
 			break ;
 		}
-		if (syntax_check(shell->input) == 0)
+		if (syntax_check(shell) == 0)
 		{
 			if (*shell->input)
 			{

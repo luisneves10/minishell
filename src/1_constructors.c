@@ -60,6 +60,7 @@ t_shell	*init_struct(char **argv, char **envp)
 		return (NULL);
 	shell->name = argv[0] + 2;
 	shell->exit_status = 0;
+	shell->argc = 0;
 	shell->prompt = NULL;
 	shell->input = NULL;
 	shell->env = copy_env(envp);

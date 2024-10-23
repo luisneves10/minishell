@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/23 12:30:00 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:20:29 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell);
 
-static t_redir	*add_redir(t_redir *head, int type, char *start_file, char *end_file)
+static t_redir	*add_redir(t_redir *head, int type,
+					char *start_file, char *end_file)
 {
 	t_redir	*tmp;
 	t_redir	*new_redir;
-	int	file_length;
+	int		file_length;
 
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
@@ -33,7 +34,7 @@ static t_redir	*add_redir(t_redir *head, int type, char *start_file, char *end_f
 	new_redir->file[file_length] = '\0';
 	new_redir->next = NULL;
 	if (!head)
-		return new_redir;
+		return (new_redir);
 	tmp = head;
 	while (tmp->next)
 		tmp = tmp->next;
@@ -41,15 +42,16 @@ static t_redir	*add_redir(t_redir *head, int type, char *start_file, char *end_f
 	return (head);
 }
 
-static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, char *end_str, t_shell *shell)
+static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str,
+					char *end_str, t_shell *shell)
 {
-	t_token	*tok;
-	int		token;
-	char	*end_tok;
-	char	*start_tok;
+	t_token		*tok;
+	int			token;
+	char		*end_tok;
+	char		*start_tok;
 	t_execcmd	*ecmd;
 
-	ecmd =  (t_execcmd *)cmd;
+	ecmd = (t_execcmd *)cmd;
 	tok = create_token();
 	while (find_char(ptr_str, end_str, "<>"))
 	{
@@ -71,14 +73,19 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, char *end_str, t_shell *s
 static int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
 {
 	int	tok_type;
+	int	len;
 
 	tok_type = get_token(str, end, &token->start, &token->end);
 	if (tok_type == 0)
 		return (0);
 	if (tok_type != 'a')
 		exit(0);
-	cmd->argv[token->argc] = token->start;
-	cmd->end_argv[token->argc] = token->end;
+	len = token->end - token->start;
+	cmd->argv[token->argc] = malloc(sizeof(char) * (len + 1));
+	if (!cmd->argv[token->argc])
+		return (0);
+	cmd->argv[token->argc] = ft_strndup(str, len);
+	// cmd->end_argv[token->argc] = token->end;
 	return (1);
 }
 
@@ -90,6 +97,9 @@ static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
 
 	ret = exec_cmd();
 	cmd = (t_execcmd *)ret;
+	cmd->argv = malloc(sizeof(char *) * shell->argc + 1);
+	if (!cmd->argv)
+		return (NULL);
 	token = create_token();
 	ret = parse_redirs(ret, ptr_str, end_str, shell);
 	while (!find_char(ptr_str, end_str, "|"))
@@ -99,7 +109,7 @@ static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
 		token->argc++;
 		ret = parse_redirs(ret, ptr_str, end_str, shell);
 	}
-	cmd->argv[token->argc] = NULL;
+	cmd->argv[shell->argc] = NULL;
 	cmd->end_argv[token->argc] = NULL;
 	free(token);
 	return (ret);
@@ -107,9 +117,9 @@ static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
 
 static t_cmd	*parse_pipe(char **ptr_str, char *end_str, t_shell *shell)
 {
-	t_cmd		*cmd;
-	char		*s;
-	char		*es;
+	t_cmd	*cmd;
+	char	*s;
+	char	*es;
 
 	s = NULL;
 	es = NULL;

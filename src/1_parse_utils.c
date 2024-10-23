@@ -88,12 +88,6 @@ int	special_chars(char **str)
 {
 	if (**str == '|')
 		return ('|');
-	else if (**str == '(')
-		return ('(');
-	else if (**str == ')')
-		return (')');
-	else if (**str == ';')
-		return (';');
 	else if (**str == '<' || **str == '>')
 		return (special_redirs(str));
 	else if (**str == 0)
