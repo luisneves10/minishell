@@ -3,33 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   1_parse_func.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/18 15:15:57 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/23 12:30:00 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_cmd	*parse_exec(char **ptr_str, char *end_str);
+static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell);
 
-static t_redir	*add_redirection(t_redir *head, int type, char *start_file, char *end_file)
+static t_redir	*add_redir(t_redir *head, int type, char *start_file, char *end_file)
 {
 	t_redir	*tmp;
 	t_redir	*new_redir;
+	int	file_length;
 
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
 		exit(1);
 	memset(new_redir, 0, sizeof(t_redir));
 	new_redir->type = type;
-	int	file_length = end_file - start_file;
+	file_length = end_file - start_file;
 	new_redir->file = malloc(file_length + 1); // +1 for the null terminator
 	if (!new_redir->file)
 		exit(1);
 	strncpy(new_redir->file, start_file, end_file - start_file);//MUDAR STRNCPY
-	new_redir->file[end_file - start_file] = '\0';
+	new_redir->file[file_length] = '\0';
 	new_redir->next = NULL;
 	if (!head)
 		return new_redir;
@@ -40,7 +41,7 @@ static t_redir	*add_redirection(t_redir *head, int type, char *start_file, char 
 	return (head);
 }
 
-static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, char *end_str)
+static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, char *end_str, t_shell *shell)
 {
 	t_token	*tok;
 	int		token;
@@ -58,7 +59,10 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, char *end_str)
 			printf("missing file for redirection\n");
 			break ;
 		}
-		ecmd->redir = add_redirection(ecmd->redir, token, start_tok, end_tok);
+		if (token == '-')
+			shell->delimiter = get_delimiter(start_tok, end_tok);
+		else
+			ecmd->redir = add_redir(ecmd->redir, token, start_tok, end_tok);
 	}
 	free(tok);
 	return (cmd);
@@ -78,7 +82,7 @@ static int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
 	return (1);
 }
 
-static t_cmd	*parse_exec(char **ptr_str, char *end_str)
+static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
 {
 	t_cmd		*ret;
 	t_execcmd	*cmd;
@@ -87,13 +91,13 @@ static t_cmd	*parse_exec(char **ptr_str, char *end_str)
 	ret = exec_cmd();
 	cmd = (t_execcmd *)ret;
 	token = create_token();
-	ret = parse_redirs(ret, ptr_str, end_str);
+	ret = parse_redirs(ret, ptr_str, end_str, shell);
 	while (!find_char(ptr_str, end_str, "|"))
 	{
 		if (!deal_token(cmd, ptr_str, end_str, token))
 			break ;
 		token->argc++;
-		ret = parse_redirs(ret, ptr_str, end_str);
+		ret = parse_redirs(ret, ptr_str, end_str, shell);
 	}
 	cmd->argv[token->argc] = NULL;
 	cmd->end_argv[token->argc] = NULL;
@@ -101,7 +105,7 @@ static t_cmd	*parse_exec(char **ptr_str, char *end_str)
 	return (ret);
 }
 
-static t_cmd	*parse_pipe(char **ptr_str, char *end_str)
+static t_cmd	*parse_pipe(char **ptr_str, char *end_str, t_shell *shell)
 {
 	t_cmd		*cmd;
 	char		*s;
@@ -109,22 +113,22 @@ static t_cmd	*parse_pipe(char **ptr_str, char *end_str)
 
 	s = NULL;
 	es = NULL;
-	cmd = parse_exec(ptr_str, end_str);
+	cmd = parse_exec(ptr_str, end_str, shell);
 	while (find_char(ptr_str, end_str, "|"))
 	{
 		get_token(ptr_str, end_str, &s, &es);
-		cmd = pipe_cmd(cmd, parse_pipe(ptr_str, end_str));
+		cmd = pipe_cmd(cmd, parse_pipe(ptr_str, end_str, shell));
 	}
 	return (cmd);
 }
 
-t_cmd	*parse_cmd(char *str)
+t_cmd	*parse_cmd(char *str, t_shell *shell)
 {
 	char	*end_str;
 	t_cmd	*cmd;
 
 	end_str = str + ft_strlen(str);
-	cmd = parse_pipe(&str, end_str);
+	cmd = parse_pipe(&str, end_str, shell);
 	null_terminate(cmd);
 	return (cmd);
 }

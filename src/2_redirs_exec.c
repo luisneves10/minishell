@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/17 16:13:14 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/23 10:17:35 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,16 +75,6 @@ int	redirs_conditions(t_fds *fds, t_redir *redir)
 			return (-1);
 		}
 		handle_out(fds);
-	}
-	if (redir->type == '-') //when it is used the '<<'
-	{
-		fds->in_fd = open(redir->file, O_RDONLY);
-		if (fds->in_fd < 0)
-		{
-			perror("open error (heredoc)");
-			return (-1);
-		}
-		handle_in(fds);
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/17 16:18:43 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/23 12:54:00 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,43 @@ int	get_token(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 		str ++;
 	if (*str == '"' || *str == '\'')
 		return (parse_quotes(ptr_str, end_str, start_tok, end_tok));
-	if (start_tok)
-		*start_tok = str;
+	//if (start_tok)
+	*start_tok = str;
 	ret = special_chars(&str);
 	if (ret != 'a')
 		str ++;
 	while (str < end_str && *str != ' ' && *str != '|' && *str != '>'
 		&& *str != '<' && ret == 'a')
 		str ++;
-	if (end_tok)
-		*end_tok = str;
+	//if (end_tok)
+	*end_tok = str;
 	*ptr_str = str;
 	return (ret);
+}
+
+int	special_redirs(char **str)
+{
+	if (**str == '>')
+	{
+		(*str)++;
+		if (**str == '>')
+		{
+			return ('+');
+		}
+		(*str)--;
+		return ('>');
+	}
+	else if (**str == '<')
+	{
+		(*str)++;
+		if (**str == '<')
+		{
+			return ('-');
+		}
+		(*str)--;
+		return ('<');
+	}
+	return ('?');
 }
 
 int	special_chars(char **str)
@@ -69,20 +94,8 @@ int	special_chars(char **str)
 		return (')');
 	else if (**str == ';')
 		return (';');
-	else if (**str == '<')
-		return ('<');
-	else if (**str == '>' || **str == '<')
-	{
-		(*str)++;
-		if (**str == '>')
-			return ('+');
-		if (**str == '<')
-			return ('-');
-		(*str)--;
-		if (**str == '<')
-			return ('<');
-		return ('>');
-	}
+	else if (**str == '<' || **str == '>')
+		return (special_redirs(str));
 	else if (**str == 0)
 		return (0);
 	return ('a');

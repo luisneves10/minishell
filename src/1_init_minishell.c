@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_init_minishell.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/23 12:12:14 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/23 10:25:16 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ void	init_minishell(t_shell *shell)
 
 	while (1)
 	{
+		shell->heredoc = 0;
+		shell->delimiter = NULL;
 		shell->prompt = get_prompt();
 		shell->input = readline(shell->prompt);
 		if (!shell->input)
@@ -63,7 +65,7 @@ void	init_minishell(t_shell *shell)
 			if (*shell->input)
 			{
 				add_history(shell->input);
-				cmd = parse_cmd(shell->input);
+				cmd = parse_cmd(shell->input, shell);
 				run_cmd(cmd, shell);
 				free_cmd(cmd);
 			}
