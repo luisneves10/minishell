@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 13:08:36 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:51:58 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	parse_quotes(char **ptr_str, char *end_str,
 	int		flag;
 
 	str = *ptr_str;
-	str++;
 	*start_tok = str;
+	str++;
 	flag = 0;
 	if (**ptr_str == '"')
 		flag = 1;
@@ -56,7 +56,13 @@ int	parse_quotes(char **ptr_str, char *end_str,
 		str++;
 	while (str < end_str && *str != '\'' && flag == 0)
 		str++;
-	//*str = '\0';
+	*end_tok = str++;
+	if (*str == '|' || *str == '<' || *str == '>')
+		*ptr_str = str;
+	else
+		while (str < end_str && *str != ' ' &&
+			*str != '|' && *str != '<' && *str != '>')
+			str++;
 	*end_tok = str;
 	str++;
 	*ptr_str = str;
@@ -99,6 +105,14 @@ int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
 	if (tok_type != 'a')
 		exit(0);
 	len = token->end - token->start;
-	cmd->argv[token->argc] = ft_strndup(token->start, len);
+/*
+	-> tratamento da string para tirar as aspas e guardar info se e single
+	ou double quotes.
+
+	if (*token->start == '\'')
+		literal
+	else
+		handle das expansoes
+*/
 	return (1);
 }
