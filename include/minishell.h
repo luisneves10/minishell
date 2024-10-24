@@ -62,7 +62,7 @@ typedef struct execcmd
 {
 	int		type;
 	char	**argv;
-	char	*end_argv[20];
+	// char	*end_argv[20];
 	t_redir	*redir;
 	int		fd_out;
 	int		fd_in;
@@ -136,7 +136,7 @@ int		get_token(char **ptr_str, char *end_str,
 int		special_chars(char **str);
 void	null_terminate(t_cmd *cmd);
 int		find_char(char **ptr_str, char *end_str, char *set);
-t_cmd	*exec_cmd(void);
+t_cmd	*exec_cmd(t_shell *shell);
 int		syntax_check(t_shell *shell);
 void	token_count(char *input, t_shell *argc);
 
