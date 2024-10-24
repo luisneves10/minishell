@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/23 15:20:29 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/24 10:53:07 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,7 @@ static int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
 	if (tok_type != 'a')
 		exit(0);
 	len = token->end - token->start;
-	cmd->argv[token->argc] = malloc(sizeof(char) * (len + 1));
-	if (!cmd->argv[token->argc])
-		return (0);
-	cmd->argv[token->argc] = ft_strndup(str, len);
-	// cmd->end_argv[token->argc] = token->end;
+	cmd->argv[token->argc] = ft_strndup(token->start, len);
 	return (1);
 }
 
@@ -95,11 +91,8 @@ static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
 	t_execcmd	*cmd;
 	t_token		*token;
 
-	ret = exec_cmd();
+	ret = exec_cmd(shell);
 	cmd = (t_execcmd *)ret;
-	cmd->argv = malloc(sizeof(char *) * shell->argc + 1);
-	if (!cmd->argv)
-		return (NULL);
 	token = create_token();
 	ret = parse_redirs(ret, ptr_str, end_str, shell);
 	while (!find_char(ptr_str, end_str, "|"))
@@ -109,8 +102,6 @@ static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
 		token->argc++;
 		ret = parse_redirs(ret, ptr_str, end_str, shell);
 	}
-	cmd->argv[shell->argc] = NULL;
-	cmd->end_argv[token->argc] = NULL;
 	free(token);
 	return (ret);
 }
@@ -140,5 +131,14 @@ t_cmd	*parse_cmd(char *str, t_shell *shell)
 	end_str = str + ft_strlen(str);
 	cmd = parse_pipe(&str, end_str, shell);
 	null_terminate(cmd);
+	/* ******************** DEBUG DEBUG DEBUG ******************** */
+	printf("--------------------------------------------\n");
+	int i = 0;
+	while (((t_execcmd *)cmd)->argv[i])
+	{
+		printf("argv[%d]: %s\n", i, ((t_execcmd *)cmd)->argv[i]);
+		i++;
+	}
+	/* ******************** DEBUG DEBUG DEBUG ******************** */
 	return (cmd);
 }

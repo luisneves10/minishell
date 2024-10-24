@@ -6,13 +6,13 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/17 11:26:13 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/24 10:07:27 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd	*exec_cmd(void)
+t_cmd	*exec_cmd(t_shell *shell)
 {
 	t_execcmd	*cmd;
 
@@ -20,7 +20,10 @@ t_cmd	*exec_cmd(void)
 	if (!cmd)
 		exit(0); // DAR HANDLE
 	ft_memset(cmd, 0, sizeof(t_execcmd));
-	ft_memset(cmd->argv, 0, (sizeof(char *) * 20));
+	// ft_memset(cmd->argv, 0, (sizeof(char *) * 20));
+	cmd->argv = ft_calloc(sizeof(char *), (shell->argc + 1));
+	if (!cmd->argv)
+		return (NULL);
 	cmd->type = EXEC;
 	return ((t_cmd *)cmd);
 }
