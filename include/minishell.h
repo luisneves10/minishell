@@ -134,11 +134,13 @@ t_cmd	*parse_cmd(char *str, t_shell *shell);
 int		get_token(char **ptr_str, char *end_str,
 			char **start_token, char **end_token);
 int		special_chars(char **str);
-void	null_terminate(t_cmd *cmd);
 int		find_char(char **ptr_str, char *end_str, char *set);
 t_cmd	*exec_cmd(t_shell *shell);
 int		syntax_check(t_shell *shell);
-void	token_count(char *input, t_shell *argc);
+void	token_count(char *str, t_shell *argc);
+t_redir	*add_redir(t_redir *head, int type,
+					char *start_file, char *end_file);
+int		deal_token(t_execcmd *cmd, char **str, char *end, t_token *token);
 
 /* ========================================================================== */
 /*	COMMANDS AND REDIRECTIONS                                                 */

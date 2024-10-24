@@ -6,41 +6,13 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 10:53:07 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/24 13:10:32 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell);
-
-static t_redir	*add_redir(t_redir *head, int type,
-					char *start_file, char *end_file)
-{
-	t_redir	*tmp;
-	t_redir	*new_redir;
-	int		file_length;
-
-	new_redir = malloc(sizeof(t_redir));
-	if (!new_redir)
-		exit(1);
-	memset(new_redir, 0, sizeof(t_redir));
-	new_redir->type = type;
-	file_length = end_file - start_file;
-	new_redir->file = malloc(file_length + 1); // +1 for the null terminator
-	if (!new_redir->file)
-		exit(1);
-	strncpy(new_redir->file, start_file, end_file - start_file);//MUDAR STRNCPY
-	new_redir->file[file_length] = '\0';
-	new_redir->next = NULL;
-	if (!head)
-		return (new_redir);
-	tmp = head;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_redir;
-	return (head);
-}
 
 static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str,
 					char *end_str, t_shell *shell)
@@ -70,27 +42,14 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str,
 	return (cmd);
 }
 
-static int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
-{
-	int	tok_type;
-	int	len;
-
-	tok_type = get_token(str, end, &token->start, &token->end);
-	if (tok_type == 0)
-		return (0);
-	if (tok_type != 'a')
-		exit(0);
-	len = token->end - token->start;
-	cmd->argv[token->argc] = ft_strndup(token->start, len);
-	return (1);
-}
-
 static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
 {
 	t_cmd		*ret;
 	t_execcmd	*cmd;
 	t_token		*token;
 
+	shell->argc = 0;
+	token_count(*ptr_str, shell);
 	ret = exec_cmd(shell);
 	cmd = (t_execcmd *)ret;
 	token = create_token();
@@ -130,15 +89,5 @@ t_cmd	*parse_cmd(char *str, t_shell *shell)
 
 	end_str = str + ft_strlen(str);
 	cmd = parse_pipe(&str, end_str, shell);
-	null_terminate(cmd);
-	/* ******************** DEBUG DEBUG DEBUG ******************** */
-	printf("--------------------------------------------\n");
-	int i = 0;
-	while (((t_execcmd *)cmd)->argv[i])
-	{
-		printf("argv[%d]: %s\n", i, ((t_execcmd *)cmd)->argv[i]);
-		i++;
-	}
-	/* ******************** DEBUG DEBUG DEBUG ******************** */
 	return (cmd);
 }

@@ -6,13 +6,42 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 10:44:17 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/24 13:08:36 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parse_quotes(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
+t_redir	*add_redir(t_redir *head, int type,
+					char *start_file, char *end_file)
+{
+	t_redir	*tmp;
+	t_redir	*new_redir;
+	int		file_length;
+
+	new_redir = malloc(sizeof(t_redir));
+	if (!new_redir)
+		exit(1);
+	memset(new_redir, 0, sizeof(t_redir));
+	new_redir->type = type;
+	file_length = end_file - start_file;
+	new_redir->file = malloc(file_length + 1); // +1 for the null terminator
+	if (!new_redir->file)
+		exit(1);
+	strncpy(new_redir->file, start_file, end_file - start_file);//MUDAR STRNCPY
+	new_redir->file[file_length] = '\0';
+	new_redir->next = NULL;
+	if (!head)
+		return (new_redir);
+	tmp = head;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new_redir;
+	return (head);
+}
+
+int	parse_quotes(char **ptr_str, char *end_str,
+		char **start_tok, char **end_tok)
 {
 	char	*str;
 	int		flag;
@@ -45,92 +74,31 @@ int	get_token(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 		str ++;
 	if (*str == '"' || *str == '\'')
 		return (parse_quotes(ptr_str, end_str, start_tok, end_tok));
-	// if (start_tok)
-	*start_tok = str;
+	if (start_tok)
+		*start_tok = str;
 	ret = special_chars(&str);
 	if (ret != 'a')
 		str ++;
 	while (str < end_str && *str != ' ' && *str != '|' && *str != '>'
 		&& *str != '<' && ret == 'a')
 		str ++;
-	// if (end_tok)
-	*end_tok = str;
+	if (end_tok)
+		*end_tok = str;
 	*ptr_str = str;
 	return (ret);
 }
 
-int	special_redirs(char **str)
+int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
 {
-	if (**str == '>')
-	{
-		(*str)++;
-		if (**str == '>')
-		{
-			return ('+');
-		}
-		(*str)--;
-		return ('>');
-	}
-	else if (**str == '<')
-	{
-		(*str)++;
-		if (**str == '<')
-		{
-			return ('-');
-		}
-		(*str)--;
-		return ('<');
-	}
-	return ('?');
-}
+	int	tok_type;
+	int	len;
 
-int	special_chars(char **str)
-{
-	if (**str == '|')
-		return ('|');
-	else if (**str == '<' || **str == '>')
-		return (special_redirs(str));
-	else if (**str == 0)
+	tok_type = get_token(str, end, &token->start, &token->end);
+	if (tok_type == 0)
 		return (0);
-	return ('a');
-}
-
-void	null_terminate(t_cmd *cmd)
-{
-	t_execcmd	*ecmd;
-	t_pipecmd	*pcmd;
-	int			i;
-
-	i = 0;
-	if (cmd == NULL)
+	if (tok_type != 'a')
 		exit(0);
-	if (cmd->type == EXEC)
-	{
-		ecmd = (t_execcmd *)cmd;
-		while (ecmd->argv[i])
-		{
-			// *ecmd->end_argv[i] = '\0';
-			i ++;
-		}
-	}
-	else if (cmd->type == PIPE)
-	{
-		pcmd = (t_pipecmd *)cmd;
-		null_terminate(pcmd->left);
-		null_terminate(pcmd->right);
-	}
-}
-
-int	find_char(char **ptr_str, char *end_str, char *set)
-{
-	char	*s;
-
-	s = *ptr_str;
-	while (s < end_str && *s == ' ')
-		s++;
-	*ptr_str = s;
-	if (s < end_str && ft_strchr(set, *s)) /* * PERGUNTAR AO DAVID * */
-		return (1);
-	else
-		return (0);
+	len = token->end - token->start;
+	cmd->argv[token->argc] = ft_strndup(token->start, len);
+	return (1);
 }

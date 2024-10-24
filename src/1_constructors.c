@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 10:07:27 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/24 12:25:44 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ t_cmd	*exec_cmd(t_shell *shell)
 	if (!cmd)
 		exit(0); // DAR HANDLE
 	ft_memset(cmd, 0, sizeof(t_execcmd));
-	// ft_memset(cmd->argv, 0, (sizeof(char *) * 20));
 	cmd->argv = ft_calloc(sizeof(char *), (shell->argc + 1));
 	if (!cmd->argv)
 		return (NULL);

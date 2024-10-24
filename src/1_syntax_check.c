@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 14:59:05 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 09:31:55 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/24 11:46:34 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ int	check_redirs(char *input)
 
 int	syntax_check(t_shell *shell)
 {
-	token_count(shell->input, shell);
 	if (check_quotes(shell->input) == 0 && check_pipes(shell->input) == 0
 		&& check_redirs(shell->input) == 0)
 		return (0);
