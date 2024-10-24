@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/23 12:12:19 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:40:57 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,11 +115,10 @@ void	run_cmd(t_cmd *cmd, t_shell *shell)
 
 	execcmd = (t_execcmd *)cmd;
 	pipecmd = (t_pipecmd *)cmd;
-	//printf("heredoc: %s\n", shell->delimiter);
+	if (shell->heredoc_flag == 1)
+		handle_heredoc(shell);
 	if (!cmd)
 		return;
-	if (shell->delimiter)
-		handle_heredoc();
 	if (cmd->type == EXEC)
 		handle_redirs(execcmd, shell);
 	else if (cmd->type == PIPE)

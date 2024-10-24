@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/23 12:54:00 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:04:30 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,16 @@ int	get_token(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 		str ++;
 	if (*str == '"' || *str == '\'')
 		return (parse_quotes(ptr_str, end_str, start_tok, end_tok));
-	//if (start_tok)
-	*start_tok = str;
+	if (start_tok)
+		*start_tok = str;
 	ret = special_chars(&str);
 	if (ret != 'a')
 		str ++;
 	while (str < end_str && *str != ' ' && *str != '|' && *str != '>'
 		&& *str != '<' && ret == 'a')
 		str ++;
-	//if (end_tok)
-	*end_tok = str;
+	if (end_tok)
+		*end_tok = str;
 	*ptr_str = str;
 	return (ret);
 }

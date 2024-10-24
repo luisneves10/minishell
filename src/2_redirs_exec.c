@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/23 10:17:35 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:40:02 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	handle_in(t_fds *fds)
 		fds->saved_in = dup(STDIN_FILENO);  // GUARDAR O STDIN ORIGINAL
 	if (fds->saved_in < 0)
 	{
-		perror("dup error (saving original stdout)");
+		perror("dup error (saving original stdin)");
 		exit(1);
 	}
 	if (dup2(fds->in_fd, STDIN_FILENO) < 0 || fds->saved_in < 0)
@@ -44,9 +44,9 @@ static void	handle_out(t_fds *fds)
 	}
 }
 
-int	redirs_conditions(t_fds *fds, t_redir *redir)
+int	redirs_conditions(t_fds *fds, t_redir *redir, t_shell *shell)
 {
-	if (redir->type == '<')
+	if (redir && redir->type == '<')
 	{
 		fds->in_fd = open(redir->file, O_RDONLY);
 		if (fds->in_fd < 0)
@@ -56,7 +56,7 @@ int	redirs_conditions(t_fds *fds, t_redir *redir)
 		}
 		handle_in(fds);
 	}
-	if (redir->type == '>')
+	else if (redir && redir->type == '>')
 	{
 		fds->out_fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fds->out_fd < 0)
@@ -66,7 +66,7 @@ int	redirs_conditions(t_fds *fds, t_redir *redir)
 		}
 		handle_out(fds);
 	}
-	if (redir->type == '+')
+	else if (redir && redir->type == '+')
 	{
 		fds->out_fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fds->out_fd < 0)
@@ -75,6 +75,18 @@ int	redirs_conditions(t_fds *fds, t_redir *redir)
 			return (-1);
 		}
 		handle_out(fds);
+	}
+	if (redir && redir->type == '-')
+	{
+		redir->file = shell->heredoc->delimiter;
+		shell->heredoc = shell->heredoc->next;
+		fds->in_fd = open(redir->file, O_RDONLY);
+		if (fds->in_fd < 0)
+		{
+			perror("open error (input redirection)");
+			return (-1); //tirei daqui o exit
+		}
+		handle_in(fds);
 	}
 	return (1);
 }
@@ -100,7 +112,7 @@ void	handle_redirs(t_execcmd *execcmd, t_shell *shell)
 	redir = execcmd->redir;
 	while (redir)
 	{
-		if (redirs_conditions(fds, redir) < 0)
+		if (redirs_conditions(fds, redir, shell) < 0)
 			return ;
 		redir = redir->next;
 	}
