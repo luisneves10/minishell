@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/25 15:43:45 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:43:25 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,11 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str,
 			break ;
 		}
 		if (token == '-')
-			shell->delimiter = get_delimiter(start_tok, end_tok);
-		else
-			ecmd->redir = add_redir(ecmd->redir, token, start_tok, end_tok);
+		{
+			shell->heredoc = get_delimiter(start_tok, end_tok, shell);
+			shell->heredoc_flag = 1;
+		}
+		ecmd->redir = add_redir(ecmd->redir, token, start_tok, end_tok);
 	}
 	free(tok);
 	return (cmd);
@@ -88,6 +90,7 @@ t_cmd	*parse_cmd(char *str, t_shell *shell)
 	t_cmd	*cmd;
 
 	end_str = str + ft_strlen(str);
+	*end_str = '\0';
 	cmd = parse_pipe(&str, end_str, shell);
 	return (cmd);
 }

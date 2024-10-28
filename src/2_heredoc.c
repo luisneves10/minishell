@@ -6,40 +6,87 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/23 12:07:44 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:59:25 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_delimiter(char *start_tok, char *end_tok)
+t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 {
-	int		len;
-	char	*delimiter;
+	int			len;
+	t_heredoc	*new_heredoc;
+	t_heredoc	*current;
 
-	len = end_tok - start_tok;
-	delimiter = malloc(len + 1);
-	if (!delimiter)
+	current = NULL;
+	new_heredoc = malloc(sizeof(t_heredoc));
+	if (!new_heredoc)
+	{
+		perror("malloc error");
 		exit(1);
-	strncpy(delimiter, start_tok, end_tok - start_tok);//MUDAR STRNCPY
-	delimiter[len] = '\0';
-	return (delimiter);
+	}
+	new_heredoc->next = NULL;
+	len = end_tok - start_tok;
+	new_heredoc->delimiter = ft_calloc(len + 1, sizeof(char));
+	if (!new_heredoc->delimiter)
+	{
+		free(new_heredoc);
+		perror("calloc error");
+		return (NULL);
+	}
+	if (!new_heredoc->delimiter)
+		return (NULL);
+	ft_strlcpy(new_heredoc->delimiter, start_tok, len + 1);
+	if (shell->heredoc == NULL)
+		shell->heredoc = new_heredoc;
+	else
+	{
+		current = shell->heredoc;
+		while (current->next != NULL)
+			current = current->next;
+		current->next = new_heredoc;
+	}
+	return (shell->heredoc);
 }
 
-void	handle_heredoc(void)
+static void	read_heredoc(t_heredoc *current)
 {
-	int	fd;
+	char	*line;
 
-	fd = open("heredoc", O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd < 0)
+	while (1)
+		{
+			line = readline("> ");
+			if (!line)
+			{
+				perror("readline error");
+				break;
+			}
+			if (strcmp(line, current->delimiter) == 0)
+			{
+				free(line);
+				break;
+			}
+			write(current->fd, line, ft_strlen(line));
+			write(current->fd, "\n", 1);
+			free(line);
+		}
+}
+
+void	handle_heredoc(t_shell *shell)
+{
+	t_heredoc	*current;
+
+	current = shell->heredoc;
+	while (current)
 	{
-		perror("open error (heredoc)");
-		return ;
+		current->fd = open(current->delimiter, O_WRONLY | O_CREAT | O_EXCL, 0644);
+		if (current->fd < 0)
+		{
+			perror("open error (heredoc)");
+			return ;
+		}
+		read_heredoc(current);
+		close(current->fd);
+		current = current->next;
 	}
-	if (dup2(fd, STDIN_FILENO) < 0)
-	{
-		perror("dup2 error (input redirection)");
-		exit(1);
-	}
-	close(fd);
 }

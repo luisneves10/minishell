@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/23 12:07:29 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/24 13:02:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,16 +93,22 @@ typedef struct file_descriptors
 	int	saved_out;
 }	t_fds;
 
+typedef struct heredoc
+{
+	int		fd;
+	char	*delimiter;
+	struct heredoc	*next;
+}	t_heredoc;
+
 typedef struct shell
 {
-	char	*name;
-	char	**env;
-	char	*input;
-	char	*prompt;
-	int		argc;
-	int		exit_status;
-	int		heredoc;
-	char	*delimiter;
+	char		*name;
+	char		**env;
+	char		*input;
+	char		*prompt;
+	int			exit_status;
+	int			heredoc_flag;
+	t_heredoc	*heredoc;
 }	t_shell;
 
 /* ========================================================================== */
@@ -155,8 +161,8 @@ t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 void	fork_function1(t_pipecmd *pipecmd, t_shell *shell);
 void	fork_function2(t_pipecmd *pipecmd, t_shell *shell);
 t_token	*create_token(void);
-void	handle_heredoc(void);
-char	*get_delimiter(char *start_tok, char *end_tok);
+void	handle_heredoc(t_shell *shell);
+t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
 
 /* ========================================================================== */
 /*	EXECUTION AND PROCESS HANDLING                                            */

@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/24 15:38:16 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:28:48 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void	init_minishell(t_shell *shell)
 
 	while (1)
 	{
-		shell->heredoc = 0;
-		shell->delimiter = NULL;
+		shell->heredoc_flag = 0;
+		shell->heredoc = NULL;
 		shell->prompt = get_prompt();
 		shell->input = readline(shell->prompt);
 		if (!shell->input)
