@@ -106,6 +106,7 @@ typedef struct shell
 	char		**env;
 	char		*input;
 	char		*prompt;
+	int			argc;
 	int			exit_status;
 	int			heredoc_flag;
 	t_heredoc	*heredoc;
