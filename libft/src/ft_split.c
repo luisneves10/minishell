@@ -31,24 +31,6 @@ static int	ft_count_words(char const *s, char c)
 	return (count);
 }
 
-static char	*ft_strndup(char *s, size_t n)
-{
-	char	*s2;
-	size_t	i;
-
-	s2 = (char *)malloc(sizeof(char) * n + 1);
-	if (!s2)
-		return (NULL);
-	i = 0;
-	while (i < n && s[i])
-	{
-		s2[i] = s[i];
-		i++;
-	}
-	s2[i] = '\0';
-	return (s2);
-}
-
 char	**free_tab(char **tab, int k)
 {
 	while (k >= 0)
