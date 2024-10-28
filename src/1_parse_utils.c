@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 15:51:58 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:43:37 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,14 +105,6 @@ int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
 	if (tok_type != 'a')
 		exit(0);
 	len = token->end - token->start;
-/*
-	-> tratamento da string para tirar as aspas e guardar info se e single
-	ou double quotes.
-
-	if (*token->start == '\'')
-		literal
-	else
-		handle das expansoes
-*/
+	cmd->argv[token->argc] = ft_strndup(token->start, len);
 	return (1);
 }

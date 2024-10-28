@@ -62,7 +62,6 @@ typedef struct execcmd
 {
 	int		type;
 	char	**argv;
-	// char	*end_argv[20];
 	t_redir	*redir;
 	int		fd_out;
 	int		fd_in;

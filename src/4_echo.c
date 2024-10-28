@@ -24,6 +24,11 @@ int	ft_echo(char **argv)
 	int	i;
 
 	i = 1;
+	if (!argv[1])
+	{
+		printf("\n");
+		return (0);
+	}
 	if (is_echo_flag(argv[1]))
 		i++;
 	while (argv[i] && argv[i + 1] != NULL)

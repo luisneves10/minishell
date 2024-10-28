@@ -6,13 +6,13 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 13:10:32 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:43:45 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell);
+// static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell);
 
 static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str,
 					char *end_str, t_shell *shell)
