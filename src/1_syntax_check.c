@@ -73,9 +73,6 @@ int	check_pipes(char *input)
 
 int	check_redirs(char *input)
 {
-	char	*end_str;
-
-	end_str = &input[ft_strlen(input)];
 	while (*input)
 	{
 		if (*input == '>' || *input == '<' || !ft_strncmp(input, ">>", 2)
@@ -88,7 +85,7 @@ int	check_redirs(char *input)
 				input++;
 			if (*input == '\0')
 				return (mini_error(" near unexpected token `newline'", E_NWL));
-			if (find_char(&input, end_str, "<>|"))
+			if (find_char(&input, "<>|"))
 				return (mini_error(" near unexpected token", ER_TOK)); //need to have the token to error??
 		}
 		input++;

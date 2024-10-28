@@ -12,8 +12,7 @@
 
 #include "minishell.h"
 
-t_redir	*add_redir(t_redir *head, int type,
-					char *start_file, char *end_file)
+t_redir	*add_redir(t_redir *head, int type, char *start_file, char *end_file)
 {
 	t_redir	*tmp;
 	t_redir	*new_redir;
@@ -40,8 +39,7 @@ t_redir	*add_redir(t_redir *head, int type,
 	return (head);
 }
 
-int	parse_quotes(char **ptr_str, char *end_str,
-		char **start_tok, char **end_tok)
+int	parse_quotes(char **ptr_str, char **start_tok, char **end_tok)
 {
 	char	*str;
 	int		flag;
@@ -52,15 +50,15 @@ int	parse_quotes(char **ptr_str, char *end_str,
 	flag = 0;
 	if (**ptr_str == '"')
 		flag = 1;
-	while (str < end_str && *str != '"' && flag == 1)
+	while (*str && *str != '"' && flag == 1)
 		str++;
-	while (str < end_str && *str != '\'' && flag == 0)
+	while (*str && *str != '\'' && flag == 0)
 		str++;
 	*end_tok = str++;
 	if (*str == '|' || *str == '<' || *str == '>')
 		*ptr_str = str;
 	else
-		while (str < end_str && *str != ' ' &&
+		while (*str && *str != ' ' &&
 			*str != '|' && *str != '<' && *str != '>')
 			str++;
 	*end_tok = str;
@@ -69,23 +67,23 @@ int	parse_quotes(char **ptr_str, char *end_str,
 	return ('a');
 }
 
-int	get_token(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
+int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 {
 	char	*str;
 	int		ret;
 
 	ret = 0;
 	str = *ptr_str;
-	while (str < end_str && *str == ' ')
+	while (*str && *str == ' ')
 		str ++;
 	if (*str == '"' || *str == '\'')
-		return (parse_quotes(ptr_str, end_str, start_tok, end_tok));
+		return (parse_quotes(ptr_str, start_tok, end_tok));
 	if (start_tok)
 		*start_tok = str;
 	ret = special_chars(&str);
 	if (ret != 'a')
 		str ++;
-	while (str < end_str && *str != ' ' && *str != '|' && *str != '>'
+	while (*str && *str != ' ' && *str != '|' && *str != '>'
 		&& *str != '<' && ret == 'a')
 		str ++;
 	if (end_tok)
@@ -94,12 +92,12 @@ int	get_token(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
 	return (ret);
 }
 
-int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
+int	deal_token(t_execcmd *cmd, char **str, t_token *token)
 {
 	int	tok_type;
 	int	len;
 
-	tok_type = get_token(str, end, &token->start, &token->end);
+	tok_type = get_token(str, &token->start, &token->end);
 	if (tok_type == 0)
 		return (0);
 	if (tok_type != 'a')

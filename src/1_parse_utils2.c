@@ -75,15 +75,15 @@ int	special_chars(char **str)
 	return ('a');
 }
 
-int	find_char(char **ptr_str, char *end_str, char *set)
+int	find_char(char **ptr_str, char *set)
 {
 	char	*s;
 
 	s = *ptr_str;
-	while (s < end_str && *s == ' ')
+	while (*s && *s == ' ')
 		s++;
 	*ptr_str = s;
-	if (s < end_str && ft_strchr(set, *s))
+	if (*s && ft_strchr(set, *s))
 		return (1);
 	else
 		return (0);

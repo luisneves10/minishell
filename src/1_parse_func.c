@@ -12,10 +12,7 @@
 
 #include "minishell.h"
 
-// static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell);
-
-static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str,
-					char *end_str, t_shell *shell)
+static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, t_shell *shell)
 {
 	t_token		*tok;
 	int			token;
@@ -25,10 +22,10 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str,
 
 	ecmd = (t_execcmd *)cmd;
 	tok = create_token();
-	while (find_char(ptr_str, end_str, "<>"))
+	while (find_char(ptr_str, "<>"))
 	{
-		token = get_token(ptr_str, end_str, 0, 0);
-		if (get_token(ptr_str, end_str, &start_tok, &end_tok) != 'a')
+		token = get_token(ptr_str, 0, 0);
+		if (get_token(ptr_str, &start_tok, &end_tok) != 'a')
 		{
 			printf("missing file for redirection\n");
 			break ;
@@ -44,7 +41,7 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str,
 	return (cmd);
 }
 
-static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
+static t_cmd	*parse_exec(char **ptr_str, t_shell *shell)
 {
 	t_cmd		*ret;
 	t_execcmd	*cmd;
@@ -55,19 +52,19 @@ static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
 	ret = exec_cmd(shell);
 	cmd = (t_execcmd *)ret;
 	token = create_token();
-	ret = parse_redirs(ret, ptr_str, end_str, shell);
-	while (!find_char(ptr_str, end_str, "|"))
+	ret = parse_redirs(ret, ptr_str, shell);
+	while (!find_char(ptr_str, "|"))
 	{
-		if (!deal_token(cmd, ptr_str, end_str, token))
+		if (!deal_token(cmd, ptr_str, token))
 			break ;
 		token->argc++;
-		ret = parse_redirs(ret, ptr_str, end_str, shell);
+		ret = parse_redirs(ret, ptr_str, shell);
 	}
 	free(token);
 	return (ret);
 }
 
-static t_cmd	*parse_pipe(char **ptr_str, char *end_str, t_shell *shell)
+static t_cmd	*parse_pipe(char **ptr_str, t_shell *shell)
 {
 	t_cmd	*cmd;
 	char	*s;
@@ -75,22 +72,19 @@ static t_cmd	*parse_pipe(char **ptr_str, char *end_str, t_shell *shell)
 
 	s = NULL;
 	es = NULL;
-	cmd = parse_exec(ptr_str, end_str, shell);
-	while (find_char(ptr_str, end_str, "|"))
+	cmd = parse_exec(ptr_str, shell);
+	while (find_char(ptr_str, "|"))
 	{
-		get_token(ptr_str, end_str, &s, &es);
-		cmd = pipe_cmd(cmd, parse_pipe(ptr_str, end_str, shell));
+		get_token(ptr_str, &s, &es);
+		cmd = pipe_cmd(cmd, parse_pipe(ptr_str, shell));
 	}
 	return (cmd);
 }
 
 t_cmd	*parse_cmd(char *str, t_shell *shell)
 {
-	char	*end_str;
 	t_cmd	*cmd;
 
-	end_str = str + ft_strlen(str);
-	*end_str = '\0';
-	cmd = parse_pipe(&str, end_str, shell);
+	cmd = parse_pipe(&str, shell);
 	return (cmd);
 }
