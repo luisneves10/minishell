@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_redirs_exec.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 15:40:02 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/28 16:56:29 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	redirs_conditions(t_fds *fds, t_redir *redir, t_shell *shell)
 	}
 	if (redir && redir->type == '-')
 	{
-		redir->file = shell->heredoc->delimiter;
+		redir->file = shell->heredoc->filepath;
 		shell->heredoc = shell->heredoc->next;
 		fds->in_fd = open(redir->file, O_RDONLY);
 		if (fds->in_fd < 0)

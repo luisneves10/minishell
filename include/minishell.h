@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/24 13:02:47 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/28 16:54:04 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ typedef struct file_descriptors
 typedef struct heredoc
 {
 	int		fd;
+	int		index;
+	char	*filepath;
 	char	*delimiter;
 	struct heredoc	*next;
 }	t_heredoc;
@@ -110,6 +112,7 @@ typedef struct shell
 	int			exit_status;
 	int			heredoc_flag;
 	t_heredoc	*heredoc;
+	t_heredoc	*heredoc_head;
 }	t_shell;
 
 /* ========================================================================== */

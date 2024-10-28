@@ -3,15 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   1_init_minishell.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/24 15:28:48 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:15:03 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <readline/readline.h>
+
+void	delete_heredocs(t_shell *shell)
+{
+	t_heredoc	*current;
+	t_heredoc	*temp;
+
+	current = shell->heredoc_head;
+	printf("ENTERED: %s\n", shell->heredoc_head->filepath);
+	while (current != NULL)
+	{
+		if (current->fd >= 0)
+			close (current->fd);
+		if (current->filepath)
+		{
+			if (unlink(current->filepath) != 0)
+            	perror("Failed to delete heredoc file");
+		}
+		free(current->filepath);
+		current->filepath = NULL;
+		free(current->delimiter);
+		current->delimiter = NULL;
+		temp = current;
+		current = current->next;
+		free(temp);
+	}
+	shell->heredoc = NULL;
+	shell->heredoc_head = NULL;
+}
 
 void	free_shell(t_shell *shell, int i)
 {
@@ -53,6 +81,7 @@ void	init_minishell(t_shell *shell)
 	{
 		shell->heredoc_flag = 0;
 		shell->heredoc = NULL;
+		shell->heredoc_head = NULL;
 		shell->prompt = get_prompt();
 		shell->input = readline(shell->prompt);
 		if (!shell->input)
@@ -66,6 +95,7 @@ void	init_minishell(t_shell *shell)
 		{
 			cmd = parse_cmd(shell->input, shell);
 			run_cmd(cmd, shell);
+			delete_heredocs(shell);
 			free_cmd(cmd);
 		}
 		free_shell(shell, 0);

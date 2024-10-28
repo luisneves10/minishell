@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_heredoc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 15:59:25 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:35:42 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 	if (!new_heredoc->delimiter)
 		return (NULL);
 	ft_strlcpy(new_heredoc->delimiter, start_tok, len + 1);
+	new_heredoc->index = 0;
 	if (shell->heredoc == NULL)
 		shell->heredoc = new_heredoc;
 	else
@@ -45,6 +46,7 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 		while (current->next != NULL)
 			current = current->next;
 		current->next = new_heredoc;
+		new_heredoc->index += 1;
 	}
 	return (shell->heredoc);
 }
@@ -61,7 +63,8 @@ static void	read_heredoc(t_heredoc *current)
 				perror("readline error");
 				break;
 			}
-			if (strcmp(line, current->delimiter) == 0)
+			if (*line 
+				&& ft_strncmp(line, current->delimiter, ft_strlen(line)) == 0)
 			{
 				free(line);
 				break;
@@ -75,11 +78,16 @@ static void	read_heredoc(t_heredoc *current)
 void	handle_heredoc(t_shell *shell)
 {
 	t_heredoc	*current;
+	char	*index;
 
+	shell->heredoc_head = shell->heredoc;
+	//mkdir("../heredocs", 0755);
 	current = shell->heredoc;
 	while (current)
 	{
-		current->fd = open(current->delimiter, O_WRONLY | O_CREAT | O_EXCL, 0644);
+		index = ft_itoa(current->index);
+		current->filepath = ft_strjoin("../heredoc_", index);
+		current->fd = open(current->filepath, O_WRONLY | O_CREAT | O_EXCL, 0644);
 		if (current->fd < 0)
 		{
 			perror("open error (heredoc)");
@@ -88,5 +96,6 @@ void	handle_heredoc(t_shell *shell)
 		read_heredoc(current);
 		close(current->fd);
 		current = current->next;
+		free(index);
 	}
 }
