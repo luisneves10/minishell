@@ -55,7 +55,7 @@ static t_cmd	*parse_exec(char **ptr_str, t_shell *shell)
 	ret = parse_redirs(ret, ptr_str, shell);
 	while (!find_char(ptr_str, "|"))
 	{
-		if (!deal_token(cmd, ptr_str, token))
+		if (!deal_token(cmd, ptr_str, token, shell))
 			break ;
 		token->argc++;
 		ret = parse_redirs(ret, ptr_str, shell);

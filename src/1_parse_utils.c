@@ -92,7 +92,33 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 	return (ret);
 }
 
-int	deal_token(t_execcmd *cmd, char **str, t_token *token)
+char	*final_token(char *token, t_shell *shell)
+{
+	char	*tmp;
+	char	*new_tok;
+	int		i;
+	int		j;
+
+	shell = (void *)shell;
+	if (!ft_strchr(token, '"') && !ft_strchr(token, '\''))
+		return (token); // DEPOIS TRATAR DAS EXPANSOES (??)
+	i = 0;
+	j = 0;
+	tmp = NULL;
+	while (token[i] && token[i] != '\'')
+		tmp[j++] = token[i++];
+	if (token[i] == '\'')
+		i++;
+	while (token[i] && token[i] != '\'')
+		tmp[j++] = token[i++];
+	i++;
+	tmp[j] = '\0';
+	new_tok = ft_strdup(tmp);
+	free (token);
+	return (new_tok);
+}
+
+int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 {
 	int	tok_type;
 	int	len;
@@ -104,5 +130,6 @@ int	deal_token(t_execcmd *cmd, char **str, t_token *token)
 		exit(0);
 	len = token->end - token->start;
 	cmd->argv[token->argc] = ft_strndup(token->start, len);
+	cmd->argv[token->argc] = final_token(cmd->argv[token->argc], shell);
 	return (1);
 }

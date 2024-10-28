@@ -95,8 +95,8 @@ typedef struct file_descriptors
 
 typedef struct heredoc
 {
-	int		fd;
-	char	*delimiter;
+	int				fd;
+	char			*delimiter;
 	struct heredoc	*next;
 }	t_heredoc;
 
@@ -144,7 +144,7 @@ t_cmd	*exec_cmd(t_shell *shell);
 int		syntax_check(t_shell *shell);
 void	token_count(char *str, t_shell *argc);
 t_redir	*add_redir(t_redir *head, int type, char *start_file, char *end_file);
-int		deal_token(t_execcmd *cmd, char **str, t_token *token);
+int		deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell);
 
 /* ========================================================================== */
 /*	COMMANDS AND REDIRECTIONS                                                 */
