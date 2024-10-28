@@ -12,44 +12,18 @@
 
 #include "minishell.h"
 
-static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell);
+// static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell);
 
-static t_redir	*add_redir(t_redir *head, int type, char *start_file, char *end_file)
+static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str,
+					char *end_str, t_shell *shell)
 {
-	t_redir	*tmp;
-	t_redir	*new_redir;
-	int	file_length;
-
-	new_redir = malloc(sizeof(t_redir));
-	if (!new_redir)
-		exit(1);
-	memset(new_redir, 0, sizeof(t_redir));
-	new_redir->type = type;
-	file_length = end_file - start_file;
-	new_redir->file = malloc(file_length + 1); // +1 for the null terminator
-	if (!new_redir->file)
-		exit(1);
-	strncpy(new_redir->file, start_file, end_file - start_file);//MUDAR STRNCPY
-	new_redir->file[file_length] = '\0';
-	new_redir->next = NULL;
-	if (!head)
-		return new_redir;
-	tmp = head;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_redir;
-	return (head);
-}
-
-static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, char *end_str, t_shell *shell)
-{
-	t_token	*tok;
-	int		token;
-	char	*end_tok;
-	char	*start_tok;
+	t_token		*tok;
+	int			token;
+	char		*end_tok;
+	char		*start_tok;
 	t_execcmd	*ecmd;
 
-	ecmd =  (t_execcmd *)cmd;
+	ecmd = (t_execcmd *)cmd;
 	tok = create_token();
 	while (find_char(ptr_str, end_str, "<>"))
 	{
@@ -70,27 +44,15 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, char *end_str, t_shell *s
 	return (cmd);
 }
 
-static int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
-{
-	int	tok_type;
-
-	tok_type = get_token(str, end, &token->start, &token->end);
-	if (tok_type == 0)
-		return (0);
-	if (tok_type != 'a')
-		exit(0);
-	cmd->argv[token->argc] = token->start;
-	cmd->end_argv[token->argc] = token->end;
-	return (1);
-}
-
 static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
 {
 	t_cmd		*ret;
 	t_execcmd	*cmd;
 	t_token		*token;
 
-	ret = exec_cmd();
+	shell->argc = 0;
+	token_count(*ptr_str, shell);
+	ret = exec_cmd(shell);
 	cmd = (t_execcmd *)ret;
 	token = create_token();
 	ret = parse_redirs(ret, ptr_str, end_str, shell);
@@ -101,17 +63,15 @@ static t_cmd	*parse_exec(char **ptr_str, char *end_str, t_shell *shell)
 		token->argc++;
 		ret = parse_redirs(ret, ptr_str, end_str, shell);
 	}
-	cmd->argv[token->argc] = NULL;
-	cmd->end_argv[token->argc] = NULL;
 	free(token);
 	return (ret);
 }
 
 static t_cmd	*parse_pipe(char **ptr_str, char *end_str, t_shell *shell)
 {
-	t_cmd		*cmd;
-	char		*s;
-	char		*es;
+	t_cmd	*cmd;
+	char	*s;
+	char	*es;
 
 	s = NULL;
 	es = NULL;
@@ -132,6 +92,5 @@ t_cmd	*parse_cmd(char *str, t_shell *shell)
 	end_str = str + ft_strlen(str);
 	*end_str = '\0';
 	cmd = parse_pipe(&str, end_str, shell);
-	null_terminate(cmd);
 	return (cmd);
 }

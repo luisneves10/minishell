@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   1_sintax_check.c                                   :+:      :+:    :+:   */
+/*   1_syntax_check.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 14:59:05 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/17 15:05:47 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/24 11:46:34 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,10 @@ int	check_redirs(char *input)
 	return (0);
 }
 
-int	syntax_check(char *input)
+int	syntax_check(t_shell *shell)
 {
-	if (check_quotes(input) == 0 && check_pipes(input) == 0
-		&& check_redirs(input) == 0)
+	if (check_quotes(shell->input) == 0 && check_pipes(shell->input) == 0
+		&& check_redirs(shell->input) == 0)
 		return (0);
 	return (1);
 }

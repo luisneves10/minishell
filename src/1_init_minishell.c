@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <readline/readline.h>
 
 void	free_shell(t_shell *shell, int i)
 {
@@ -60,16 +61,15 @@ void	init_minishell(t_shell *shell)
 			printf("exit\n");
 			break ;
 		}
-		if (syntax_check(shell->input) == 0)
+		add_history(shell->input);
+		if (syntax_check(shell) == 0)
 		{
-			if (*shell->input)
-			{
-				add_history(shell->input);
-				cmd = parse_cmd(shell->input, shell);
-				run_cmd(cmd, shell);
-				free_cmd(cmd);
-			}
+			cmd = parse_cmd(shell->input, shell);
+			run_cmd(cmd, shell);
+			free_cmd(cmd);
 		}
 		free_shell(shell, 0);
 	}
+	rl_clear_history();
+	exit (0);
 }
