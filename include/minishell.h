@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/28 16:54:04 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/29 15:11:40 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ typedef struct token
 typedef struct file_descriptors
 {
 	int	in_fd;
-	int	out_fd;
+	int	out;
 	int	saved_in;
 	int	saved_out;
 }	t_fds;
@@ -119,6 +119,8 @@ typedef struct shell
 /* ------------------------------ FUNCTIONS --------------------------------- */
 /* ========================================================================== */
 
+int	mini_error(char *str, int error);
+
 /* ========================================================================== */
 /*	INITIALIZATION AND SIGNALS                                                */
 /* ========================================================================== */
@@ -126,6 +128,7 @@ void	init_minishell(t_shell *shell);
 void	signals(void);
 t_shell	*init_struct(char **argv, char **envp);
 void	free_shell(t_shell *shell, int i);
+t_fds	*init_fds(void);
 
 /* ========================================================================== */
 /*	ENVIRONMENT UTILS                                                         */
@@ -182,6 +185,7 @@ void	close_all(t_pipecmd *pipecmd);
 /*	MEMORY MANAGEMENT                                                         */
 /* ========================================================================== */
 void	free_cmd(t_cmd *cmd);
+void	delete_heredocs(t_shell *shell, int flag);
 
 /* ========================================================================== */
 /*	BUILTINS                                                                  */

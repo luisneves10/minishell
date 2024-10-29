@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_parse_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/23 13:04:30 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/29 14:59:44 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,17 @@ t_redir	*add_redir(t_redir *head, int type,
 		exit(1);
 	memset(new_redir, 0, sizeof(t_redir));
 	new_redir->type = type;
-	file_length = end_file - start_file;
-	new_redir->file = malloc(file_length + 1); // +1 for the null terminator
-	if (!new_redir->file)
-		exit(1);
-	strncpy(new_redir->file, start_file, end_file - start_file);//MUDAR STRNCPY
-	new_redir->file[file_length] = '\0';
+	if (type == '-')
+		new_redir->file = NULL;
+	else
+	{
+		file_length = end_file - start_file;
+		new_redir->file = malloc(file_length + 1);
+		if (!new_redir->file)
+			exit(1);
+		strncpy(new_redir->file, start_file, end_file - start_file);//MUDAR STRNCPY
+		new_redir->file[file_length] = '\0';
+	}
 	new_redir->next = NULL;
 	if (!head)
 		return (new_redir);
@@ -60,8 +65,8 @@ int	parse_quotes(char **ptr_str, char *end_str,
 	if (*str == '|' || *str == '<' || *str == '>')
 		*ptr_str = str;
 	else
-		while (str < end_str && *str != ' ' &&
-			*str != '|' && *str != '<' && *str != '>')
+		while (str < end_str && *str != ' '
+			&& *str != '|' && *str != '<' && *str != '>')
 			str++;
 	*end_tok = str;
 	str++;

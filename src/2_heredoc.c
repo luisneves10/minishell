@@ -6,19 +6,38 @@
 /*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/29 11:52:29 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/29 14:03:52 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+t_heredoc	*get_heredoc(t_shell *shell, t_heredoc *new_heredoc)
+{
+	t_heredoc	*current;
+
+	current = NULL;
+	if (shell->heredoc == NULL)
+	{
+		new_heredoc->index = 0;
+		shell->heredoc = new_heredoc;
+	}
+	else
+	{
+		current = shell->heredoc;
+		while (current->next != NULL)
+			current = current->next;
+		new_heredoc->index = current->index + 1;
+		current->next = new_heredoc;
+	}
+	return (shell->heredoc);
+}
+
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 {
 	int			len;
 	t_heredoc	*new_heredoc;
-	t_heredoc	*current;
 
-	current = NULL;
 	new_heredoc = malloc(sizeof(t_heredoc));
 	if (!new_heredoc)
 	{
@@ -37,20 +56,7 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 		return (NULL);
 	}
 	ft_strlcpy(new_heredoc->delimiter, start_tok, len + 1);
-	if (shell->heredoc == NULL)
-	{
-		new_heredoc->index = 0;
-		shell->heredoc = new_heredoc;
-	}
-	else
-	{
-		current = shell->heredoc;
-		while (current->next != NULL)
-			current = current->next;
-		new_heredoc->index = current->index + 1;
-		current->next = new_heredoc;
-	}
-	return (shell->heredoc);
+	return (get_heredoc(shell, new_heredoc));
 }
 
 static void	read_heredoc(t_heredoc *current)
@@ -59,46 +65,46 @@ static void	read_heredoc(t_heredoc *current)
 
 	line = NULL;
 	while (1)
+	{
+		line = readline("> ");
+		if (!line)
 		{
-			line = readline("> ");
-			if (!line)
-			{
-				perror("readline error");
-				break;
-			}
-			if (*line 
-				&& ft_strncmp(line, current->delimiter, ft_strlen(line)) == 0)
-			{
-				free(line);
-				break;
-			}
-			write(current->fd, line, ft_strlen(line));
-			write(current->fd, "\n", 1);
-			free(line);
-			line = NULL;
+			perror("readline error");
+			break ;
 		}
+		if (*line
+			&& ft_strncmp(line, current->delimiter, ft_strlen(current->delimiter)) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write(current->fd, line, ft_strlen(line));
+		write(current->fd, "\n", 1);
+		free(line);
+		line = NULL;
+	}
 }
 
 void	handle_heredoc(t_shell *shell)
 {
-	t_heredoc	*current;
-	char	*index;
+	char		*index;
+	t_heredoc	*curr;
 
 	shell->heredoc_head = shell->heredoc;
-	current = shell->heredoc;
-	while (current)
+	curr = shell->heredoc;
+	while (curr)
 	{
-		index = ft_itoa(current->index);
-		current->filepath = ft_strjoin("../heredoc_", index);
+		index = ft_itoa(curr->index);
+		curr->filepath = ft_strjoin("../heredoc_", index);
 		free(index);
-		current->fd = open(current->filepath, O_WRONLY | O_CREAT | O_EXCL, 0644);
-		if (current->fd < 0)
+		curr->fd = open(curr->filepath, O_WRONLY | O_CREAT | O_EXCL, 0644);
+		if (curr->fd < 0)
 		{
 			perror("open error (heredoc)");
 			return ;
 		}
-		read_heredoc(current);
-		close(current->fd);
-		current = current->next;
+		read_heredoc(curr);
+		close(curr->fd);
+		curr = curr->next;
 	}
 }

@@ -6,42 +6,12 @@
 /*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/29 11:44:33 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/29 15:11:24 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <readline/readline.h>
-
-void	delete_heredocs(t_shell *shell)
-{
-	t_heredoc	*current;
-	t_heredoc	*temp;
-
-	current = shell->heredoc_head;
-	while (current != NULL)
-	{
-		if (current->fd >= 0)
-			close (current->fd);
-		if (current->filepath)
-		{
-			if (unlink(current->filepath) < 0)
-				perror("Error deleting heredoc file");
-			free(current->filepath);
-			current->filepath = NULL;
-		}
-		if (current->delimiter)
-		{
-			free(current->delimiter);
-			current->delimiter = NULL;
-		}
-		temp = current;
-		current = current->next;
-		free(temp);
-	}
-	shell->heredoc = NULL;
-	shell->heredoc_head = NULL;
-}
 
 void	free_shell(t_shell *shell, int i)
 {
@@ -81,9 +51,6 @@ void	init_minishell(t_shell *shell)
 
 	while (1)
 	{
-		shell->heredoc_flag = 0;
-		shell->heredoc = NULL;
-		shell->heredoc_head = NULL;
 		shell->prompt = get_prompt();
 		shell->input = readline(shell->prompt);
 		if (!shell->input)
@@ -96,10 +63,12 @@ void	init_minishell(t_shell *shell)
 		if (syntax_check(shell) == 0)
 		{
 			cmd = parse_cmd(shell->input, shell);
+			if (shell->heredoc_flag == 1)
+				handle_heredoc(shell);
 			run_cmd(cmd, shell);
-			delete_heredocs(shell);
 			free_cmd(cmd);
 		}
+		delete_heredocs(shell, 1);
 		free_shell(shell, 0);
 	}
 	rl_clear_history();

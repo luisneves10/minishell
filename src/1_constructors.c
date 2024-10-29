@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_constructors.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 12:25:44 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/29 14:11:53 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_cmd	*exec_cmd(t_shell *shell)
 
 	cmd = malloc(sizeof(t_execcmd));
 	if (!cmd)
-		exit(0); // DAR HANDLE
+		exit(0);
 	ft_memset(cmd, 0, sizeof(t_execcmd));
 	cmd->argv = ft_calloc(sizeof(char *), (shell->argc + 1));
 	if (!cmd->argv)
@@ -33,7 +33,7 @@ t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right)
 
 	cmd = malloc(sizeof(t_pipecmd));
 	if (!cmd)
-		exit(0); // DAR HANDLE
+		exit(0);
 	ft_memset(cmd, 0, sizeof(t_pipecmd));
 	cmd->type = PIPE;
 	cmd->left = left;
@@ -47,7 +47,7 @@ t_token	*create_token(void)
 
 	token = malloc(sizeof(t_token));
 	if (!token)
-		exit(0); // DAR HANDLE
+		exit(0);
 	ft_memset(token, 0, sizeof(t_token));
 	token->argc = 0;
 	return (token);
@@ -60,6 +60,9 @@ t_shell	*init_struct(char **argv, char **envp)
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
 		return (NULL);
+	shell->heredoc_flag = 0;
+	shell->heredoc = NULL;
+	shell->heredoc_head = NULL;
 	shell->name = argv[0] + 2;
 	shell->exit_status = 0;
 	shell->argc = 0;
@@ -69,4 +72,16 @@ t_shell	*init_struct(char **argv, char **envp)
 	if (!shell->env)
 		return (NULL);
 	return (shell);
+}
+
+t_fds	*init_fds(void)
+{
+	t_fds	*fds;
+
+	fds = malloc(sizeof(t_fds));
+	fds->in_fd = -1;
+	fds->out = -1;
+	fds->saved_in = -1;
+	fds->saved_out = -1;
+	return (fds);
 }

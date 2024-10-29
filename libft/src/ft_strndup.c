@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 09:32:33 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/24 09:33:09 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/29 15:15:16 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 char	*ft_strndup(char *str, size_t n)
 {
 	size_t		i;
-	char	*str2;
+	char		*str2;
 
 	str2 = ft_calloc(n + 1, sizeof(char));
 	if (!str2)

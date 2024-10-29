@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_syntax_check.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 14:59:05 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 11:46:34 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/29 12:05:42 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 int	mini_error(char *str, int error)
 {
+	if (error == -1)
+	{
+		printf("%s", str);
+		return (-1);
+	}
 	printf("minishell: sintax error%s\n", str);
 	if (error == S_Q)
 		return (S_Q);
@@ -89,7 +94,7 @@ int	check_redirs(char *input)
 			if (*input == '\0')
 				return (mini_error(" near unexpected token `newline'", E_NWL));
 			if (find_char(&input, end_str, "<>|"))
-				return (mini_error(" near unexpected token", ER_TOK)); //need to have the token to error??
+				return (mini_error(" near unexpected token", ER_TOK));
 		}
 		input++;
 	}
