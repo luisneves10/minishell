@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/28 17:35:42 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/29 11:52:29 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 		perror("malloc error");
 		exit(1);
 	}
+	new_heredoc->delimiter = NULL;
 	new_heredoc->next = NULL;
+	new_heredoc->fd = -1;
 	len = end_tok - start_tok;
 	new_heredoc->delimiter = ft_calloc(len + 1, sizeof(char));
 	if (!new_heredoc->delimiter)
@@ -34,19 +36,19 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 		perror("calloc error");
 		return (NULL);
 	}
-	if (!new_heredoc->delimiter)
-		return (NULL);
 	ft_strlcpy(new_heredoc->delimiter, start_tok, len + 1);
-	new_heredoc->index = 0;
 	if (shell->heredoc == NULL)
+	{
+		new_heredoc->index = 0;
 		shell->heredoc = new_heredoc;
+	}
 	else
 	{
 		current = shell->heredoc;
 		while (current->next != NULL)
 			current = current->next;
+		new_heredoc->index = current->index + 1;
 		current->next = new_heredoc;
-		new_heredoc->index += 1;
 	}
 	return (shell->heredoc);
 }
@@ -55,6 +57,7 @@ static void	read_heredoc(t_heredoc *current)
 {
 	char	*line;
 
+	line = NULL;
 	while (1)
 		{
 			line = readline("> ");
@@ -72,6 +75,7 @@ static void	read_heredoc(t_heredoc *current)
 			write(current->fd, line, ft_strlen(line));
 			write(current->fd, "\n", 1);
 			free(line);
+			line = NULL;
 		}
 }
 
@@ -81,12 +85,12 @@ void	handle_heredoc(t_shell *shell)
 	char	*index;
 
 	shell->heredoc_head = shell->heredoc;
-	//mkdir("../heredocs", 0755);
 	current = shell->heredoc;
 	while (current)
 	{
 		index = ft_itoa(current->index);
 		current->filepath = ft_strjoin("../heredoc_", index);
+		free(index);
 		current->fd = open(current->filepath, O_WRONLY | O_CREAT | O_EXCL, 0644);
 		if (current->fd < 0)
 		{
@@ -96,6 +100,5 @@ void	handle_heredoc(t_shell *shell)
 		read_heredoc(current);
 		close(current->fd);
 		current = current->next;
-		free(index);
 	}
 }

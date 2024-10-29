@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   5_free_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/25 11:00:48 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/29 11:47:00 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void free_redirections(t_redir *redir)
 	while (redir)
 	{
 		next = redir->next;
-		free(redir->file);
+		if (redir->type != '-')
+			free(redir->file);
 		free(redir);
 		redir = NULL;
 		redir = next;

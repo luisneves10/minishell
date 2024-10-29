@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/28 17:15:03 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/29 11:44:33 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,22 @@ void	delete_heredocs(t_shell *shell)
 	t_heredoc	*temp;
 
 	current = shell->heredoc_head;
-	printf("ENTERED: %s\n", shell->heredoc_head->filepath);
 	while (current != NULL)
 	{
 		if (current->fd >= 0)
 			close (current->fd);
 		if (current->filepath)
 		{
-			if (unlink(current->filepath) != 0)
-            	perror("Failed to delete heredoc file");
+			if (unlink(current->filepath) < 0)
+				perror("Error deleting heredoc file");
+			free(current->filepath);
+			current->filepath = NULL;
 		}
-		free(current->filepath);
-		current->filepath = NULL;
-		free(current->delimiter);
-		current->delimiter = NULL;
+		if (current->delimiter)
+		{
+			free(current->delimiter);
+			current->delimiter = NULL;
+		}
 		temp = current;
 		current = current->next;
 		free(temp);
