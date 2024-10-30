@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   5_free_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/29 15:12:42 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:14:30 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	delete_heredocs(t_shell *shell, int flag)
 void	free_redirections(t_redir *redir)
 {
 	t_redir	*next;
-	//printf("ENTERED: %c\n", redir->type);
+
 	while (redir)
 	{
 		next = redir->next;

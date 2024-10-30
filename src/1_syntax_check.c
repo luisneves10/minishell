@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_syntax_check.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 14:59:05 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/29 12:05:42 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/30 11:57:30 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	mini_error(char *str, int error)
 		printf("%s", str);
 		return (-1);
 	}
-	printf("minishell: sintax error%s\n", str);
+	printf("minishell: syntax error%s\n", str);
 	if (error == S_Q)
 		return (S_Q);
 	else if (error == D_Q)

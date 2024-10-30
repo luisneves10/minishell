@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_pipe_exec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:18:03 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/29 15:11:17 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/30 12:41:24 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	fork_function1(t_pipecmd *pipecmd, t_shell *shell)
 		run_cmd(pipecmd->left, shell);
 		delete_heredocs(shell, 0);
 		free_cmd((t_cmd *)pipecmd);
-		free_shell(shell, 1);
+		free_shell(shell, 2);
 		exit(0);
 	}
 }
@@ -61,7 +61,7 @@ void	fork_function2(t_pipecmd *pipecmd, t_shell *shell)
 		run_cmd(pipecmd->right, shell);
 		free_cmd((t_cmd *)pipecmd);
 		delete_heredocs(shell, 0);
-		free_shell(shell, 1);
+		free_shell(shell, 2);
 		exit(0);
 	}
 }

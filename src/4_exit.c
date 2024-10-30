@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   4_exit.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 14:28:33 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/02 11:42:32 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/30 11:59:40 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	ft_exit(char **argv, t_shell *shell)
 {
 	free_shell(shell, 1);
 	// free_cmd(shell->cmd);
-	printf("exit\n");
 	if (argv[1] == NULL)
 		exit (0);
 	if (ft_isnumber(argv[1]))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_init_minishell.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/29 15:11:24 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:12:30 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	free_shell(t_shell *shell, int i)
 	{
 		free_env(shell->env);
 		free (shell);
+		if (i == 1)
+			printf("exit\n");
 		return ;
 	}
 	shell->prompt = NULL;
@@ -56,7 +58,6 @@ void	init_minishell(t_shell *shell)
 		if (!shell->input)
 		{
 			free_shell(shell, 1);
-			printf("exit\n");
 			break ;
 		}
 		add_history(shell->input);

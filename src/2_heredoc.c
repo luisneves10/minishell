@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_heredoc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/29 14:03:52 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:00:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 	return (get_heredoc(shell, new_heredoc));
 }
 
-static void	read_heredoc(t_heredoc *current)
+static void	read_heredoc(t_heredoc *cur)
 {
 	char	*line;
 
@@ -73,13 +73,13 @@ static void	read_heredoc(t_heredoc *current)
 			break ;
 		}
 		if (*line
-			&& ft_strncmp(line, current->delimiter, ft_strlen(current->delimiter)) == 0)
+			&& !ft_strncmp(line, cur->delimiter, ft_strlen(cur->delimiter)))
 		{
 			free(line);
 			break ;
 		}
-		write(current->fd, line, ft_strlen(line));
-		write(current->fd, "\n", 1);
+		write(cur->fd, line, ft_strlen(line));
+		write(cur->fd, "\n", 1);
 		free(line);
 		line = NULL;
 	}
