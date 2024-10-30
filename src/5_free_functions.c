@@ -6,34 +6,61 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/25 11:00:48 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:14:30 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_redirections(t_redir *redir)
+void	delete_heredocs(t_shell *shell, int flag)
+{
+	t_heredoc	*current;
+	t_heredoc	*temp;
+
+	current = shell->heredoc_head;
+	while (current != NULL)
+	{
+		if (current->fd >= 0)
+			close (current->fd);
+		if (flag == 1)
+		{
+			if (unlink(current->filepath) < 0)
+				perror("Error deleting heredoc file");
+		}
+		free(current->filepath);
+		current->filepath = NULL;
+		free(current->delimiter);
+		current->delimiter = NULL;
+		temp = current;
+		current = current->next;
+		free(temp);
+	}
+	shell->heredoc = NULL;
+	shell->heredoc_head = NULL;
+}
+
+void	free_redirections(t_redir *redir)
 {
 	t_redir	*next;
 
 	while (redir)
 	{
 		next = redir->next;
-		free(redir->file);
+		if (redir->type != '-')
+			free(redir->file);
 		free(redir);
-		redir = NULL;
 		redir = next;
 	}
 }
 
-void free_cmd(t_cmd *cmd)
+void	free_cmd(t_cmd *cmd)
 {
 	t_execcmd	*execcmd;
 	t_pipecmd	*pipecmd;
 	int			i;
 
 	if (cmd == NULL)
-		return;
+		return ;
 	i = 0;
 	if (cmd->type == EXEC)
 	{

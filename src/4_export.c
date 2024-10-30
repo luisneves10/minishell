@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 15:21:52 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/18 14:33:24 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/30 12:00:54 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ static int	valid_name_len(t_shell *shell, char *arg)
 	}
 	return (EXPAND_NEW);
 }
-
 
 static int	var_update(char **local_env, char *var)
 {

@@ -6,30 +6,42 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/23 13:04:30 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:12:07 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*aloc_file(char *start_file, t_redir *new_redir, char *end_file)
+{
+	int		file_length;
+	char	*file;
+
+	file_length = end_file - start_file;
+	file = ft_strndup(start_file, file_length);
+	if (!file)
+	{
+		free(new_redir);
+		exit(1);
+	}
+	return (file);
+}
 
 t_redir	*add_redir(t_redir *head, int type,
 					char *start_file, char *end_file)
 {
 	t_redir	*tmp;
 	t_redir	*new_redir;
-	int		file_length;
 
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
-		exit(1);
+		exit(-1);
 	memset(new_redir, 0, sizeof(t_redir));
 	new_redir->type = type;
-	file_length = end_file - start_file;
-	new_redir->file = malloc(file_length + 1); // +1 for the null terminator
-	if (!new_redir->file)
-		exit(1);
-	strncpy(new_redir->file, start_file, end_file - start_file);//MUDAR STRNCPY
-	new_redir->file[file_length] = '\0';
+	if (type == '-')
+		new_redir->file = NULL;
+	else
+		new_redir->file = aloc_file(start_file, new_redir, end_file);
 	new_redir->next = NULL;
 	if (!head)
 		return (new_redir);
@@ -60,8 +72,8 @@ int	parse_quotes(char **ptr_str, char *end_str,
 	if (*str == '|' || *str == '<' || *str == '>')
 		*ptr_str = str;
 	else
-		while (str < end_str && *str != ' ' &&
-			*str != '|' && *str != '<' && *str != '>')
+		while (str < end_str && *str != ' '
+			&& *str != '|' && *str != '<' && *str != '>')
 			str++;
 	*end_tok = str;
 	str++;
