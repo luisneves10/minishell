@@ -39,7 +39,7 @@ t_redir	*add_redir(t_redir *head, int type, char *start_file, char *end_file)
 	return (head);
 }
 
-int	parse_quotes(char **ptr_str, char **start_tok, char **end_tok)
+/* int	parse_quotes(char **ptr_str, char **start_tok, char **end_tok)
 {
 	char	*str;
 	int		flag;
@@ -65,6 +65,36 @@ int	parse_quotes(char **ptr_str, char **start_tok, char **end_tok)
 	str++;
 	*ptr_str = str;
 	return ('a');
+} */
+
+/* int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
+{
+	char	quote_type;
+	int		in_quotes;
+
+	in_quotes = 0;
+	*start_tok = str;
+	while (*str)
+	{
+		while (*str && !find_char(&str, " |\"\'"))
+			str++;
+		if (*str == '"' || *str == '\'')
+		{
+			quote_type = **ptr_str;
+			in_quotes = 1;
+			str++;
+			while (*str && *str != quote_type)
+				str++;
+			if (*str == quote_type)
+				in_quotes = 0;
+			str++;
+		}
+		if (*str == ' ' || *str == '|')
+			break ;
+	}
+	*end_tok = str++;
+	*ptr_str = str;
+	return ('a');
 }
 
 int	get_token(char **ptr_str, char **start_tok, char **end_tok)
@@ -77,7 +107,73 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 	while (*str && *str == ' ')
 		str ++;
 	if (*str == '"' || *str == '\'')
-		return (parse_quotes(ptr_str, start_tok, end_tok));
+		return (parse_quotes(ptr_str, str, start_tok, end_tok));
+	if (start_tok)
+		*start_tok = str;
+	ret = special_chars(&str);
+	if (ret != 'a')
+		str ++;
+	while (*str && *str != ' ' && *str != '|' && *str != '>'
+		&& *str != '<' && ret == 'a')
+		str ++;
+	if (end_tok)
+		*end_tok = str;
+	*ptr_str = str;
+	return (ret);
+} */
+
+int	token_has_quotes(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != ' ')
+	{
+		if (str[i] == '"' || str[i] == '\'')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
+{
+	char	quote_type;
+
+	*start_tok = str;
+	while (*str)
+	{
+		while (*str && !find_char(&str, " |\"\'"))
+			str++;
+		if (*str == '"' || *str == '\'')
+		{
+			quote_type = *str;
+			str++;
+			while (*str && *str != quote_type)
+				str++;
+			if (*str && *str == quote_type)
+				str++;
+		}
+		if (*str == ' ' || *str == '|')
+			break ;
+	}
+	*end_tok = str++;
+	*ptr_str = str;
+	return ('a');
+}
+
+int	get_token(char **ptr_str, char **start_tok, char **end_tok)
+{
+	char	*str;
+	int		ret;
+
+	ret = 0;
+	str = *ptr_str;
+
+	while (*str && *str == ' ')
+		str++;
+	if (token_has_quotes(str))
+		return (parse_quotes(ptr_str, str, start_tok, end_tok));
 	if (start_tok)
 		*start_tok = str;
 	ret = special_chars(&str);
@@ -92,36 +188,11 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 	return (ret);
 }
 
-char	*final_token(char *token, t_shell *shell)
-{
-	char	*tmp;
-	char	*new_tok;
-	int		i;
-	int		j;
-
-	shell = (void *)shell;
-	if (!ft_strchr(token, '"') && !ft_strchr(token, '\''))
-		return (token); // DEPOIS TRATAR DAS EXPANSOES (??)
-	i = 0;
-	j = 0;
-	tmp = NULL;
-	while (token[i] && token[i] != '\'')
-		tmp[j++] = token[i++];
-	if (token[i] == '\'')
-		i++;
-	while (token[i] && token[i] != '\'')
-		tmp[j++] = token[i++];
-	i++;
-	tmp[j] = '\0';
-	new_tok = ft_strdup(tmp);
-	free (token);
-	return (new_tok);
-}
-
 int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 {
 	int	tok_type;
 	int	len;
+	t_shell	*sh; // DELETE DELETE DELETE DELETE DELETE DELETE DELETE
 
 	tok_type = get_token(str, &token->start, &token->end);
 	if (tok_type == 0)
@@ -130,6 +201,9 @@ int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 		exit(0);
 	len = token->end - token->start;
 	cmd->argv[token->argc] = ft_strndup(token->start, len);
-	cmd->argv[token->argc] = final_token(cmd->argv[token->argc], shell);
+	printf("TOKEN: %s\n", cmd->argv[token->argc]); // DELETE DELETE DELETE DELETE
+	printf("______________________________\n"); // DELETE DELETE DELETE DELETE
+	sh = shell; // DELETE DELETE DELETE DELETE DELETE DELETE
+	sh = (void *)sh; // DELETE DELETE DELETE DELETE DELETE DELETE
 	return (1);
 }

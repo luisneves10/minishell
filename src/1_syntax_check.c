@@ -14,7 +14,7 @@
 
 int	mini_error(char *str, int error)
 {
-	printf("minishell: sintax error%s\n", str);
+	printf("minishell: syntax error%s\n", str);
 	if (error == S_Q)
 		return (S_Q);
 	else if (error == D_Q)

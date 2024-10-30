@@ -49,6 +49,7 @@ static t_cmd	*parse_exec(char **ptr_str, t_shell *shell)
 
 	shell->argc = 0;
 	token_count(*ptr_str, shell);
+	printf("shell->argc: %d\n", shell->argc); // DELETE THIS <---
 	ret = exec_cmd(shell);
 	cmd = (t_execcmd *)ret;
 	token = create_token();

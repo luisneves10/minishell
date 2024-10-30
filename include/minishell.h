@@ -119,84 +119,84 @@ typedef struct shell
 /* ========================================================================== */
 /*	INITIALIZATION AND SIGNALS                                                */
 /* ========================================================================== */
-void	init_minishell(t_shell *shell);
-void	signals(void);
-t_shell	*init_struct(char **argv, char **envp);
-void	free_shell(t_shell *shell, int i);
+void		init_minishell(t_shell *shell);
+void		signals(void);
+t_shell		*init_struct(char **argv, char **envp);
+void		free_shell(t_shell *shell, int i);
 
 /* ========================================================================== */
 /*	ENVIRONMENT UTILS                                                         */
 /* ========================================================================== */
-char	**copy_env(char **env);
-int		env_size(char **env);
-void	free_env(char **env);
-int		var_name_len(char *var);
-int		var_search(char **env, char *var);
+char		**copy_env(char **env);
+int			env_size(char **env);
+void		free_env(char **env);
+int			var_name_len(char *var);
+int			var_search(char **env, char *var);
 
 /* ========================================================================== */
 /*	PARSING                                                                   */
 /* ========================================================================== */
-t_cmd	*parse_cmd(char *str, t_shell *shell);
-int		get_token(char **ptr_str, char **start_token, char **end_token);
-int		special_chars(char **str);
-int		find_char(char **ptr_str, char *set);
-t_cmd	*exec_cmd(t_shell *shell);
-int		syntax_check(t_shell *shell);
-void	token_count(char *str, t_shell *argc);
-t_redir	*add_redir(t_redir *head, int type, char *start_file, char *end_file);
-int		deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell);
+t_cmd		*parse_cmd(char *str, t_shell *shell);
+int			get_token(char **ptr_str, char **start_token, char **end_token);
+int			special_chars(char **str);
+int			find_char(char **ptr_str, char *set);
+t_cmd		*exec_cmd(t_shell *shell);
+int			syntax_check(t_shell *shell);
+void		token_count(char *str, t_shell *argc);
+t_redir		*add_redir(t_redir *head, int type, char *start_file, char *end_file);
+int			deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell);
 
 /* ========================================================================== */
 /*	COMMANDS AND REDIRECTIONS                                                 */
 /* ========================================================================== */
-void	run_cmd(t_cmd *cmd, t_shell *shell);
-void	handle_redirs(t_execcmd *execcmd, t_shell *shell);
-void	execute_commands(t_execcmd *execcmd, t_shell *shell);
-void	free_split(char **split);
-void	handle_child_process(char *path, t_execcmd *execcmd, t_shell *shell);
-void	handle_parent_process(int pid, char *path,
-			t_execcmd *execcmd, t_shell *shell);
-t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
-void	fork_function1(t_pipecmd *pipecmd, t_shell *shell);
-void	fork_function2(t_pipecmd *pipecmd, t_shell *shell);
-t_token	*create_token(void);
-void	handle_heredoc(t_shell *shell);
+void		run_cmd(t_cmd *cmd, t_shell *shell);
+void		handle_redirs(t_execcmd *execcmd, t_shell *shell);
+void		execute_commands(t_execcmd *execcmd, t_shell *shell);
+void		free_split(char **split);
+void		handle_child_process(char *path, t_execcmd *execcmd, t_shell *shell);
+void		handle_parent_process(int pid, char *path,
+				t_execcmd *execcmd, t_shell *shell);
+t_cmd		*pipe_cmd(t_cmd *left, t_cmd *right);
+void		fork_function1(t_pipecmd *pipecmd, t_shell *shell);
+void		fork_function2(t_pipecmd *pipecmd, t_shell *shell);
+t_token		*create_token(void);
+void		handle_heredoc(t_shell *shell);
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
 
 /* ========================================================================== */
 /*	EXECUTION AND PROCESS HANDLING                                            */
 /* ========================================================================== */
-char	*get_cmd_path(char **env, char *cmd);
-char	*get_cmds_path(char *path, char *cmd);
-void	child1_process(t_pipecmd *pipecmd, t_shell *shell,
-			int prev_pipe, int *pi);
-void	fork_function(t_pipecmd *pipecmd, t_shell *shell);
-void	close_all(t_pipecmd *pipecmd);
+char		*get_cmd_path(char **env, char *cmd);
+char		*get_cmds_path(char *path, char *cmd);
+void		child1_process(t_pipecmd *pipecmd, t_shell *shell,
+				int prev_pipe, int *pi);
+void		fork_function(t_pipecmd *pipecmd, t_shell *shell);
+void		close_all(t_pipecmd *pipecmd);
 
 /* ========================================================================== */
 /*	MEMORY MANAGEMENT                                                         */
 /* ========================================================================== */
-void	free_cmd(t_cmd *cmd);
+void		free_cmd(t_cmd *cmd);
 
 /* ========================================================================== */
 /*	BUILTINS                                                                  */
 /* ========================================================================== */
-char	*is_builtin(t_execcmd *execcmd);
-void	exec_builtin(char **argv, char *builtin, t_shell *shell);
-int		ft_echo(char **argv);
-int		ft_pwd(char **argv);
-int		ft_cd(char **argv, t_shell *shell);
-int		ft_export(char **argv, t_shell *shell);
-char	**update_env(char **local_env, char *var);
-int		ft_export_no_args(t_shell *shell);
-void	append_var(t_shell *shell, char *var);
-int		ft_unset(char **argv, t_shell *shell);
-int		ft_env(char **argv, t_shell *shell);
-void	ft_exit(char **argv, t_shell *shell);
+char		*is_builtin(t_execcmd *execcmd);
+void		exec_builtin(char **argv, char *builtin, t_shell *shell);
+int			ft_echo(char **argv);
+int			ft_pwd(char **argv);
+int			ft_cd(char **argv, t_shell *shell);
+int			ft_export(char **argv, t_shell *shell);
+char		**update_env(char **local_env, char *var);
+int			ft_export_no_args(t_shell *shell);
+void		append_var(t_shell *shell, char *var);
+int			ft_unset(char **argv, t_shell *shell);
+int			ft_env(char **argv, t_shell *shell);
+void		ft_exit(char **argv, t_shell *shell);
 
 /* ========================================================================== */
 /*	BUILTIN UTILS                                                             */
 /* ========================================================================== */
-int		has_options(char **argv, char *command);
+int			has_options(char **argv, char *command);
 
 #endif

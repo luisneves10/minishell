@@ -12,30 +12,39 @@
 
 #include "minishell.h"
 
+static void	quote_check(char *str, int *in_quotes, char *quote_type)
+{
+	if (!(*in_quotes))
+	{
+		*in_quotes = 1;
+		*quote_type = *str;
+	}
+	else
+		*in_quotes = 0;
+}
+
 void	token_count(char *str, t_shell *shell)
 {
-	int	i;
+	int		in_quotes;
+	char	quote_type;
 
-	i = 0;
-	while (str[i] && str[i] != '|' && str[i] != '>' && str[i] != '<')
+	in_quotes = 0;
+	quote_type = 0;
+	while (*str)
 	{
-		while (str[i] && str[i] == ' ')
-			i++;
-		if (str[i] && (str[i] == '|' || str[i] == '>' || str[i] == '<'))
-			return ;
-		if (str[i] && str[i] != ' ')
+		while (*str == ' ' && !in_quotes)
+			str++;
+		if (*str && *str != ' ' && *str != '|')
 			shell->argc++;
-		if (str[i] == '"' || str[i] == '\'')
+		while (*str && (in_quotes || (*str != ' ' && *str != '|')))
 		{
-			i++;
-			while (str[i] && str[i] != '"' && str[i] != '\'')
-				i++;
-			i++;
+			if ((*str == '\'' || *str == '"')
+				&& (!in_quotes || *str == quote_type))
+				quote_check(str, &in_quotes, &quote_type);
+			str++;
 		}
-		if (str[i] && (str[i] == '|' || str[i] == '>' || str[i] == '<'))
+		if (*str == '|' && !in_quotes)
 			return ;
-		while (str[i] && str[i] != ' ')
-			i++;
 	}
 }
 
@@ -80,8 +89,11 @@ int	find_char(char **ptr_str, char *set)
 	char	*s;
 
 	s = *ptr_str;
-	while (*s && *s == ' ')
-		s++;
+	if (!ft_strchr(set, ' '))
+	{
+		while (*s && *s == ' ')
+			s++;
+	}
 	*ptr_str = s;
 	if (*s && ft_strchr(set, *s))
 		return (1);
