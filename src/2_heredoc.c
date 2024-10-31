@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/30 13:00:47 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:02:08 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,17 +59,32 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 	return (get_heredoc(shell, new_heredoc));
 }
 
+void	heredoc_sig_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		exit(2);
+	}
+}
+
 static void	read_heredoc(t_heredoc *cur)
 {
 	char	*line;
-
+	//int		fd;
+	//char	delimiter[50];
+	//free heredoc
+	//passar fd e delimiter para variavel
+	signal(SIGINT, heredoc_sig_handler);
 	line = NULL;
 	while (1)
 	{
 		line = readline("> ");
-		if (!line)
+		if (!line) // EOF = CTRL + D // DAR ERRO QUE APARECE NO BASH
 		{
-			perror("readline error");
+			printf("minishell: heredocument delimited by end-of-file (wanted %s)\n", cur->delimiter);
 			break ;
 		}
 		if (*line
@@ -83,9 +98,41 @@ static void	read_heredoc(t_heredoc *cur)
 		free(line);
 		line = NULL;
 	}
+	exit(0);
 }
 
-void	handle_heredoc(t_shell *shell)
+int	process_heredoc(t_heredoc *curr)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork error");
+		return (-1);
+	}
+	else if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		read_heredoc(curr);
+		exit(0);
+	}
+	else
+	{
+		signal(SIGINT, SIG_IGN);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status) && WEXITSTATUS(status) == SIGINT)
+		{
+			signal(SIGINT, SIG_DFL);
+			return (1);
+		}
+	}
+	return (0);
+}
+
+
+int	handle_heredoc(t_shell *shell)
 {
 	char		*index;
 	t_heredoc	*curr;
@@ -101,10 +148,15 @@ void	handle_heredoc(t_shell *shell)
 		if (curr->fd < 0)
 		{
 			perror("open error (heredoc)");
-			return ;
+			return (-1);
 		}
-		read_heredoc(curr);
+		if (process_heredoc(curr) == 1)
+		{
+			close(curr->fd);
+			return (1);
+		}
 		close(curr->fd);
 		curr = curr->next;
 	}
+	return (0);
 }
