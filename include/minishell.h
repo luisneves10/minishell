@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/31 12:37:40 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:20:26 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ typedef struct heredoc
 
 typedef struct shell
 {
+	t_cmd		*head;
 	char		*name;
 	char		**env;
 	char		*input;
@@ -169,7 +170,7 @@ t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 void	fork_function1(t_pipecmd *pipecmd, t_shell *shell);
 void	fork_function2(t_pipecmd *pipecmd, t_shell *shell);
 t_token	*create_token(void);
-int	handle_heredoc(t_shell *shell);
+int	handle_heredoc(t_shell *shell, t_cmd *cmd);
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
 
 /* ========================================================================== */

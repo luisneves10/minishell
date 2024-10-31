@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/31 16:02:08 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:32:18 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,10 @@ void	heredoc_sig_handler(int sig)
 	}
 }
 
-static void	read_heredoc(t_heredoc *cur)
+static void	read_heredoc(char *delimiter, char *file)
 {
 	char	*line;
-	//int		fd;
+	int		fd;
 	//char	delimiter[50];
 	//free heredoc
 	//passar fd e delimiter para variavel
@@ -82,29 +82,41 @@ static void	read_heredoc(t_heredoc *cur)
 	while (1)
 	{
 		line = readline("> ");
+		//ABRIR O FILE AQUI!!!!
+		fd = open(file, O_WRONLY | O_CREAT | O_EXCL, 0644);
+		if (fd < 0)
+		{
+			perror("open error (heredoc)");
+			return ;
+		}
 		if (!line) // EOF = CTRL + D // DAR ERRO QUE APARECE NO BASH
 		{
-			printf("minishell: heredocument delimited by end-of-file (wanted %s)\n", cur->delimiter);
+			printf("minishell: heredocument delimited by end-of-file (wanted %s)\n", delimiter);
+			close(fd);
 			break ;
 		}
 		if (*line
-			&& !ft_strncmp(line, cur->delimiter, ft_strlen(cur->delimiter)))
+			&& !ft_strncmp(line, delimiter, ft_strlen(delimiter)))
 		{
 			free(line);
+			close(fd);
 			break ;
 		}
-		write(cur->fd, line, ft_strlen(line));
-		write(cur->fd, "\n", 1);
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
 		free(line);
 		line = NULL;
+		close(fd);
 	}
 	exit(0);
 }
 
-int	process_heredoc(t_heredoc *curr)
+int	process_heredoc(t_heredoc *curr, t_shell *shell, t_cmd *cmd)
 {
 	pid_t	pid;
 	int		status;
+	char	delimiter[4096];
+	char	file[4096];
 
 	pid = fork();
 	if (pid == -1)
@@ -115,7 +127,12 @@ int	process_heredoc(t_heredoc *curr)
 	else if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
-		read_heredoc(curr);
+		strcpy(delimiter, curr->delimiter);//mudar strcpy
+		strcpy(file, curr->filepath);//mudar strcpy
+		delete_heredocs(shell, 0);
+		free_shell(shell, 2);
+		free_cmd(cmd);
+		read_heredoc(delimiter, file);
 		exit(0);
 	}
 	else
@@ -132,7 +149,7 @@ int	process_heredoc(t_heredoc *curr)
 }
 
 
-int	handle_heredoc(t_shell *shell)
+int	handle_heredoc(t_shell *shell, t_cmd *cmd)
 {
 	char		*index;
 	t_heredoc	*curr;
@@ -144,18 +161,10 @@ int	handle_heredoc(t_shell *shell)
 		index = ft_itoa(curr->index);
 		curr->filepath = ft_strjoin("../heredoc_", index);
 		free(index);
-		curr->fd = open(curr->filepath, O_WRONLY | O_CREAT | O_EXCL, 0644);
-		if (curr->fd < 0)
+		if (process_heredoc(curr, shell, cmd) == 1)
 		{
-			perror("open error (heredoc)");
-			return (-1);
-		}
-		if (process_heredoc(curr) == 1)
-		{
-			close(curr->fd);
 			return (1);
 		}
-		close(curr->fd);
 		curr = curr->next;
 	}
 	return (0);

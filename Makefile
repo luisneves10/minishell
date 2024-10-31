@@ -6,7 +6,7 @@
 #    By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/13 14:19:16 by luibarbo          #+#    #+#              #
-#    Updated: 2024/10/23 09:34:59 by daduarte         ###   ########.fr        #
+#    Updated: 2024/10/31 16:34:08 by daduarte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ VALGRINDFLAGS	= -s --suppressions=$(READLINE_SUPP) \
 				  --tool=memcheck --leak-check=full \
 				  --show-leak-kinds=all --track-origins=yes \
 				  --track-fds=yes --show-below-main=no \
-				  --log-file=$(LEAKS_LOG)
+				 # --log-file=$(LEAKS_LOG)
 
 SRC_FILES	= 0_main.c \
 			  1_init_minishell.c 1_constructors.c 1_parse_func.c \
@@ -99,6 +99,7 @@ re: fclean all
 
 leaks: re
 	valgrind $(VALGRINDFLAGS) ./$(NAME)
-	cat $(LEAKS_LOG)
+
+#cat $(LEAKS_LOG)
 
 .PHONY: all clean fclean re leaks
