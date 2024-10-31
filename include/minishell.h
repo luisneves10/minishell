@@ -35,6 +35,7 @@
 # define BACK  5
 
 /* ------------------------------------------------------- ERROR MACROS ----- */
+# define INV_CHAR 40
 # define S_Q     41
 # define D_Q     42
 # define ERROR_P 43
@@ -143,8 +144,10 @@ int			find_char(char **ptr_str, char *set);
 t_cmd		*exec_cmd(t_shell *shell);
 int			syntax_check(t_shell *shell);
 void		token_count(char *str, t_shell *argc);
-t_redir		*add_redir(t_redir *head, int type, char *start_file, char *end_file);
-int			deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell);
+t_redir		*add_redir(t_redir *head, int type,
+				char *start_file, char *end_file);
+int			deal_token(t_execcmd *cmd, char **str,
+				t_token *token, t_shell *shell);
 
 /* ========================================================================== */
 /*	COMMANDS AND REDIRECTIONS                                                 */
@@ -153,7 +156,8 @@ void		run_cmd(t_cmd *cmd, t_shell *shell);
 void		handle_redirs(t_execcmd *execcmd, t_shell *shell);
 void		execute_commands(t_execcmd *execcmd, t_shell *shell);
 void		free_split(char **split);
-void		handle_child_process(char *path, t_execcmd *execcmd, t_shell *shell);
+void		handle_child_process(char *path, t_execcmd *execcmd,
+				t_shell *shell);
 void		handle_parent_process(int pid, char *path,
 				t_execcmd *execcmd, t_shell *shell);
 t_cmd		*pipe_cmd(t_cmd *left, t_cmd *right);

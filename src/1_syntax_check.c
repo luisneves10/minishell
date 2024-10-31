@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 14:59:05 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/24 11:46:34 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/31 14:47:59 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 int	mini_error(char *str, int error)
 {
 	printf("minishell: syntax error%s\n", str);
-	if (error == S_Q)
+	if (error == INV_CHAR)
+		return (INV_CHAR);
+	else if (error == S_Q)
 		return (S_Q);
 	else if (error == D_Q)
 		return (D_Q);
@@ -28,25 +30,49 @@ int	mini_error(char *str, int error)
 	return (1);
 }
 
-int	check_quotes(char *input)
+int	check_closed_quotes(char **input, char *quote_type)
 {
-	int	single_quotes;
-	int	double_quotes;
+	*quote_type = **input;
+	(*input)++;
+	while (**input && **input != *quote_type)
+		(*input)++;
+	if (**input && **input == *quote_type)
+	{
+		(*input)++;
+		return (0);
+	}
+	if (!(**input))
+	{
+		if (*quote_type == '\'')
+			return (mini_error(": missing single quotes \'\'\'", S_Q));
+		if (*quote_type == '"')
+			return (mini_error(": missing double quotes \'\"\'", D_Q));
+	}
+	return (0);
+}
 
-	single_quotes = 0;
-	double_quotes = 0;
+int	check_chars_and_quotes(char *input)
+{
+	char	quote_type;
+	int		ret;
+
+	quote_type = '\0';
+	ret = 0;
 	while (*input)
 	{
-		if (*input == '\'')
-			single_quotes++;
-		if (*input == '"')
-			double_quotes++;
-		input++;
+		while (*input && *input != '"' && *input != '\'')
+		{
+			if (ft_strchr("\\;()&!*", *input))
+				return (mini_error(": invalid character", INV_CHAR));
+			input++;
+		}
+		if (*input && (*input == '\'' || *input == '"'))
+		{
+			ret = check_closed_quotes(&input, &quote_type);
+			if (ret)
+				return (ret);
+		}
 	}
-	if (single_quotes % 2 != 0)
-		return (mini_error(": missing single quotes \'\'\'", S_Q));
-	if (double_quotes % 2 != 0)
-		return (mini_error(": missing double quotes \'\"\'", D_Q));
 	return (0);
 }
 
@@ -95,8 +121,8 @@ int	check_redirs(char *input)
 
 int	syntax_check(t_shell *shell)
 {
-	if (check_quotes(shell->input) == 0 && check_pipes(shell->input) == 0
-		&& check_redirs(shell->input) == 0)
+	if (check_chars_and_quotes(shell->input) == 0
+		&& check_pipes(shell->input) == 0 && check_redirs(shell->input) == 0)
 		return (0);
 	return (1);
 }

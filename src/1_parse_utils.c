@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/23 13:04:30 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/31 11:52:31 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,89 +38,6 @@ t_redir	*add_redir(t_redir *head, int type, char *start_file, char *end_file)
 	tmp->next = new_redir;
 	return (head);
 }
-
-/* int	parse_quotes(char **ptr_str, char **start_tok, char **end_tok)
-{
-	char	*str;
-	int		flag;
-
-	str = *ptr_str;
-	*start_tok = str;
-	str++;
-	flag = 0;
-	if (**ptr_str == '"')
-		flag = 1;
-	while (*str && *str != '"' && flag == 1)
-		str++;
-	while (*str && *str != '\'' && flag == 0)
-		str++;
-	*end_tok = str++;
-	if (*str == '|' || *str == '<' || *str == '>')
-		*ptr_str = str;
-	else
-		while (*str && *str != ' ' &&
-			*str != '|' && *str != '<' && *str != '>')
-			str++;
-	*end_tok = str;
-	str++;
-	*ptr_str = str;
-	return ('a');
-} */
-
-/* int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
-{
-	char	quote_type;
-	int		in_quotes;
-
-	in_quotes = 0;
-	*start_tok = str;
-	while (*str)
-	{
-		while (*str && !find_char(&str, " |\"\'"))
-			str++;
-		if (*str == '"' || *str == '\'')
-		{
-			quote_type = **ptr_str;
-			in_quotes = 1;
-			str++;
-			while (*str && *str != quote_type)
-				str++;
-			if (*str == quote_type)
-				in_quotes = 0;
-			str++;
-		}
-		if (*str == ' ' || *str == '|')
-			break ;
-	}
-	*end_tok = str++;
-	*ptr_str = str;
-	return ('a');
-}
-
-int	get_token(char **ptr_str, char **start_tok, char **end_tok)
-{
-	char	*str;
-	int		ret;
-
-	ret = 0;
-	str = *ptr_str;
-	while (*str && *str == ' ')
-		str ++;
-	if (*str == '"' || *str == '\'')
-		return (parse_quotes(ptr_str, str, start_tok, end_tok));
-	if (start_tok)
-		*start_tok = str;
-	ret = special_chars(&str);
-	if (ret != 'a')
-		str ++;
-	while (*str && *str != ' ' && *str != '|' && *str != '>'
-		&& *str != '<' && ret == 'a')
-		str ++;
-	if (end_tok)
-		*end_tok = str;
-	*ptr_str = str;
-	return (ret);
-} */
 
 int	token_has_quotes(char *str)
 {
@@ -157,7 +74,9 @@ int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
 		if (*str == ' ' || *str == '|')
 			break ;
 	}
-	*end_tok = str++;
+	*end_tok = str;
+	if (*str)
+		str++;
 	*ptr_str = str;
 	return ('a');
 }
@@ -174,16 +93,16 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 		str++;
 	if (token_has_quotes(str))
 		return (parse_quotes(ptr_str, str, start_tok, end_tok));
-	if (start_tok)
-		*start_tok = str;
+	// if (start_tok)
+	*start_tok = str;
 	ret = special_chars(&str);
 	if (ret != 'a')
 		str ++;
 	while (*str && *str != ' ' && *str != '|' && *str != '>'
 		&& *str != '<' && ret == 'a')
 		str ++;
-	if (end_tok)
-		*end_tok = str;
+	// if (end_tok)
+	*end_tok = str;
 	*ptr_str = str;
 	return (ret);
 }
