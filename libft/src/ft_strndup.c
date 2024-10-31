@@ -14,9 +14,11 @@
 
 char	*ft_strndup(char *str, size_t n)
 {
-	size_t		i;
+	size_t	i;
 	char	*str2;
 
+	if ((int)n > ft_strlen(str))
+		n = ft_strlen(str);
 	str2 = ft_calloc(n + 1, sizeof(char));
 	if (!str2)
 		return (NULL);
