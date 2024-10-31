@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_executor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/24 15:40:57 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/29 14:07:12 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	command_type(t_execcmd *execcmd, t_shell *shell, char **path)
 	}
 	if (execcmd->argv[0][0] == '/' || ft_strncmp(execcmd->argv[0], "./", 2) == 0
 		|| ft_strncmp(execcmd->argv[0], "../", 3) == 0)
-		*path = execcmd->argv[0]; //usa o comando como path (ex: ./minishell)
+		*path = execcmd->argv[0];
 	else
 	{
 		*path = get_cmd_path(shell->env, execcmd->argv[0]);
@@ -115,10 +115,8 @@ void	run_cmd(t_cmd *cmd, t_shell *shell)
 
 	execcmd = (t_execcmd *)cmd;
 	pipecmd = (t_pipecmd *)cmd;
-	if (shell->heredoc_flag == 1)
-		handle_heredoc(shell);
 	if (!cmd)
-		return;
+		return ;
 	if (cmd->type == EXEC)
 		handle_redirs(execcmd, shell);
 	else if (cmd->type == PIPE)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:02:12 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/10 12:09:52 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/29 15:15:34 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

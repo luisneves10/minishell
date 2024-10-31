@@ -14,8 +14,13 @@
 
 int	mini_error(char *str, int error)
 {
+	if (error == -1)
+	{
+		printf("%s", str);
+		return (-1);
+	}
 	printf("minishell: syntax error%s\n", str);
-	if (error == INV_CHAR)
+  if (error == INV_CHAR)
 		return (INV_CHAR);
 	else if (error == S_Q)
 		return (S_Q);
@@ -111,8 +116,8 @@ int	check_redirs(char *input)
 				input++;
 			if (*input == '\0')
 				return (mini_error(" near unexpected token `newline'", E_NWL));
-			if (find_char(&input, "<>|"))
-				return (mini_error(" near unexpected token", ER_TOK)); //need to have the token to error??
+			if (find_char(&input, end_str, "<>|"))
+				return (mini_error(" near unexpected token", ER_TOK));
 		}
 		input++;
 	}

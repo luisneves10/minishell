@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 09:32:33 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/24 09:33:09 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/30 12:39:29 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,19 @@
 char	*ft_strndup(char *str, size_t n)
 {
 	size_t	i;
+	size_t	len;
 	char	*str2;
 
-	if ((int)n > ft_strlen(str))
-		n = ft_strlen(str);
-	str2 = ft_calloc(n + 1, sizeof(char));
+	len = 0;
+	if (!str)
+		return (NULL);
+	while (len < n && str[len])
+		len ++;
+	str2 = ft_calloc(len + 1, sizeof(char));
 	if (!str2)
 		return (NULL);
 	i = 0;
-	while (str[i] && i < n)
+	while (str[i] && i < len)
 	{
 		str2[i] = str[i];
 		i++;

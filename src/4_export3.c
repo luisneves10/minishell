@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   4_export3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:32:19 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/18 14:48:16 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/10/30 12:01:08 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,3 @@ void	append_var(t_shell *shell, char *var)
 	if (flag)
 		create_var(shell, var);
 }
-
