@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/30 13:12:07 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/31 11:52:31 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,71 +52,90 @@ t_redir	*add_redir(t_redir *head, int type,
 	return (head);
 }
 
-int	parse_quotes(char **ptr_str, char *end_str,
-		char **start_tok, char **end_tok)
+int	token_has_quotes(char *str)
 {
-	char	*str;
-	int		flag;
+	int	i;
 
-	str = *ptr_str;
+	i = 0;
+	while (str[i] && str[i] != ' ')
+	{
+		if (str[i] == '"' || str[i] == '\'')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
+{
+	char	quote_type;
+
 	*start_tok = str;
-	str++;
-	flag = 0;
-	if (**ptr_str == '"')
-		flag = 1;
-	while (str < end_str && *str != '"' && flag == 1)
-		str++;
-	while (str < end_str && *str != '\'' && flag == 0)
-		str++;
-	*end_tok = str++;
-	if (*str == '|' || *str == '<' || *str == '>')
-		*ptr_str = str;
-	else
-		while (str < end_str && *str != ' '
-			&& *str != '|' && *str != '<' && *str != '>')
+	while (*str)
+	{
+		while (*str && !find_char(&str, " |\"\'"))
 			str++;
+		if (*str == '"' || *str == '\'')
+		{
+			quote_type = *str;
+			str++;
+			while (*str && *str != quote_type)
+				str++;
+			if (*str && *str == quote_type)
+				str++;
+		}
+		if (*str == ' ' || *str == '|')
+			break ;
+	}
 	*end_tok = str;
-	str++;
+	if (*str)
+		str++;
 	*ptr_str = str;
 	return ('a');
 }
 
-int	get_token(char **ptr_str, char *end_str, char **start_tok, char **end_tok)
+int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 {
 	char	*str;
 	int		ret;
 
 	ret = 0;
 	str = *ptr_str;
-	while (str < end_str && *str == ' ')
-		str ++;
-	if (*str == '"' || *str == '\'')
-		return (parse_quotes(ptr_str, end_str, start_tok, end_tok));
-	if (start_tok)
-		*start_tok = str;
+
+	while (*str && *str == ' ')
+		str++;
+	if (token_has_quotes(str))
+		return (parse_quotes(ptr_str, str, start_tok, end_tok));
+	// if (start_tok)
+	*start_tok = str;
 	ret = special_chars(&str);
 	if (ret != 'a')
 		str ++;
-	while (str < end_str && *str != ' ' && *str != '|' && *str != '>'
+	while (*str && *str != ' ' && *str != '|' && *str != '>'
 		&& *str != '<' && ret == 'a')
 		str ++;
-	if (end_tok)
-		*end_tok = str;
+	// if (end_tok)
+	*end_tok = str;
 	*ptr_str = str;
 	return (ret);
 }
 
-int	deal_token(t_execcmd *cmd, char **str, char *end, t_token *token)
+int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 {
 	int	tok_type;
 	int	len;
+	t_shell	*sh; // DELETE DELETE DELETE DELETE DELETE DELETE DELETE
 
-	tok_type = get_token(str, end, &token->start, &token->end);
+	tok_type = get_token(str, &token->start, &token->end);
 	if (tok_type == 0)
 		return (0);
 	if (tok_type != 'a')
 		exit(0);
 	len = token->end - token->start;
 	cmd->argv[token->argc] = ft_strndup(token->start, len);
+	printf("TOKEN: %s\n", cmd->argv[token->argc]); // DELETE DELETE DELETE DELETE
+	printf("______________________________\n"); // DELETE DELETE DELETE DELETE
+	sh = shell; // DELETE DELETE DELETE DELETE DELETE DELETE
+	sh = (void *)sh; // DELETE DELETE DELETE DELETE DELETE DELETE
 	return (1);
 }
