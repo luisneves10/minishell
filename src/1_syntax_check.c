@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 14:59:05 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/31 14:47:59 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/11/04 10:03:43 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	check_redirs(char *input)
 				input++;
 			if (*input == '\0')
 				return (mini_error(" near unexpected token `newline'", E_NWL));
-			if (find_char(&input, end_str, "<>|"))
+			if (find_char(&input, "<>|"))
 				return (mini_error(" near unexpected token", ER_TOK));
 		}
 		input++;

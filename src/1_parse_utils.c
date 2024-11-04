@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/31 11:52:31 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/11/04 10:12:01 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,16 +106,16 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 		str++;
 	if (token_has_quotes(str))
 		return (parse_quotes(ptr_str, str, start_tok, end_tok));
-	// if (start_tok)
-	*start_tok = str;
+	if (start_tok)
+		*start_tok = str;
 	ret = special_chars(&str);
 	if (ret != 'a')
 		str ++;
 	while (*str && *str != ' ' && *str != '|' && *str != '>'
 		&& *str != '<' && ret == 'a')
 		str ++;
-	// if (end_tok)
-	*end_tok = str;
+	if (end_tok)
+		*end_tok = str;
 	*ptr_str = str;
 	return (ret);
 }
@@ -133,8 +133,6 @@ int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 		exit(0);
 	len = token->end - token->start;
 	cmd->argv[token->argc] = ft_strndup(token->start, len);
-	printf("TOKEN: %s\n", cmd->argv[token->argc]); // DELETE DELETE DELETE DELETE
-	printf("______________________________\n"); // DELETE DELETE DELETE DELETE
 	sh = shell; // DELETE DELETE DELETE DELETE DELETE DELETE
 	sh = (void *)sh; // DELETE DELETE DELETE DELETE DELETE DELETE
 	return (1);

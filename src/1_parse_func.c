@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/30 14:58:56 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/04 10:12:24 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static t_cmd	*parse_exec(char **ptr_str, t_shell *shell)
 
 	shell->argc = 0;
 	token_count(*ptr_str, shell);
-	printf("shell->argc: %d\n", shell->argc); // DELETE DELETE DELETE
 	ret = exec_cmd(shell);
 	cmd = (t_execcmd *)ret;
 	token = create_token();
