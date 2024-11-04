@@ -32,8 +32,8 @@ READLINE_SUPP	= readline.supp
 VALGRINDFLAGS	= -s --suppressions=$(READLINE_SUPP) \
 				  --tool=memcheck --leak-check=full \
 				  --show-leak-kinds=all --track-origins=yes \
-				  --track-fds=yes --show-below-main=no \
-				 # --log-file=$(LEAKS_LOG)
+				  --track-fds=yes --show-below-main=no
+VALGRINDFLAGS2	= --log-file=$(LEAKS_LOG)
 
 SRC_FILES	= 0_main.c \
 			  1_init_minishell.c 1_constructors.c 1_parse_func.c \
@@ -98,8 +98,10 @@ fclean: clean
 re: fclean all
 
 leaks: re
+	valgrind $(VALGRINDFLAGS) $(VALGRINDFLAGS2) ./$(NAME)
+	cat $(LEAKS_LOG)
+
+le: re
 	valgrind $(VALGRINDFLAGS) ./$(NAME)
 
-#cat $(LEAKS_LOG)
-
-.PHONY: all clean fclean re leaks
+.PHONY: all clean fclean re leaks le

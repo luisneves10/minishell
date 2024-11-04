@@ -99,9 +99,10 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 	char	*str;
 	int		ret;
 
+	if (!ptr_str || !(*ptr_str))
+		return (0);
 	ret = 0;
 	str = *ptr_str;
-
 	while (*str && *str == ' ')
 		str++;
 	if (token_has_quotes(str))
@@ -126,6 +127,8 @@ int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 	int	len;
 	t_shell	*sh; // DELETE DELETE DELETE DELETE DELETE DELETE DELETE
 
+	if (!str || !*str || !**str)
+		return (0);
 	tok_type = get_token(str, &token->start, &token->end);
 	if (tok_type == 0)
 		return (0);
