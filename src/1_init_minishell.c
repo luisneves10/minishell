@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/30 13:12:30 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:20:12 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,12 @@ void	init_minishell(t_shell *shell)
 		if (syntax_check(shell) == 0)
 		{
 			cmd = parse_cmd(shell->input, shell);
+			shell->head = cmd;
 			if (shell->heredoc_flag == 1)
-				handle_heredoc(shell);
+				handle_heredoc(shell, cmd);
 			run_cmd(cmd, shell);
-			free_cmd(cmd);
+			free_cmd(cmd); //enviar o meio da lista!
+			//tem que se enviar a head da lista
 		}
 		delete_heredocs(shell, 1);
 		free_shell(shell, 0);
