@@ -50,6 +50,8 @@ static int	var_update(char **local_env, char *var)
 	i = 0;
 	while (local_env[i])
 	{
+		if (!ft_strchr(var, '='))
+			return (1);
 		if (ft_strncmp(local_env[i], var, var_size) == 0)
 		{
 			free (local_env[i]);
