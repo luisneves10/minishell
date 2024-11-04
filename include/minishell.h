@@ -155,6 +155,7 @@ t_redir		*add_redir(t_redir *head, int type,
 				char *start_file, char *end_file);
 int			deal_token(t_execcmd *cmd, char **str,
 				t_token *token, t_shell *shell);
+char		*final_token(char *tok, t_shell *shell);
 
 /* ========================================================================== */
 /*	COMMANDS AND REDIRECTIONS                                                 */
