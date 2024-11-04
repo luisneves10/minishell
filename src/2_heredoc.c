@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/31 16:32:18 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:41:48 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 		exit(1);
 	}
 	new_heredoc->delimiter = NULL;
+	new_heredoc->filepath = NULL;
 	new_heredoc->next = NULL;
 	new_heredoc->fd = -1;
 	len = end_tok - start_tok;
@@ -72,30 +73,27 @@ void	heredoc_sig_handler(int sig)
 
 static void	read_heredoc(char *delimiter, char *file)
 {
-	char	*line;
 	int		fd;
-	//char	delimiter[50];
-	//free heredoc
-	//passar fd e delimiter para variavel
+	char	*line;
+
 	signal(SIGINT, heredoc_sig_handler);
 	line = NULL;
 	while (1)
 	{
 		line = readline("> ");
-		//ABRIR O FILE AQUI!!!!
-		fd = open(file, O_WRONLY | O_CREAT | O_EXCL, 0644);
+		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd < 0)
 		{
 			perror("open error (heredoc)");
 			return ;
 		}
-		if (!line) // EOF = CTRL + D // DAR ERRO QUE APARECE NO BASH
+		if (!line)
 		{
 			printf("minishell: heredocument delimited by end-of-file (wanted %s)\n", delimiter);
 			close(fd);
 			break ;
 		}
-		if (*line
+		if (*line && ft_strlen(delimiter) == ft_strlen(line)
 			&& !ft_strncmp(line, delimiter, ft_strlen(delimiter)))
 		{
 			free(line);
@@ -115,9 +113,11 @@ int	process_heredoc(t_heredoc *curr, t_shell *shell, t_cmd *cmd)
 {
 	pid_t	pid;
 	int		status;
+	int		fd;
 	char	delimiter[4096];
 	char	file[4096];
 
+	fd = 0;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -141,9 +141,10 @@ int	process_heredoc(t_heredoc *curr, t_shell *shell, t_cmd *cmd)
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == SIGINT)
 		{
-			signal(SIGINT, SIG_DFL);
+			signal(SIGINT, signal_handler);
 			return (1);
 		}
+		signal(SIGINT, SIG_DFL);
 	}
 	return (0);
 }

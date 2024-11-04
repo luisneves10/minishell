@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/31 18:20:26 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:42:23 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,9 @@ void		init_minishell(t_shell *shell);
 void		signals(void);
 t_shell		*init_struct(char **argv, char **envp);
 void		free_shell(t_shell *shell, int i);
-t_fds	  *init_fds(void);
+t_fds		*init_fds(void);
+void		signal_handler(int sig);
+void	heredoc_sig_handler(int sig);
 
 /* ========================================================================== */
 /*	ENVIRONMENT UTILS                                                         */
@@ -170,7 +172,7 @@ t_cmd	  *pipe_cmd(t_cmd *left, t_cmd *right);
 void	  fork_function1(t_pipecmd *pipecmd, t_shell *shell);
 void	  fork_function2(t_pipecmd *pipecmd, t_shell *shell);
 t_token	*create_token(void);
-int	    handle_heredoc(t_shell *shell, t_cmd *cmd);
+int		handle_heredoc(t_shell *shell, t_cmd *cmd);
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
 
 /* ========================================================================== */

@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/31 16:52:59 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:46:14 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,27 @@ void	delete_heredocs(t_shell *shell, int flag)
 			close (current->fd);
 		if (flag == 1)
 		{
-			if (unlink(current->filepath) < 0)
-				perror("Error deleting heredoc file");
+			if (current->filepath)
+				if (access(current->filepath, F_OK) == 0)
+					if (unlink(current->filepath) < 0)
+						perror("Error deleting heredoc file");
+			shell->heredoc = NULL;
+			shell->heredoc_head = NULL;
 		}
-		free(current->filepath);
-		current->filepath = NULL;
-		free(current->delimiter);
-		current->delimiter = NULL;
+		if (current->filepath)
+		{
+			free(current->filepath);
+			current->filepath = NULL;
+		}
+		if (current->delimiter)
+		{
+			free(current->delimiter);
+			current->delimiter = NULL;
+		}
 		temp = current;
 		current = current->next;
 		free(temp);
 	}
-	shell->heredoc = NULL;
-	shell->heredoc_head = NULL;
 }
 
 void	free_redirections(t_redir *redir)

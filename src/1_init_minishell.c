@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/31 18:20:12 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:42:34 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,9 @@ static char	*get_prompt(void)
 void	init_minishell(t_shell *shell)
 {
 	t_cmd	*cmd;
+	int		flag;
 
+	flag = 0;
 	while (1)
 	{
 		shell->prompt = get_prompt();
@@ -66,10 +68,12 @@ void	init_minishell(t_shell *shell)
 			cmd = parse_cmd(shell->input, shell);
 			shell->head = cmd;
 			if (shell->heredoc_flag == 1)
-				handle_heredoc(shell, cmd);
-			run_cmd(cmd, shell);
-			free_cmd(cmd); //enviar o meio da lista!
-			//tem que se enviar a head da lista
+				if (handle_heredoc(shell, cmd) == 1)
+						flag = 1;
+			if (flag == 0)
+				run_cmd(cmd, shell);
+			flag = 0;
+			free_cmd(cmd);
 		}
 		delete_heredocs(shell, 1);
 		free_shell(shell, 0);
