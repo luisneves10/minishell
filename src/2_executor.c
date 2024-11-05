@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/05 11:45:40 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 13:16:30 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,4 +133,5 @@ void	run_cmd(t_cmd *cmd, t_shell *shell)
 		wait(NULL);
 		wait(NULL);
 	}
+	shell->exit_status = 0;
 }
