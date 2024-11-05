@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:29:45 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/04 16:34:01 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 10:44:49 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,22 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 	}
 	ft_strlcpy(new_heredoc->delimiter, start_tok, len + 1);
 	return (get_heredoc(shell, new_heredoc));
+}
+
+void	close_fds(t_fds *fds)
+{
+	if (fds->saved_in != -1)
+	{
+		dup2(fds->saved_in, STDIN_FILENO);
+		close(fds->saved_in);
+	}
+	if (fds->saved_out != -1)
+	{
+		dup2(fds->saved_out, STDOUT_FILENO);
+		close(fds->saved_out);
+	}
+	if (fds->out != -1)
+		close(fds->out);
+	if (fds->in_fd != -1)
+		close(fds->in_fd);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_executor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/29 14:07:12 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 11:45:40 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void	run_cmd(t_cmd *cmd, t_shell *shell)
 		if (pipe(pipecmd->pipefd) == -1)
 		{
 			perror("pipe error");
-			exit(77);
+			exit(1);
 		}
 		fork_function1(pipecmd, shell);
 		fork_function2(pipecmd, shell);

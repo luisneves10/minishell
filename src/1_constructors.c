@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_constructors.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/29 14:11:53 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 10:47:15 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_shell	*init_struct(char **argv, char **envp)
 	if (!shell)
 		return (NULL);
 	shell->heredoc_flag = 0;
+	shell->exit_heredoc = 0;
 	shell->heredoc = NULL;
 	shell->heredoc_head = NULL;
 	shell->name = argv[0] + 2;

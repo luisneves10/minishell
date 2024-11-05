@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/04 10:12:01 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 11:45:22 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_redir	*add_redir(t_redir *head, int type,
 
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
-		exit(-1);
+		exit(1);
 	memset(new_redir, 0, sizeof(t_redir));
 	new_redir->type = type;
 	if (type == '-')
@@ -101,7 +101,6 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 
 	ret = 0;
 	str = *ptr_str;
-
 	while (*str && *str == ' ')
 		str++;
 	if (token_has_quotes(str))
@@ -122,15 +121,15 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 
 int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 {
-	int	tok_type;
-	int	len;
+	int		len;
+	int		tok_type;
 	t_shell	*sh; // DELETE DELETE DELETE DELETE DELETE DELETE DELETE
 
 	tok_type = get_token(str, &token->start, &token->end);
 	if (tok_type == 0)
 		return (0);
 	if (tok_type != 'a')
-		exit(0);
+		exit(1);
 	len = token->end - token->start;
 	cmd->argv[token->argc] = ft_strndup(token->start, len);
 	sh = shell; // DELETE DELETE DELETE DELETE DELETE DELETE

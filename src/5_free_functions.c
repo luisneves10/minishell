@@ -6,11 +6,21 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/04 16:46:14 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 10:16:12 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	delete_herefile(t_shell *shell, t_heredoc *current)
+{
+	if (current->filepath)
+		if (access(current->filepath, F_OK) == 0)
+			if (unlink(current->filepath) < 0)
+				perror("Error deleting heredoc file");
+	shell->heredoc = NULL;
+	shell->heredoc_head = NULL;
+}
 
 void	delete_heredocs(t_shell *shell, int flag)
 {
@@ -23,14 +33,7 @@ void	delete_heredocs(t_shell *shell, int flag)
 		if (current->fd >= 0)
 			close (current->fd);
 		if (flag == 1)
-		{
-			if (current->filepath)
-				if (access(current->filepath, F_OK) == 0)
-					if (unlink(current->filepath) < 0)
-						perror("Error deleting heredoc file");
-			shell->heredoc = NULL;
-			shell->heredoc_head = NULL;
-		}
+			delete_herefile(shell, current);
 		if (current->filepath)
 		{
 			free(current->filepath);
