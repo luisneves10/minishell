@@ -136,8 +136,12 @@ int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 		exit(0);
 	len = token->end - token->start;
 	tmp = ft_strndup(token->start, len);
-	cmd->argv[token->argc] = final_token(tmp, shell);
 	// printf("TOKEN: %s\n", cmd->argv[token->argc]); // DELETE DELETE DELETE
 	// printf("_________________________\n"); // DELETE DELETE DELETE
+	if (!ft_strchr(tmp, '"') && !ft_strchr(tmp, '\''))
+		cmd->argv[token->argc] = ft_strdup(tmp);//cmd->argv[token->argc] = expand();
+	else
+		cmd->argv[token->argc] = clean_token(tmp, shell);
+	free (tmp);
 	return (1);
 }
