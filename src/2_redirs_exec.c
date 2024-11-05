@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/05 13:15:31 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:02:50 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	redirs_out(t_fds *fds, t_redir *redir, t_shell *shell)
 	return (1);
 }
 
-void	handle_redirs(t_execcmd *execcmd, t_shell *shell)
+void	handle_redirs(t_cmd *execcmd, t_shell *shell)
 {
 	t_redir	*redir;
 	t_fds	*fds;

@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/05 13:16:30 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:03:58 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*get_cmd_path(char **env, char *cmd)
 	return (real_path);
 }
 
-void	command_type(t_execcmd *execcmd, t_shell *shell, char **path)
+void	command_type(t_cmd *execcmd, t_shell *shell, char **path)
 {
 	if (is_builtin(execcmd) != NULL)
 	{
@@ -88,7 +88,7 @@ void	command_type(t_execcmd *execcmd, t_shell *shell, char **path)
 	}
 }
 
-void	execute_commands(t_execcmd *execcmd, t_shell *shell)
+void	execute_commands(t_cmd *execcmd, t_shell *shell)
 {
 	int		pid;
 	char	*path;
@@ -110,26 +110,21 @@ void	execute_commands(t_execcmd *execcmd, t_shell *shell)
 
 void	run_cmd(t_cmd *cmd, t_shell *shell)
 {
-	t_execcmd	*execcmd;
-	t_pipecmd	*pipecmd;
-
-	execcmd = (t_execcmd *)cmd;
-	pipecmd = (t_pipecmd *)cmd;
 	if (!cmd)
 		return ;
 	if (cmd->type == EXEC)
-		handle_redirs(execcmd, shell);
+		handle_redirs(cmd, shell);
 	else if (cmd->type == PIPE)
 	{
-		if (pipe(pipecmd->pipefd) == -1)
+		if (pipe(cmd->pipefd) == -1)
 		{
 			perror("pipe error");
 			exit(1);
 		}
-		fork_function1(pipecmd, shell);
-		fork_function2(pipecmd, shell);
-		close(pipecmd->pipefd[0]);
-		close(pipecmd->pipefd[1]);
+		fork_function1(cmd, shell);
+		fork_function2(cmd, shell);
+		close(cmd->pipefd[0]);
+		close(cmd->pipefd[1]);
 		wait(NULL);
 		wait(NULL);
 	}

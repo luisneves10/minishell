@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/04 10:12:24 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:06:48 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, t_shell *shell)
 	int			token;
 	char		*end_tok;
 	char		*start_tok;
-	t_execcmd	*ecmd;
+	t_cmd		*ecmd;
 
-	ecmd = (t_execcmd *)cmd;
+	ecmd = cmd;
 	tok = create_token();
 	while (find_char(ptr_str, "<>"))
 	{
@@ -43,14 +43,14 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, t_shell *shell)
 
 static t_cmd	*parse_exec(char **ptr_str, t_shell *shell)
 {
+	t_cmd		*cmd;
 	t_cmd		*ret;
-	t_execcmd	*cmd;
 	t_token		*token;
 
 	shell->argc = 0;
 	token_count(*ptr_str, shell);
-	ret = exec_cmd(shell);
-	cmd = (t_execcmd *)ret;
+	ret = create_cmd(shell, EXEC, NULL, NULL);
+	cmd = ret;
 	token = create_token();
 	ret = parse_redirs(ret, ptr_str, shell);
 	while (!find_char(ptr_str, "|"))
@@ -66,9 +66,9 @@ static t_cmd	*parse_exec(char **ptr_str, t_shell *shell)
 
 static t_cmd	*parse_pipe(char **ptr_str, t_shell *shell)
 {
-	t_cmd	*cmd;
 	char	*s;
 	char	*es;
+	t_cmd	*cmd;
 
 	s = NULL;
 	es = NULL;
@@ -76,7 +76,7 @@ static t_cmd	*parse_pipe(char **ptr_str, t_shell *shell)
 	while (find_char(ptr_str, "|"))
 	{
 		get_token(ptr_str, &s, &es);
-		cmd = pipe_cmd(cmd, parse_pipe(ptr_str, shell));
+		cmd = create_cmd(shell, PIPE, cmd, parse_pipe(ptr_str, shell));
 	}
 	return (cmd);
 }

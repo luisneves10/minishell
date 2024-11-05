@@ -6,39 +6,30 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/05 10:47:15 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:15:29 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd	*exec_cmd(t_shell *shell)
+t_cmd	*create_cmd(t_shell *shell, int type, t_cmd *left, t_cmd *right)
 {
-	t_execcmd	*cmd;
+	t_cmd	*cmd;
 
-	cmd = malloc(sizeof(t_execcmd));
+	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
 		exit(0);
-	ft_memset(cmd, 0, sizeof(t_execcmd));
-	cmd->argv = ft_calloc(sizeof(char *), (shell->argc + 1));
-	if (!cmd->argv)
-		return (NULL);
-	cmd->type = EXEC;
-	return ((t_cmd *)cmd);
-}
-
-t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right)
-{
-	t_pipecmd	*cmd;
-
-	cmd = malloc(sizeof(t_pipecmd));
-	if (!cmd)
-		exit(0);
-	ft_memset(cmd, 0, sizeof(t_pipecmd));
-	cmd->type = PIPE;
+	ft_memset(cmd, 0, sizeof(t_cmd));
+	if (type == EXEC)
+	{
+		cmd->argv = ft_calloc(sizeof(char *), (shell->argc + 1));
+		if (!cmd->argv)
+			return (NULL);
+	}
 	cmd->left = left;
 	cmd->right = right;
-	return ((t_cmd *)cmd);
+	cmd->type = type;
+	return (cmd);
 }
 
 t_token	*create_token(void)

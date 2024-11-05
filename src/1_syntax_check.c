@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 14:59:05 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/05 15:46:36 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:20:32 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int	mini_error(char *str, int error, t_shell *shell)
 		printf("minishell: %s", str);
 		return (-1);
 	}
-	printf("minishell: syntax error%s\n", str);
-  if (error == INV_CHAR)
+	printf("minishell: syntax error %s\n", str);
+	if (error == INV_CHAR)
 		return (INV_CHAR);
 	else if (error == S_Q)
 		return (S_Q);
@@ -103,7 +103,7 @@ int	check_pipes(t_shell *shell)
 	while (*input == ' ')
 		input++;
 	if (*input == '|')
-		return (mini_error(" near unexpected token `|'", ERROR_P, shell));
+		return (mini_error("near unexpected token `|'", ERROR_P, shell));
 	while (*input)
 	{
 		if (*input == '"' || *input == '\'')
@@ -113,8 +113,8 @@ int	check_pipes(t_shell *shell)
 			input ++;
 			while (*input == ' ')
 				input++;
-			if ((*input == '|' && flag == 0)|| *input == '\0')
-				return (mini_error(" near unexpected token `|'", 43, shell));
+			if ((*input == '|' && flag == 0) || *input == '\0')
+				return (mini_error("near unexpected token `|'", 43, shell));
 		}
 		if (*input != '"' || *input != '\'')
 			input++;
@@ -142,15 +142,14 @@ int	check_redirs(t_shell *shell)
 			while (*input == ' ')
 				input++;
 			if (*input == '\0')
-				return (mini_error(" near unexpected token `newline'", E_NWL, shell));
+				return (mini_error("near unexpected token `newline'", 1, shell));
 			if (find_char(&input, "<>|") && flag == 0)
-				return (mini_error(" near unexpected token", ER_TOK, shell));
+				return (mini_error("near unexpected token", ER_TOK, shell));
 		}
 		input++;
 	}
 	return (0);
 }
-
 
 int	syntax_check(t_shell *shell)
 {

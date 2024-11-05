@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/05 13:07:26 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:04:54 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,6 @@
 # define EXPAND_NEW  1
 # define EXPAND_APPEND 2
 
-typedef struct cmd
-{
-	int	type;
-}	t_cmd;
-
 typedef struct s_redir
 {
 	int				type;
@@ -58,6 +53,22 @@ typedef struct s_redir
 	char			*end_file;
 	struct s_redir	*next;
 }	t_redir;
+
+typedef struct cmd
+{
+	int	type;
+	char	**argv;
+	t_redir	*redir;
+	int		fd_out;
+	int		fd_in;
+	int		pipefd[2];
+	int		prev_pipe;
+	struct cmd	*left;
+	struct cmd	*right;
+	pid_t	pid1;
+	pid_t	pid2;
+}	t_cmd;
+
 
 typedef struct execcmd
 {
@@ -135,6 +146,7 @@ void		free_shell(t_shell *shell, int i);
 t_fds		*init_fds(void);
 void		signal_handler(int sig);
 void		heredoc_sig_handler(int sig);
+t_cmd	*create_cmd(t_shell *shell, int type, t_cmd *left, t_cmd *right);
 
 /* ========================================================================== */
 /*	ENVIRONMENT UTILS                                                         */
@@ -157,7 +169,7 @@ int			syntax_check(t_shell *shell);
 void		token_count(char *str, t_shell *argc);
 t_redir		*add_redir(t_redir *head, int type,
 				char *start_file, char *end_file);
-int			deal_token(t_execcmd *cmd, char **str,
+int			deal_token(t_cmd *cmd, char **str,
 				t_token *token, t_shell *shell);
 char		*final_token(char *tok, t_shell *shell);
 
@@ -165,16 +177,16 @@ char		*final_token(char *tok, t_shell *shell);
 /*	COMMANDS AND REDIRECTIONS                                                 */
 /* ========================================================================== */
 void		run_cmd(t_cmd *cmd, t_shell *shell);
-void		handle_redirs(t_execcmd *execcmd, t_shell *shell);
-void		execute_commands(t_execcmd *execcmd, t_shell *shell);
+void		handle_redirs(t_cmd *execcmd, t_shell *shell);
+void		execute_commands(t_cmd *execcmd, t_shell *shell);
 void		free_split(char **split);
-void		handle_child_process(char *path, t_execcmd *execcmd,
+void		handle_child_process(char *path, t_cmd *execcmd,
 				t_shell *shell);
 void		handle_parent_process(int pid, char *path,
-				t_execcmd *execcmd, t_shell *shell);
+				t_cmd *execcmd, t_shell *shell);
 t_cmd		*pipe_cmd(t_cmd *left, t_cmd *right);
-void		fork_function1(t_pipecmd *pipecmd, t_shell *shell);
-void		fork_function2(t_pipecmd *pipecmd, t_shell *shell);
+void		fork_function1(t_cmd *pipecmd, t_shell *shell);
+void		fork_function2(t_cmd *pipecmd, t_shell *shell);
 t_token		*create_token(void);
 int		  handle_heredoc(t_shell *shell);
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
@@ -198,7 +210,7 @@ void		delete_heredocs(t_shell *shell, int flag);
 /* ========================================================================== */
 /*	BUILTINS                                                                  */
 /* ========================================================================== */
-char		*is_builtin(t_execcmd *execcmd);
+char		*is_builtin(t_cmd *execcmd);
 void		exec_builtin(char **argv, char *builtin, t_shell *shell);
 int			ft_echo(char **argv);
 int			ft_pwd(char **argv);

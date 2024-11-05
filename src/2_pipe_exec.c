@@ -6,13 +6,13 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:18:03 by daduarte          #+#    #+#             */
-/*   Updated: 2024/10/31 18:20:52 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:03:33 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	fork_function1(t_pipecmd *pipecmd, t_shell *shell)
+void	fork_function1(t_cmd *pipecmd, t_shell *shell)
 {
 	int	pid;
 
@@ -39,7 +39,7 @@ void	fork_function1(t_pipecmd *pipecmd, t_shell *shell)
 	}
 }
 
-void	fork_function2(t_pipecmd *pipecmd, t_shell *shell)
+void	fork_function2(t_cmd *pipecmd, t_shell *shell)
 {
 	int	pid;
 

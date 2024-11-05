@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/05 10:16:12 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:13:36 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,29 +66,25 @@ void	free_redirections(t_redir *redir)
 
 void	free_cmd(t_cmd *cmd)
 {
-	t_execcmd	*execcmd;
-	t_pipecmd	*pipecmd;
-	int			i;
+	int	i;
 
 	if (cmd == NULL)
 		return ;
 	i = 0;
 	if (cmd->type == EXEC)
 	{
-		execcmd = (t_execcmd *)cmd;
-		if (execcmd->redir)
-			free_redirections(execcmd->redir);
-		while (execcmd->argv[i])
-			free (execcmd->argv[i++]);
-		free (execcmd->argv);
-		free (execcmd);
+		if (cmd->redir)
+			free_redirections(cmd->redir);
+		while (cmd->argv[i])
+			free (cmd->argv[i++]);
+		free (cmd->argv);
+		free (cmd);
 	}
 	else if (cmd->type == PIPE)
 	{
-		pipecmd = (t_pipecmd *)cmd;
-		free_cmd(pipecmd->left);
-		free_cmd(pipecmd->right);
-		free (pipecmd);
+		free_cmd(cmd->left);
+		free_cmd(cmd->right);
+		free (cmd);
 	}
 	cmd = NULL;
 }
