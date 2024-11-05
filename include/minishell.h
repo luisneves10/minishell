@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/31 18:20:26 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 10:46:59 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ typedef struct shell
 	char		*input;
 	char		*prompt;
 	int			argc;
+	int			exit_heredoc;
 	int			exit_status;
 	int			heredoc_flag;
 	t_heredoc	*heredoc;
@@ -121,7 +122,8 @@ typedef struct shell
 /* ------------------------------ FUNCTIONS --------------------------------- */
 /* ========================================================================== */
 
-int			mini_error(char *str, int error);
+int		mini_error(char *str, int error);
+void	close_fds(t_fds *fds);
 
 /* ========================================================================== */
 /*	INITIALIZATION AND SIGNALS                                                */
@@ -131,6 +133,8 @@ void		signals(void);
 t_shell		*init_struct(char **argv, char **envp);
 void		free_shell(t_shell *shell, int i);
 t_fds		*init_fds(void);
+void		signal_handler(int sig);
+void		heredoc_sig_handler(int sig);
 
 /* ========================================================================== */
 /*	ENVIRONMENT UTILS                                                         */
@@ -172,7 +176,7 @@ t_cmd		*pipe_cmd(t_cmd *left, t_cmd *right);
 void		fork_function1(t_pipecmd *pipecmd, t_shell *shell);
 void		fork_function2(t_pipecmd *pipecmd, t_shell *shell);
 t_token		*create_token(void);
-int			handle_heredoc(t_shell *shell, t_cmd *cmd);
+int		  handle_heredoc(t_shell *shell);
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
 
 /* ========================================================================== */
