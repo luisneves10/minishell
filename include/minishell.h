@@ -96,10 +96,10 @@ typedef struct file_descriptors
 
 typedef struct heredoc
 {
-	int		fd;
-	int		index;
-	char	*filepath;
-	char	*delimiter;
+	int				fd;
+	int				index;
+	char			*filepath;
+	char			*delimiter;
 	struct heredoc	*next;
 }	t_heredoc;
 
@@ -159,22 +159,24 @@ t_redir		*add_redir(t_redir *head, int type,
 				char *start_file, char *end_file);
 int			deal_token(t_execcmd *cmd, char **str,
 				t_token *token, t_shell *shell);
+char		*final_token(char *tok, t_shell *shell);
 
 /* ========================================================================== */
 /*	COMMANDS AND REDIRECTIONS                                                 */
 /* ========================================================================== */
-void	  run_cmd(t_cmd *cmd, t_shell *shell);
-void	  handle_redirs(t_execcmd *execcmd, t_shell *shell);
-void	  execute_commands(t_execcmd *execcmd, t_shell *shell);
-void	  free_split(char **split);
-void	  handle_child_process(char *path, t_execcmd *execcmd, t_shell *shell);
-void	  handle_parent_process(int pid, char *path,
-			  t_execcmd *execcmd, t_shell *shell);
-t_cmd	  *pipe_cmd(t_cmd *left, t_cmd *right);
-void	  fork_function1(t_pipecmd *pipecmd, t_shell *shell);
-void	  fork_function2(t_pipecmd *pipecmd, t_shell *shell);
-t_token	*create_token(void);
-int		handle_heredoc(t_shell *shell);
+void		run_cmd(t_cmd *cmd, t_shell *shell);
+void		handle_redirs(t_execcmd *execcmd, t_shell *shell);
+void		execute_commands(t_execcmd *execcmd, t_shell *shell);
+void		free_split(char **split);
+void		handle_child_process(char *path, t_execcmd *execcmd,
+				t_shell *shell);
+void		handle_parent_process(int pid, char *path,
+				t_execcmd *execcmd, t_shell *shell);
+t_cmd		*pipe_cmd(t_cmd *left, t_cmd *right);
+void		fork_function1(t_pipecmd *pipecmd, t_shell *shell);
+void		fork_function2(t_pipecmd *pipecmd, t_shell *shell);
+t_token		*create_token(void);
+int		  handle_heredoc(t_shell *shell);
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
 
 /* ========================================================================== */
@@ -190,8 +192,8 @@ void		close_all(t_pipecmd *pipecmd);
 /* ========================================================================== */
 /*	MEMORY MANAGEMENT                                                         */
 /* ========================================================================== */
-void	  free_cmd(t_cmd *cmd);
-void	  delete_heredocs(t_shell *shell, int flag);
+void		free_cmd(t_cmd *cmd);
+void		delete_heredocs(t_shell *shell, int flag);
 
 /* ========================================================================== */
 /*	BUILTINS                                                                  */

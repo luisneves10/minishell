@@ -99,6 +99,8 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 	char	*str;
 	int		ret;
 
+	if (!ptr_str || !(*ptr_str))
+		return (0);
 	ret = 0;
 	str = *ptr_str;
 	while (*str && *str == ' ')
@@ -121,18 +123,21 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 
 int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 {
-	int		len;
 	int		tok_type;
-	t_shell	*sh; // DELETE DELETE DELETE DELETE DELETE DELETE DELETE
+	int		len;
+	char	*tmp;
 
+	if (!str || !*str || !**str)
+		return (0);
 	tok_type = get_token(str, &token->start, &token->end);
 	if (tok_type == 0)
 		return (0);
 	if (tok_type != 'a')
 		exit(1);
 	len = token->end - token->start;
-	cmd->argv[token->argc] = ft_strndup(token->start, len);
-	sh = shell; // DELETE DELETE DELETE DELETE DELETE DELETE
-	sh = (void *)sh; // DELETE DELETE DELETE DELETE DELETE DELETE
+	tmp = ft_strndup(token->start, len);
+	cmd->argv[token->argc] = final_token(tmp, shell);
+	// printf("TOKEN: %s\n", cmd->argv[token->argc]); // DELETE DELETE DELETE
+	// printf("_________________________\n"); // DELETE DELETE DELETE
 	return (1);
 }

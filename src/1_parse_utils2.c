@@ -88,8 +88,10 @@ int	find_char(char **ptr_str, char *set)
 {
 	char	*s;
 
+	if (!ptr_str || !*ptr_str || !set)
+		return (0);
 	s = *ptr_str;
-	if (!ft_strchr(set, ' '))
+	if (*s && !ft_strchr(set, ' '))
 	{
 		while (*s && *s == ' ')
 			s++;
