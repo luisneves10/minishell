@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/05 11:04:47 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/06 15:58:38 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ int	handle_heredoc(t_shell *shell)
 		free(index);
 		if (process_heredoc(curr, shell) == 1)
 		{
+			shell->exit_status = 130;
 			return (1);
 		}
 		curr = curr->next;

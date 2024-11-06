@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/05 11:44:29 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/06 15:16:32 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ int	redirs_in(t_fds *fds, t_redir *redir, t_shell *shell)
 		close(fds->in_fd);
 	fds->in_fd = open(redir->file, O_RDONLY);
 	if (fds->in_fd < 0)
-		return (mini_error("open error (input redirection)\n", -1));
+		return (mini_error("No such file or directory\n", -1, shell));
 	handle_in(fds);
 	return (1);
 }
 
-int	redirs_out(t_fds *fds, t_redir *redir)
+int	redirs_out(t_fds *fds, t_redir *redir, t_shell *shell)
 {
 	if (fds->out != -1)
 		close(fds->out);
@@ -69,12 +69,12 @@ int	redirs_out(t_fds *fds, t_redir *redir)
 	else
 		fds->out = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds->out < 0)
-		return (mini_error("open error (output redirection)\n", -1));
+		return (mini_error("No such file or directory\n", -1, shell));
 	handle_out(fds);
 	return (1);
 }
 
-void	handle_redirs(t_execcmd *execcmd, t_shell *shell)
+void	handle_redirs(t_cmd *execcmd, t_shell *shell)
 {
 	t_redir	*redir;
 	t_fds	*fds;
@@ -89,7 +89,7 @@ void	handle_redirs(t_execcmd *execcmd, t_shell *shell)
 				return ;
 		}
 		else if (redir && (redir->type == '>' || redir->type == '+'))
-			if (redirs_out(fds, redir) < 0)
+			if (redirs_out(fds, redir, shell) < 0)
 				return ;
 		redir = redir->next;
 	}

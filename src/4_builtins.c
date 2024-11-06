@@ -6,13 +6,13 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 11:58:25 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/16 12:18:08 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:04:23 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*is_builtin(t_execcmd *execcmd)
+char	*is_builtin(t_cmd *execcmd)
 {
 	if (ft_strncmp(execcmd->argv[0], "echo", 4) == 0
 		&& ft_strlen(execcmd->argv[0]) == 4)
