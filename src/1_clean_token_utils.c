@@ -39,20 +39,26 @@ t_chunk	*chunk_last(t_chunk *chunk)
 	return (chunk);
 }
 
-void	chunk_add_back(t_chunk **chunk, char *str, char type)
+void	chunk_add_back(t_chunk **chunks, t_chunk *chunk)
 {
-	t_chunk	*new;
 	t_chunk	*last;
 
-	last = chunk_last(*chunk);
-	new = malloc(sizeof(t_chunk));
-	if (!new)
-		return ;
+	last = chunk_last(*chunks);
 	if (!last)
-		*chunk = new;
+		*chunks = chunk;
 	else
-		last->next = new;
-	new->str = str;
-	new->type = type;
-	new->next = NULL;
+		last->next = chunk;
+}
+
+void	free_chunks(t_chunk *chunks)
+{
+	t_chunk	*tmp;
+
+	while (chunks)
+	{
+		tmp = chunks->next;
+		free (chunks->str);
+		free (chunks);
+		chunks = tmp;
+	}
 }

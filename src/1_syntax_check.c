@@ -20,7 +20,7 @@ int	mini_error(char *str, int error)
 		return (-1);
 	}
 	printf("minishell: syntax error%s\n", str);
-  if (error == INV_CHAR)
+	if (error == INV_CHAR)
 		return (INV_CHAR);
 	else if (error == S_Q)
 		return (S_Q);
