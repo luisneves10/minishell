@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/04 14:38:32 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/11/06 13:36:51 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,6 @@ int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 		exit(0);
 	len = token->end - token->start;
 	tmp = ft_strndup(token->start, len);
-	// printf("TOKEN: %s\n", cmd->argv[token->argc]); // DELETE DELETE DELETE
-	// printf("_________________________\n"); // DELETE DELETE DELETE
 	if (!ft_strchr(tmp, '"') && !ft_strchr(tmp, '\''))
 		cmd->argv[token->argc] = ft_strdup(tmp);//cmd->argv[token->argc] = expand();
 	else

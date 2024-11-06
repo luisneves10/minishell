@@ -163,6 +163,10 @@ t_redir		*add_redir(t_redir *head, int type,
 int			deal_token(t_execcmd *cmd, char **str,
 				t_token *token, t_shell *shell);
 char		*clean_token(char *tok, t_shell *shell);
+int			final_token_size(t_chunk *chunks);
+t_chunk		*chunk_last(t_chunk *chunk);
+void		chunk_add_back(t_chunk **chunk, char *str, char type);
+void		free_chunks(t_chunk *chunks);
 
 /* ========================================================================== */
 /*	COMMANDS AND REDIRECTIONS                                                 */
