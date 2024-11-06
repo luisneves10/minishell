@@ -6,11 +6,13 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:58:12 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/30 15:52:58 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:00:49 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	g_ctrlc = 0;
 
 int	main(int argc, char **argv, char *envp[])
 {

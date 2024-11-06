@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   1_clean_token.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:18:22 by luibarbo          #+#    #+#             */
 /*   Updated: 2024/11/06 13:38:36 by luibarbo         ###   ########.fr       */

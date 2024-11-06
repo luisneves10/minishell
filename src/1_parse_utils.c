@@ -16,9 +16,11 @@ char	*aloc_file(char *start_file, t_redir *new_redir, char *end_file)
 {
 	int		file_length;
 	char	*file;
+	char	*temp;
 
 	file_length = end_file - start_file;
-	file = ft_strndup(start_file, file_length);
+	temp = ft_strndup(start_file, file_length);
+	file = final_token(temp, NULL);
 	if (!file)
 	{
 		free(new_redir);
@@ -35,7 +37,7 @@ t_redir	*add_redir(t_redir *head, int type,
 
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
-		exit(-1);
+		exit(1);
 	memset(new_redir, 0, sizeof(t_redir));
 	new_redir->type = type;
 	if (type == '-')
@@ -121,7 +123,7 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 	return (ret);
 }
 
-int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
+int	deal_token(t_cmd *cmd, char **str, t_token *token, t_shell *shell)
 {
 	int		tok_type;
 	int		len;
@@ -133,7 +135,7 @@ int	deal_token(t_execcmd *cmd, char **str, t_token *token, t_shell *shell)
 	if (tok_type == 0)
 		return (0);
 	if (tok_type != 'a')
-		exit(0);
+		exit(1);
 	len = token->end - token->start;
 	tmp = ft_strndup(token->start, len);
 	if (!ft_strchr(tmp, '"') && !ft_strchr(tmp, '\''))

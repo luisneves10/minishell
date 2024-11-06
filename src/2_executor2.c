@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 11:36:02 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/23 16:19:22 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:05:08 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	free_split(char **split)
 	}
 }
 
-void	handle_child_process(char *path, t_execcmd *execcmd, t_shell *shell)
+void	handle_child_process(char *path, t_cmd *execcmd, t_shell *shell)
 {
 	execve(path, execcmd->argv, shell->env);
 	perror("execve error");
@@ -36,7 +36,7 @@ void	handle_child_process(char *path, t_execcmd *execcmd, t_shell *shell)
 }
 
 void	handle_parent_process(int pid, char *path,
-							t_execcmd *execcmd, t_shell *shell)
+							t_cmd *execcmd, t_shell *shell)
 {
 	int	status;
 
