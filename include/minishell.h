@@ -27,7 +27,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-/* ----------------------------------------------------- CCOMAND MACROS ----- */
+/* ----------------------------------------------------- COMMAND MACROS ----- */
 # define EXEC  1
 # define REDIR 2
 # define PIPE  3
@@ -91,6 +91,13 @@ typedef struct pipecmd
 	pid_t	pid1;
 	pid_t	pid2;
 }	t_pipecmd;
+
+typedef struct s_chunk
+{
+	char			*str;
+	char			type;
+	struct s_chunk	*next;
+}	t_chunk;
 
 typedef struct token
 {
@@ -175,7 +182,12 @@ t_redir		*add_redir(t_redir *head, int type,
 				char *start_file, char *end_file);
 int			deal_token(t_cmd *cmd, char **str,
 				t_token *token, t_shell *shell);
-char		*final_token(char *tok, t_shell *shell);
+char		*clean_token(char *tok, t_shell *shell);
+int			final_token_size(t_chunk *chunks);
+t_chunk		*chunk_last(t_chunk *chunk);
+void		chunk_add_back(t_chunk **chunks, t_chunk *chunk, t_chunk **head);
+char		*chunks_join(t_chunk *chunks);
+void		free_chunks(t_chunk *chunks);
 
 /* ========================================================================== */
 /*	COMMANDS AND REDIRECTIONS                                                 */

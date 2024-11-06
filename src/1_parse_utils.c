@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/06 14:49:48 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/06 13:36:51 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,10 @@ int	deal_token(t_cmd *cmd, char **str, t_token *token, t_shell *shell)
 		exit(1);
 	len = token->end - token->start;
 	tmp = ft_strndup(token->start, len);
-	cmd->argv[token->argc] = final_token(tmp, shell);
+	if (!ft_strchr(tmp, '"') && !ft_strchr(tmp, '\''))
+		cmd->argv[token->argc] = ft_strdup(tmp);//cmd->argv[token->argc] = expand();
+	else
+		cmd->argv[token->argc] = clean_token(tmp, shell);
+	free (tmp);
 	return (1);
 }

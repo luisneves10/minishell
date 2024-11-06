@@ -6,93 +6,81 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:18:22 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/06 14:45:54 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/06 13:38:36 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*clean_single_quotes(char quote_type, char *tok)
+void	chunk_no_quotes(t_chunk **chunk, char **cpy, int size)
 {
-	char	*tmp;
-	char	*tok2;
-	int		i;
-	int		j;
-
-	tmp = ft_calloc(sizeof(char), 1000);
-	if (!tmp)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (tok[i] && tok[i] != quote_type)
-		tmp[j++] = tok[i++];
-	if (tok[i] && tok[i] == quote_type)
-		i++;
-	while (tok[i] && tok[i] != quote_type)
-		tmp[j++] = tok[i++];
-	if (tok[i] && tok[i] == quote_type)
-		i++;
-	while (tok[i])
-		tmp[j++] = tok[i++];
-	tok2 = ft_strdup(tmp);
-	free (tmp);
-	free (tok);
-	return (tok2);
+	(*chunk)->str = ft_strndup(*cpy, size);
+	(*chunk)->type = 'a';
+	if (!(*chunk)->str)
+		free(*chunk);
 }
 
-static char	*clean_double_quotes(char quote_type, char *tok)
+t_chunk	*init_chunk()
 {
-	char	*tmp;
-	char	*tok2;
-	int		i;
-	int		j;
+	t_chunk	*chunk;
 
-	tmp = ft_calloc(sizeof(char), 1000);
-	if (!tmp)
+	chunk = malloc(sizeof(t_chunk));
+	if (!chunk)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (tok[i] && tok[i] != quote_type)
-		tmp[j++] = tok[i++];
-	if (tok[i] && tok[i] == quote_type)
-		i++;
-	while (tok[i] && tok[i] != quote_type)
-		tmp[j++] = tok[i++];
-	if (tok[i] && tok[i] == quote_type)
-		i++;
-	while (tok[i])
-		tmp[j++] = tok[i++];
-	tok2 = ft_strdup(tmp);
-	free (tmp);
-	free (tok);
-	return (tok2);
+	chunk->str = NULL;
+	chunk->next = NULL;
+	return (chunk);
 }
 
-char	*final_token(char *tok, t_shell *shell)
+t_chunk	*create_chunk(char **tok, t_shell *shell)
 {
-	char	*tok2;
-	char	quote_type;
+	t_chunk	*chunk;
 	int		i;
+	char	*cpy;
 
-	tok2 = NULL;
-	if (!ft_strchr(tok, '"') && !ft_strchr(tok, '\''))
-	{
-		tok2 = is_expansion(tok, shell);
-		return (tok2);
-	}
+	shell = (void *)shell; // DELETE DELETE DELETE DELETE DELETE
+	chunk = init_chunk();
 	i = 0;
-	while (tok[i] && tok[i] != '"' && tok[i] != '\'')
+	cpy = *tok;
+	while (cpy[i] && cpy[i] != '"' && cpy[i] != '\'')
+	{
 		i++;
-	quote_type = tok[i];
-	if (quote_type == '"')
-	{
-		tok2 = clean_double_quotes(quote_type, tok);
-		return (final_token(tok2, shell));
+		(*tok)++;
 	}
-	else if (quote_type == '\'')
+	if (i > 0)
+		chunk_no_quotes(&chunk, &cpy, i);
+	else
 	{
-		tok2 = clean_single_quotes(quote_type, tok);
-		return (final_token(tok2, shell));
-	}	
-	return (tok2);
+		chunk->type = **tok;
+		while (cpy[i + 1] && cpy[i + 1] != chunk->type)
+			i++;
+		chunk->str = ft_strndup(cpy + 1, i);
+		*tok = cpy + i + 2;
+	}
+	return (chunk);
+}
+
+char	*clean_token(char *tok, t_shell *shell)
+{
+	t_chunk	*chunks;
+	t_chunk	*chunk;
+	t_chunk	*head;
+	char	*tok_cpy;
+	char	*final_token;
+
+	tok_cpy = tok;
+	chunks = NULL;
+	while (*tok_cpy)
+	{
+		chunk = create_chunk(&tok_cpy, shell);
+		if (!chunk)
+		{
+			free_chunks(head);
+			return (NULL);
+		}
+		chunk_add_back(&chunks, chunk, &head);
+	}
+	final_token = chunks_join(chunks);
+	free_chunks(head);
+	return (final_token);
 }
