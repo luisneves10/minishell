@@ -12,6 +12,26 @@
 
 #include "minishell.h"
 
+void	chunk_no_quotes(t_chunk **chunk, char **cpy, int size)
+{
+	(*chunk)->str = ft_strndup(*cpy, size);
+	(*chunk)->type = 'a';
+	if (!(*chunk)->str)
+		free(*chunk);
+}
+
+t_chunk	*init_chunk()
+{
+	t_chunk	*chunk;
+
+	chunk = malloc(sizeof(t_chunk));
+	if (!chunk)
+		return (NULL);
+	chunk->str = NULL;
+	chunk->next = NULL;
+	return (chunk);
+}
+
 t_chunk	*create_chunk(char **tok, t_shell *shell)
 {
 	t_chunk	*chunk;
@@ -19,11 +39,7 @@ t_chunk	*create_chunk(char **tok, t_shell *shell)
 	char	*cpy;
 
 	shell = (void *)shell; // DELETE DELETE DELETE DELETE DELETE
-	chunk = malloc(sizeof(t_chunk));
-	if (!chunk)
-		return (NULL);
-	chunk->str = NULL;
-	chunk->next = NULL;
+	chunk = init_chunk();
 	i = 0;
 	cpy = *tok;
 	while (cpy[i] && cpy[i] != '"' && cpy[i] != '\'')
@@ -32,23 +48,14 @@ t_chunk	*create_chunk(char **tok, t_shell *shell)
 		(*tok)++;
 	}
 	if (i > 0)
-	{
-		chunk->str = ft_strndup(cpy, i);
-		chunk->type = 'a';
-	}
+		chunk_no_quotes(&chunk, &cpy, i);
 	else
 	{
 		chunk->type = **tok;
-		(*tok)++;
 		while (cpy[i + 1] && cpy[i + 1] != chunk->type)
 			i++;
 		chunk->str = ft_strndup(cpy + 1, i);
 		*tok = cpy + i + 2;
-	}
-	if (!chunk->str)
-	{
-		free(chunk);
-		return (NULL);
 	}
 	return (chunk);
 }
@@ -62,12 +69,7 @@ char	*clean_token(char *tok, t_shell *shell)
 	char	*final_token;
 
 	tok_cpy = tok;
-	chunks = malloc(sizeof(t_chunk));
-	if (!chunks)
-		return (NULL);
-	chunks->str = NULL;
-	chunks->next = NULL;
-	head = chunks;
+	chunks = NULL;
 	while (*tok_cpy)
 	{
 		chunk = create_chunk(&tok_cpy, shell);
@@ -76,16 +78,9 @@ char	*clean_token(char *tok, t_shell *shell)
 			free_chunks(head);
 			return (NULL);
 		}
-		chunk_add_back(&chunks, chunk);
+		chunk_add_back(&chunks, chunk, &head);
 	}
-	final_token = ft_calloc(sizeof(char), final_token_size(chunks));
-	if (!final_token)
-		return (NULL);
-	while (chunks && chunks->str)
-	{
-		final_token = ft_strjoin_free(final_token, chunks->str);
-		chunks = chunks->next;
-	}
+	final_token = chunks_join(chunks);
 	free_chunks(head);
 	return (final_token);
 }

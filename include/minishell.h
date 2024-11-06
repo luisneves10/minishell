@@ -165,7 +165,8 @@ int			deal_token(t_execcmd *cmd, char **str,
 char		*clean_token(char *tok, t_shell *shell);
 int			final_token_size(t_chunk *chunks);
 t_chunk		*chunk_last(t_chunk *chunk);
-void		chunk_add_back(t_chunk **chunks, t_chunk *chunk);
+void		chunk_add_back(t_chunk **chunks, t_chunk *chunk, t_chunk **head);
+char		*chunks_join(t_chunk *chunks);
 void		free_chunks(t_chunk *chunks);
 
 /* ========================================================================== */
