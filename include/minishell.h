@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/05 16:04:54 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:15:53 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@
 # define EXPAND_NEW  1
 # define EXPAND_APPEND 2
 
+
+extern int	g_ctrlc;
 typedef struct s_redir
 {
 	int				type;
@@ -135,6 +137,8 @@ typedef struct shell
 
 int		mini_error(char *str, int error, t_shell *shell);
 void	close_fds(t_fds *fds);
+char	*is_expansion(char *token, t_shell *shell);
+void	on_off_flag(int *flag);
 
 /* ========================================================================== */
 /*	INITIALIZATION AND SIGNALS                                                */

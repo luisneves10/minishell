@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_clean_token.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:18:22 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/04 14:37:34 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/11/06 14:45:54 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ char	*final_token(char *tok, t_shell *shell)
 	tok2 = NULL;
 	if (!ft_strchr(tok, '"') && !ft_strchr(tok, '\''))
 	{
-		// DEAL EXPANSOES !!!
-		return (tok);
+		tok2 = is_expansion(tok, shell);
+		return (tok2);
 	}
 	i = 0;
 	while (tok[i] && tok[i] != '"' && tok[i] != '\'')
@@ -93,6 +93,6 @@ char	*final_token(char *tok, t_shell *shell)
 	{
 		tok2 = clean_single_quotes(quote_type, tok);
 		return (final_token(tok2, shell));
-	}
+	}	
 	return (tok2);
 }

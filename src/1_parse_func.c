@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/05 16:06:48 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/06 10:27:27 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, t_shell *shell)
 	int			token;
 	char		*end_tok;
 	char		*start_tok;
-	t_cmd		*ecmd;
 
-	ecmd = cmd;
 	tok = create_token();
 	while (find_char(ptr_str, "<>"))
 	{
@@ -35,7 +33,7 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, t_shell *shell)
 			shell->heredoc = get_delimiter(start_tok, end_tok, shell);
 			shell->heredoc_flag = 1;
 		}
-		ecmd->redir = add_redir(ecmd->redir, token, start_tok, end_tok);
+		cmd->redir = add_redir(cmd->redir, token, start_tok, end_tok);
 	}
 	free(tok);
 	return (cmd);

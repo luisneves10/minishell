@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/05 13:16:53 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:03:59 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	free_shell(t_shell *shell, int i)
 {
 	free (shell->prompt);
 	free (shell->input);
+	g_ctrlc = 0;
 	if (i)
 	{
 		free_env(shell->env);

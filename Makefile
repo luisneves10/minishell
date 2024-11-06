@@ -6,7 +6,7 @@
 #    By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/13 14:19:16 by luibarbo          #+#    #+#              #
-#    Updated: 2024/11/05 10:45:02 by daduarte         ###   ########.fr        #
+#    Updated: 2024/11/06 16:16:26 by daduarte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,13 +38,14 @@ VALGRINDFLAGS2	= --log-file=$(LEAKS_LOG)
 SRC_FILES	= 0_main.c \
 			  1_init_minishell.c 1_constructors.c 1_parse_func.c \
 			  1_parse_utils.c 1_parse_utils2.c 1_env_utils.c 1_syntax_check.c \
-			  1_clean_token.c \
+			  1_clean_token.c 1_expansions.c \
 			  2_executor.c 2_executor2.c 2_pipe_exec.c 2_redirs_exec.c \
 			  2_heredoc.c 2_heredoc_utils.c \
 			  3_signals.c \
 			  4_builtins.c 4_echo.c 4_pwd.c 4_export.c 4_export2.c \
-			  4_export3.c 4_unset.c 4_env.c 4_exit.c 4_utils.c 4_cd.c\
-			  5_free_functions.c
+			  4_export3.c 4_unset.c 4_env.c 4_exit.c 4_utils.c 4_cd.c \
+			  5_free_functions.c \
+			  6_error.c
 
 SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
 
