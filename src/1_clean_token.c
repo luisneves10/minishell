@@ -20,7 +20,7 @@ void	chunk_no_quotes(t_chunk **chunk, char **cpy, int size)
 		free(*chunk);
 }
 
-t_chunk	*init_chunk()
+t_chunk	*init_chunk(void)
 {
 	t_chunk	*chunk;
 
@@ -32,13 +32,12 @@ t_chunk	*init_chunk()
 	return (chunk);
 }
 
-t_chunk	*create_chunk(char **tok, t_shell *shell)
+t_chunk	*create_chunk(char **tok)
 {
 	t_chunk	*chunk;
 	int		i;
 	char	*cpy;
 
-	shell = (void *)shell; // DELETE DELETE DELETE DELETE DELETE
 	chunk = init_chunk();
 	i = 0;
 	cpy = *tok;
@@ -60,12 +59,24 @@ t_chunk	*create_chunk(char **tok, t_shell *shell)
 	return (chunk);
 }
 
+char	*expand_chunk(t_chunk *chunk, t_shell *shell)
+{
+	char	*tmp;
+
+	tmp = ft_strdup(chunk->str);
+	free (chunk->str);
+	chunk->str = NULL;
+	chunk->str = is_expansion(tmp, shell);
+	free (tmp);
+	tmp = NULL;
+	return (chunk->str);
+}
+
 char	*clean_token(char *tok, t_shell *shell)
 {
 	t_chunk	*chunks;
 	t_chunk	*chunk;
 	t_chunk	*head;
-	char	*tmp;
 	char	*tok_cpy;
 	char	*final_token;
 
@@ -73,21 +84,14 @@ char	*clean_token(char *tok, t_shell *shell)
 	chunks = NULL;
 	while (*tok_cpy)
 	{
-		chunk = create_chunk(&tok_cpy, shell);
+		chunk = create_chunk(&tok_cpy);
 		if (!chunk)
 		{
 			free_chunks(head);
 			return (NULL);
 		}
 		if (chunk->type == '"' || chunk->type == 'a')
-		{
-			tmp = ft_strdup(chunk->str);
-			free (chunk->str);
-			chunk->str = NULL;
-			chunk->str = is_expansion(tmp, shell);
-			free(tmp);
-			tmp = NULL;
-		}
+			chunk->str = expand_chunk(chunk, shell);
 		chunk_add_back(&chunks, chunk, &head);
 	}
 	final_token = chunks_join(chunks);

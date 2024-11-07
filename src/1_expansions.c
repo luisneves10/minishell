@@ -43,16 +43,12 @@ char	*is_expansion(char *token, t_shell *shell)
 			return (ft_itoa(shell->exit_status));
 		}
 		expand = create_expand(token);
-		i = 0;
-		while (shell->env[i])
-		{
-			if (var_search(shell->env, expand) >= 0)
-				return (free(expand), ft_strdup(shell->env[i]
-						+ (var_name_len(shell->env[i]) + 1)));
-			else
-				return (free(expand), ft_strdup(""));
-			i ++;
-		}
+		i = var_search(shell->env, expand);
+		if (i >= 0)
+			return (free(expand), ft_strdup(shell->env[i]
+					+ (var_name_len(shell->env[i]) + 1)));
+		else
+			return (free(expand), ft_strdup(""));
 	}
 	return (ft_strdup(tmp));
 }
