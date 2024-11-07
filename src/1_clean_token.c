@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:18:22 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/06 13:38:36 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/11/07 10:31:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ char	*clean_token(char *tok, t_shell *shell)
 	t_chunk	*chunks;
 	t_chunk	*chunk;
 	t_chunk	*head;
+	char	*tmp;
 	char	*tok_cpy;
 	char	*final_token;
 
@@ -77,6 +78,15 @@ char	*clean_token(char *tok, t_shell *shell)
 		{
 			free_chunks(head);
 			return (NULL);
+		}
+		if (chunk->type == '"' || chunk->type == 'a')
+		{
+			tmp = ft_strdup(chunk->str);
+			free (chunk->str);
+			chunk->str = NULL;
+			chunk->str = is_expansion(tmp, shell);
+			free(tmp);
+			tmp = NULL;
 		}
 		chunk_add_back(&chunks, chunk, &head);
 	}
