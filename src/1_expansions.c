@@ -6,43 +6,30 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:12:34 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/07 10:33:37 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:26:29 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*create_expand(char *expand)
-{
-	int		i;
-	char	*str;
-
-	str = NULL;
-	i = 0;
-	while (expand[i] && (ft_isalnum(expand[i]) || expand[i] == '_'))
-		i ++;
-	str = ft_strndup(expand, i);
-	return (str);
-}
-
-char	*is_expansion(char *token, t_shell *shell)
+char	*is_expansion(char **token, t_shell *shell)
 {
 	int		i;
 	char	*tmp;
 	char	*expand;
 
-	tmp = token;
+	tmp = *token;
 	expand = NULL;
-	if (*token == '$')
+	if (**token == '$')
 	{
-		token++;
-		if (*token == '?' && *(token + 1) == '\0') //acrescentar condicoes
-		{
-			if (g_ctrlc == 1)
-				shell->exit_status = 130;
-			return (ft_itoa(shell->exit_status));
-		}
-		expand = create_expand(token);
+		(*token)++;
+		if (**token == ' ' || **token == '\0')
+			return (ft_strdup("$"));
+		if (**token == '0' || **token == '$'
+			|| ft_isdigit(**token) || **token == '?')
+			return (expand_cases(token, shell));
+		expand = create_expand(*token);
+		*token = *token + ft_strlen(expand);
 		i = var_search(shell->env, expand);
 		if (i >= 0)
 			return (free(expand), ft_strdup(shell->env[i]
@@ -51,4 +38,31 @@ char	*is_expansion(char *token, t_shell *shell)
 			return (free(expand), ft_strdup(""));
 	}
 	return (ft_strdup(tmp));
+}
+
+char	*deal_expansion(char *token, t_shell *shell)
+{
+	int		i;
+	char	*final;
+	char	*tmp;
+
+	tmp = NULL;
+	final = ft_calloc(sizeof(char), 1);
+	while (*token)
+	{
+		if (*token && *token == '$')
+		{
+			tmp = is_expansion(&token, shell);
+			final = ft_strjoin_free(final, tmp);
+			free(tmp);
+			tmp = NULL;
+		}
+		else
+		{
+			i = 0;
+			final = expansion_join(token, final, &i);
+			token = token + i;
+		}
+	}
+	return (final);
 }
