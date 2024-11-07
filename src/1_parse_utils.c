@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/06 13:36:51 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/11/07 09:48:13 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*aloc_file(char *start_file, t_redir *new_redir, char *end_file)
 
 	file_length = end_file - start_file;
 	temp = ft_strndup(start_file, file_length);
-	file = final_token(temp, NULL);
+	file = clean_token(temp, NULL);
 	if (!file)
 	{
 		free(new_redir);
