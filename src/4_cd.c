@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:01:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/16 12:21:15 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:44:17 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ int	ft_cd(char **argv, t_shell *shell)
 	env = shell->env;
 	if (has_options(argv, "cd"))
 		return (1);
+	if (argv[2])
+		return (ft_putstr_fd("too many arguments\n", 2), 1);
 	tmp = getcwd(path, sizeof(path));
 	if (!argv[1])
 	{

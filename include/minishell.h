@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/07 12:27:47 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:15:37 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,9 @@ int		mini_error(char *str, int error, t_shell *shell);
 void	close_fds(t_fds *fds);
 char	*deal_expansion(char *token, t_shell *shell);
 void	on_off_flag(int *flag);
+char	*expansion_join(char *token, char *old_final, int *i);
+char	*expand_cases(char **token, t_shell *shell);
+char	*create_expand(char *expand);
 
 /* ========================================================================== */
 /*	INITIALIZATION AND SIGNALS                                                */
