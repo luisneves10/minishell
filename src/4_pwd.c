@@ -14,7 +14,7 @@
 
 int	ft_pwd(char **argv)
 {
-	char	path[1024];
+	char	path[4096];
 
 	if (has_options(argv, argv[0]))
 		return (1);

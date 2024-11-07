@@ -63,7 +63,6 @@ static int	change_dir(char **argv, t_shell *shell)
 			path = ft_strjoin(env[home_index] + 5, argv[1]);
 		else
 			path = ft_strjoin(getenv("HOME"), argv[1]);
-		printf("PATH: %s\n", path);
 		if (chdir(path) == -1)
 		{
 			perror("minishell: cd");
