@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:18:22 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/07 12:27:59 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:48:54 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*expand_chunk(t_chunk *chunk, t_shell *shell)
 	tmp = ft_strdup(chunk->str);
 	free (chunk->str);
 	chunk->str = NULL;
-	chunk->str = is_expansion(tmp, shell);
+	chunk->str = deal_expansion(tmp, shell);
 	free (tmp);
 	tmp = NULL;
 	return (chunk->str);
