@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/06 16:15:53 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/07 12:27:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ typedef struct shell
 
 int		mini_error(char *str, int error, t_shell *shell);
 void	close_fds(t_fds *fds);
-char	*is_expansion(char *token, t_shell *shell);
+char	*deal_expansion(char *token, t_shell *shell);
 void	on_off_flag(int *flag);
 
 /* ========================================================================== */

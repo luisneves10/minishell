@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_env_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 10:51:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/25 11:40:32 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/11/07 13:06:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,11 @@ int	var_search(char **env, char *var)
 	{
 		size = var_name_len(env[i]);
 		if (ft_strncmp(env[i], var, size) == 0)
+		{
+			if (ft_strlen(var) != size)
+				return (-1);
 			return (i);
+		}
 		i++;
 	}
 	return (-1);
