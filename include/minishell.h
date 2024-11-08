@@ -34,14 +34,6 @@
 # define LIST  4
 # define BACK  5
 
-/* ------------------------------------------------------- ERROR MACROS ----- */
-# define INV_CHAR 40
-# define S_Q     41
-# define D_Q     42
-# define ERROR_P 43
-# define ER_TOK  44
-# define E_NWL   45
-
 /* ------------------------------------------------------ EXPAND MACROS ----- */
 # define EXPAND_NEW  1
 # define EXPAND_APPEND 2
@@ -49,6 +41,10 @@
 /* -------------------------------------------------------- EXIT ERRORS ----- */
 # define ERR_NUM  1
 # define ERR_ARG 2
+
+/* -------------------------------------------------------- EXIT MACROS ----- */
+# define EXIT_EOF 10
+# define EXIT_CMD 11
 
 extern int	g_ctrlc;
 typedef struct s_redir
