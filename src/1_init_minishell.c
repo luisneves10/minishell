@@ -21,7 +21,9 @@ void	free_shell(t_shell *shell, int i)
 	if (i)
 	{
 		free_env(shell->env);
-		if (i == 1)
+		if (i == EXIT_EOF)
+			printf("exit\n");
+		else if (i == EXIT_CMD)
 		{
 			if (shell->head)
 				free_cmd(shell->head);
@@ -62,7 +64,7 @@ void	init_minishell(t_shell *shell)
 		shell->input = readline(shell->prompt);
 		if (!shell->input)
 		{
-			free_shell(shell, 1);
+			free_shell(shell, EXIT_EOF);
 			break ;
 		}
 		add_history(shell->input);

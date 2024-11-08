@@ -65,25 +65,25 @@ void	ft_exit(char **argv, t_shell *shell)
 
 	if (argv[1] == NULL)
 	{
-		free_shell(shell, 1);
+		free_shell(shell, EXIT_CMD);
 		exit (0);
 	}
 	if (argv[2])
 	{
-		free_shell(shell, 1);
+		free_shell(shell, EXIT_CMD);
 		exit (exit_error(NULL, ERR_ARG));
 	}
 	if (argv[1][0] == '-' && argv[1][1] == '-' && argv[1][2] == '\0')
 	{
-		free_shell(shell, 1);
+		free_shell(shell, EXIT_CMD);
 		exit (0);
 	}
 	if (!valid_code(argv[1]))
 	{
-		free_shell(shell, 1);
+		free_shell(shell, EXIT_CMD);
 		exit(exit_error(argv[1], ERR_NUM));
 	}
 	exit_code = ft_atoi(argv[1]);
-	free_shell(shell, 1);
+	free_shell(shell, EXIT_CMD);
 	exit(calculate_exit_code(exit_code));
 }
