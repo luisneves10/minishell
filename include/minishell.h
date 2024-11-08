@@ -134,6 +134,7 @@ typedef struct shell
 	int			heredoc_flag;
 	t_heredoc	*heredoc;
 	t_heredoc	*heredoc_head;
+	t_fds		*fds;
 }	t_shell;
 
 /* ========================================================================== */

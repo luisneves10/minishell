@@ -61,6 +61,7 @@ t_shell	*init_struct(char **argv, char **envp)
 	shell->argc = 0;
 	shell->prompt = NULL;
 	shell->input = NULL;
+	shell->fds = NULL;
 	shell->env = copy_env(envp);
 	if (!shell->env)
 		return (NULL);
