@@ -77,24 +77,24 @@ int	redirs_out(t_fds *fds, t_redir *redir, t_shell *shell)
 void	handle_redirs(t_cmd *execcmd, t_shell *shell)
 {
 	t_redir	*redir;
-	t_fds	*fds;
 
-	fds = init_fds();
+	shell->fds = init_fds();
 	redir = execcmd->redir;
 	while (redir)
 	{
 		if (redir && (redir->type == '<' || redir->type == '-'))
 		{
-			if (redirs_in(fds, redir, shell) < 0)
+			if (redirs_in(shell->fds, redir, shell) < 0)
 				return ;
 		}
 		else if (redir && (redir->type == '>' || redir->type == '+'))
-			if (redirs_out(fds, redir, shell) < 0)
+			if (redirs_out(shell->fds, redir, shell) < 0)
 				return ;
 		redir = redir->next;
 	}
 	if (execcmd->argv[0])
 		execute_commands(execcmd, shell);
-	close_fds(fds);
-	free(fds);
+	close_fds(shell->fds);
+	free(shell->fds);
+	shell->fds = NULL;
 }

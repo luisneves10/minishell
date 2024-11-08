@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <readline/readline.h>
 
 void	free_shell(t_shell *shell, int i)
 {
@@ -27,6 +26,11 @@ void	free_shell(t_shell *shell, int i)
 		{
 			if (shell->head)
 				free_cmd(shell->head);
+			if (shell->fds)
+			{
+				close_fds(shell->fds);
+				free (shell->fds);
+			}
 			printf("exit\n");
 		}
 		free (shell);
