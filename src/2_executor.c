@@ -65,35 +65,36 @@ char	*get_cmd_path(char **env, char *cmd)
 	return (real_path);
 }
 
-void	command_type(t_cmd *execcmd, t_shell *shell, char **path)
+void	command_type(t_cmd *cmd, t_shell *shell, char **path)
 {
-	if (is_builtin(execcmd) != NULL)
+	if (is_builtin(cmd) != NULL)
 	{
-		exec_builtin(execcmd->argv, is_builtin(execcmd), shell);
+		exec_builtin(cmd->argv, is_builtin(cmd), shell);
 		*path = NULL;
 		return ;
 	}
-	if (execcmd->argv[0][0] == '/' || ft_strncmp(execcmd->argv[0], "./", 2) == 0
-		|| ft_strncmp(execcmd->argv[0], "../", 3) == 0)
-		*path = execcmd->argv[0];
+	if (cmd->argv[0][0] == '/' || ft_strncmp(cmd->argv[0], "./", 2) == 0
+		|| ft_strncmp(cmd->argv[0], "../", 3) == 0)
+		*path = cmd->argv[0];
 	else
 	{
-		*path = get_cmd_path(shell->env, execcmd->argv[0]);
+		*path = get_cmd_path(shell->env, cmd->argv[0]);
 		if (!(*path))
 		{
-			printf("%s: command not found\n", execcmd->argv[0]);
+			ft_putstr_fd(cmd->argv[0], 2);
+			ft_putstr_fd(": command not found\n", 2);
 			shell->exit_status = 127;
 			return ;
 		}
 	}
 }
 
-void	execute_commands(t_cmd *execcmd, t_shell *shell)
+void	execute_commands(t_cmd *cmd, t_shell *shell)
 {
 	int		pid;
 	char	*path;
 
-	command_type(execcmd, shell, &path);
+	command_type(cmd, shell, &path);
 	if (path == NULL)
 		return ;
 	pid = fork();
@@ -103,9 +104,9 @@ void	execute_commands(t_cmd *execcmd, t_shell *shell)
 		exit(1);
 	}
 	if (pid == 0)
-		handle_child_process(path, execcmd, shell);
+		handle_child_process(path, cmd, shell);
 	else
-		handle_parent_process(pid, path, execcmd, shell);
+		handle_parent_process(pid, path, cmd, shell);
 }
 
 void	run_cmd(t_cmd *cmd, t_shell *shell)

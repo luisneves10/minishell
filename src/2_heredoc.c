@@ -82,9 +82,7 @@ int	process_heredoc(t_heredoc *curr, t_shell *shell)
 {
 	pid_t	pid;
 	int		status;
-	int		fd;
 
-	fd = 0;
 	pid = fork();
 	if (pid == -1)
 	{

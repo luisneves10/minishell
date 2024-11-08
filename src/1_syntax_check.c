@@ -26,9 +26,11 @@ int	check_closed_quotes(char **input, char *quote_type, t_shell *shell)
 	if (!(**input))
 	{
 		if (*quote_type == '\'')
-			return (mini_error(": missing single quotes \'\'\'", S_Q, shell));
+			return (mini_error(": missing single quotes \'\'\'", 2, shell));
+			// return (mini_error(": missing single quotes \'\'\'", S_Q, shell));
 		if (*quote_type == '"')
-			return (mini_error(": missing double quotes \'\"\'", D_Q, shell));
+			return (mini_error(": missing double quotes \'\"\'", 2, shell));
+			// return (mini_error(": missing double quotes \'\"\'", D_Q, shell));
 	}
 	return (0);
 }
@@ -47,7 +49,8 @@ int	check_chars_and_quotes(t_shell *shell)
 		while (*input && *input != '"' && *input != '\'')
 		{
 			if (ft_strchr("\\;()&!*", *input))
-				return (mini_error(": invalid character", INV_CHAR, shell));
+				return (mini_error(": invalid character", 2, shell));
+				// return (mini_error(": invalid character", INV_CHAR, shell));
 			input++;
 		}
 		if (*input && (*input == '\'' || *input == '"'))
@@ -70,7 +73,8 @@ int	check_pipes(t_shell *shell)
 	while (*input == ' ')
 		input++;
 	if (*input == '|')
-		return (mini_error("near unexpected token `|'", ERROR_P, shell));
+		return (mini_error("near unexpected token `|'", 2, shell));
+		// return (mini_error("near unexpected token `|'", ERROR_P, shell));
 	while (*input)
 	{
 		if (*input == '"' || *input == '\'')
@@ -81,7 +85,8 @@ int	check_pipes(t_shell *shell)
 			while (*input == ' ')
 				input++;
 			if ((*input == '|' && flag == 0) || *input == '\0')
-				return (mini_error("near unexpected token `|'", 43, shell));
+				return (mini_error("near unexpected token `|'", 2, shell));
+				// return (mini_error("near unexpected token `|'", 43, shell));
 		}
 		if (*input != '"' || *input != '\'')
 			input++;
@@ -109,9 +114,11 @@ int	check_redirs(t_shell *shell)
 			while (*input == ' ')
 				input++;
 			if (*input == '\0')
-				return (mini_error("near unexpected token `newline'", 1, shell));
+				return (mini_error("near unexpected token `newline'", 2, shell));
+				// return (mini_error("near unexpected token `newline'", 1, shell));
 			if (find_char(&input, "<>|") && flag == 0)
-				return (mini_error("near unexpected token", ER_TOK, shell));
+				return (mini_error("near unexpected token", 2, shell));
+				// return (mini_error("near unexpected token", ER_TOK, shell));
 		}
 		input++;
 	}

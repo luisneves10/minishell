@@ -72,7 +72,8 @@ int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
 {
 	char	quote_type;
 
-	*start_tok = str;
+	if (start_tok)
+		*start_tok = str;
 	while (*str)
 	{
 		while (*str && !find_char(&str, " |\"\'"))
@@ -89,9 +90,10 @@ int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
 		if (*str == ' ' || *str == '|')
 			break ;
 	}
-	*end_tok = str;
-	if (*str)
-		str++;
+	if (end_tok)
+		*end_tok = str;
+	// if (*str)
+	// 	str++;
 	*ptr_str = str;
 	return ('a');
 }
@@ -138,7 +140,9 @@ int	deal_token(t_cmd *cmd, char **str, t_token *token, t_shell *shell)
 		exit(1);
 	len = token->end - token->start;
 	tmp = ft_strndup(token->start, len);
-	if (!ft_strchr(tmp, '"') && !ft_strchr(tmp, '\''))
+	if (ft_strncmp(tmp, "\"\"", 2) == 0 && ft_strlen(tmp) == ft_strlen("\"\""))
+		cmd->argv[token->argc] = ft_strdup("");
+	else if (!ft_strchr(tmp, '"') && !ft_strchr(tmp, '\''))
 		cmd->argv[token->argc] = deal_expansion(tmp, shell);
 	else
 		cmd->argv[token->argc] = clean_token(tmp, shell);

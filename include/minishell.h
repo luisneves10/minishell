@@ -46,6 +46,9 @@
 # define EXPAND_NEW  1
 # define EXPAND_APPEND 2
 
+/* -------------------------------------------------------- EXIT ERRORS ----- */
+# define ERR_NUM  1
+# define ERR_ARG 2
 
 extern int	g_ctrlc;
 typedef struct s_redir
@@ -58,19 +61,18 @@ typedef struct s_redir
 
 typedef struct cmd
 {
-	int	type;
-	char	**argv;
-	t_redir	*redir;
-	int		fd_out;
-	int		fd_in;
-	int		pipefd[2];
-	int		prev_pipe;
+	int			type;
+	char		**argv;
+	t_redir		*redir;
+	int			fd_out;
+	int			fd_in;
+	int			pipefd[2];
+	int			prev_pipe;
 	struct cmd	*left;
 	struct cmd	*right;
-	pid_t	pid1;
-	pid_t	pid2;
+	pid_t		pid1;
+	pid_t		pid2;
 }	t_cmd;
-
 
 typedef struct execcmd
 {
@@ -142,13 +144,13 @@ typedef struct shell
 /* ------------------------------ FUNCTIONS --------------------------------- */
 /* ========================================================================== */
 
-int		mini_error(char *str, int error, t_shell *shell);
-void	close_fds(t_fds *fds);
-char	*deal_expansion(char *token, t_shell *shell);
-void	on_off_flag(int *flag);
-char	*expansion_join(char *token, char *old_final, int *i);
-char	*expand_cases(char **token, t_shell *shell);
-char	*create_expand(char *expand);
+int			mini_error(char *str, int error, t_shell *shell);
+void		close_fds(t_fds *fds);
+char		*deal_expansion(char *token, t_shell *shell);
+void		on_off_flag(int *flag);
+char		*expansion_join(char *token, char *old_final, int *i);
+char		*expand_cases(char **token, t_shell *shell);
+char		*create_expand(char *expand);
 
 /* ========================================================================== */
 /*	INITIALIZATION AND SIGNALS                                                */
@@ -160,7 +162,7 @@ void		free_shell(t_shell *shell, int i);
 t_fds		*init_fds(void);
 void		signal_handler(int sig);
 void		heredoc_sig_handler(int sig);
-t_cmd	*create_cmd(t_shell *shell, int type, t_cmd *left, t_cmd *right);
+t_cmd		*create_cmd(t_shell *shell, int type, t_cmd *left, t_cmd *right);
 
 /* ========================================================================== */
 /*	ENVIRONMENT UTILS                                                         */
@@ -207,7 +209,7 @@ t_cmd		*pipe_cmd(t_cmd *left, t_cmd *right);
 void		fork_function1(t_cmd *pipecmd, t_shell *shell);
 void		fork_function2(t_cmd *pipecmd, t_shell *shell);
 t_token		*create_token(void);
-int		  handle_heredoc(t_shell *shell);
+int			handle_heredoc(t_shell *shell);
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
 
 /* ========================================================================== */
