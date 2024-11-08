@@ -51,6 +51,7 @@ t_shell	*init_struct(char **argv, char **envp)
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
 		return (NULL);
+	shell->head = NULL;
 	shell->heredoc_flag = 0;
 	shell->exit_heredoc = 0;
 	shell->heredoc = NULL;

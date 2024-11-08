@@ -24,7 +24,7 @@ int	ft_echo(char **argv)
 	int	i;
 
 	i = 1;
-	if (!argv[1])
+	if (!argv[1] || (argv[1] && !argv[1][0]))
 	{
 		printf("\n");
 		return (0);

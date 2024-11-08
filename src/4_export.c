@@ -89,6 +89,13 @@ char	**update_env(char **local_env, char *var)
 	return (new_env);
 }
 
+static void	export_error(char *arg)
+{
+	ft_putstr_fd("minishell: export: ", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd(": not a valid identifier\n", 2);
+}
+
 int	ft_export(char **argv, t_shell *shell)
 {
 	int	i;
@@ -108,8 +115,7 @@ int	ft_export(char **argv, t_shell *shell)
 			append_var(shell, argv[i]);
 		else if (!valid_name_len(shell, argv[i]))
 		{
-			printf("minishell: export: ");
-			printf("'%s': not a valid identifier\n", argv[i]);
+			export_error(argv[i]);
 			flag = 1;
 		}
 	}

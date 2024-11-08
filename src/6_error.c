@@ -18,22 +18,14 @@ int	mini_error(char *str, int error, t_shell *shell)
 	if (error == -1)
 	{
 		shell->exit_status = 1;
-		printf("minishell: %s", str);
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd("\n", 2);
 		return (-1);
 	}
-	printf("minishell: syntax error %s\n", str);
-	if (error == INV_CHAR)
-		return (INV_CHAR);
-	else if (error == S_Q)
-		return (S_Q);
-	else if (error == D_Q)
-		return (D_Q);
-	else if (error == ERROR_P)
-		return (ERROR_P);
-	else if (error == ER_TOK)
-		return (ER_TOK);
-	else if (error == E_NWL)
-		return (E_NWL);
+	ft_putstr_fd("minishell: syntax error ", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd("\n", 2);
 	return (1);
 }
 

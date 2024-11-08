@@ -89,7 +89,7 @@ int	ft_cd(char **argv, t_shell *shell)
 	if (has_options(argv, "cd"))
 		return (1);
 	if (argv[2])
-		return (ft_putstr_fd("too many arguments\n", 2), 1);
+		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
 	tmp = getcwd(path, sizeof(path));
 	if (!argv[1])
 	{

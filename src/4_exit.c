@@ -12,11 +12,18 @@
 
 #include "minishell.h"
 
-static int	ft_isnumber(char *arg)
+static int	valid_code(char *arg)
 {
 	int	i;
 
+	if (ft_strncmp(arg, "922337203685477580", 18) == 0
+		&& arg[18] && arg[18] > '7' && arg[18] <= '9')
+		return (0);
 	i = 0;
+	if (ft_isdigit(arg[i]) || arg[i] == '+' || arg[i] == '-')
+		i++;
+	else
+		return (0);
 	while (arg[i])
 	{
 		if (arg[i] >= '0' && arg[i] <= '9')
@@ -27,17 +34,56 @@ static int	ft_isnumber(char *arg)
 	return (1);
 }
 
+static int	calculate_exit_code(int code)
+{
+	if (code >= 0)
+		return (code % 256);
+	else
+		return (256 + (code % 256));
+}
+
+static int	exit_error(char *arg, int error)
+{
+	if (error == ERR_ARG)
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		return (1);
+	}
+	else if (error == ERR_NUM)
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		return (2);
+	}
+	return (0);
+}
+
 void	ft_exit(char **argv, t_shell *shell)
 {
-	free_shell(shell, 1);
-	// free_cmd(shell->cmd);
+	int	exit_code;
+
 	if (argv[1] == NULL)
-		exit (0);
-	if (ft_isnumber(argv[1]))
-		exit (ft_atoi(argv[1]));
-	else
 	{
-		printf("minishell: exit: %s: numeric argument required\n", argv[1]);
-		exit (255);
+		free_shell(shell, 1);
+		exit (0);
 	}
+	if (argv[2])
+	{
+		free_shell(shell, 1);
+		exit (exit_error(NULL, ERR_ARG));
+	}
+	if (argv[1][0] == '-' && argv[1][1] == '-' && argv[1][2] == '\0')
+	{
+		free_shell(shell, 1);
+		exit (0);
+	}
+	if (!valid_code(argv[1]))
+	{
+		free_shell(shell, 1);
+		exit(exit_error(argv[1], ERR_NUM));
+	}
+	exit_code = ft_atoi(argv[1]);
+	free_shell(shell, 1);
+	exit(calculate_exit_code(exit_code));
 }

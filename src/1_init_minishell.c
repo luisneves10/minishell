@@ -21,9 +21,13 @@ void	free_shell(t_shell *shell, int i)
 	if (i)
 	{
 		free_env(shell->env);
-		free (shell);
 		if (i == 1)
+		{
+			if (shell->head)
+				free_cmd(shell->head);
 			printf("exit\n");
+		}
+		free (shell);
 		return ;
 	}
 	shell->prompt = NULL;
