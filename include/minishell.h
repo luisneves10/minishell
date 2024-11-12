@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/07 15:15:37 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 13:15:08 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,26 +69,6 @@ typedef struct cmd
 	pid_t		pid1;
 	pid_t		pid2;
 }	t_cmd;
-
-typedef struct execcmd
-{
-	int		type;
-	char	**argv;
-	t_redir	*redir;
-	int		fd_out;
-	int		fd_in;
-}	t_execcmd;
-
-typedef struct pipecmd
-{
-	int		type;
-	int		pipefd[2];
-	int		prev_pipe;
-	t_cmd	*left;
-	t_cmd	*right;
-	pid_t	pid1;
-	pid_t	pid2;
-}	t_pipecmd;
 
 typedef struct s_chunk
 {
@@ -203,8 +183,8 @@ void		handle_child_process(char *path, t_cmd *execcmd,
 void		handle_parent_process(int pid, char *path,
 				t_cmd *execcmd, t_shell *shell);
 t_cmd		*pipe_cmd(t_cmd *left, t_cmd *right);
-void		fork_function1(t_cmd *pipecmd, t_shell *shell);
-void		fork_function2(t_cmd *pipecmd, t_shell *shell);
+int			fork_function1(t_cmd *pipecmd, t_shell *shell);
+int			fork_function2(t_cmd *pipecmd, t_shell *shell);
 t_token		*create_token(void);
 int			handle_heredoc(t_shell *shell);
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);

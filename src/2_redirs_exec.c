@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/06 15:16:32 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 11:25:06 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,44 @@ void	handle_redirs(t_cmd *execcmd, t_shell *shell)
 	redir = execcmd->redir;
 	while (redir)
 	{
+		if (redir->type == '>' || redir->type == '+')
+		{
+			if (access(redir->file, F_OK) == 0 && access(redir->file, W_OK) == -1)
+			{
+				perror("minishell");
+				shell->exit_status = 1;
+				close_fds(shell->fds);
+				free(shell->fds);
+				return;
+			}
+		}
+		if (redir->type == '-' || redir->type == '<')
+		{
+			if (access(redir->file, F_OK) == 0 && access(redir->file, R_OK) == -1)
+			{
+				perror("minishell");
+				shell->exit_status = 1;
+				close_fds(shell->fds);
+				free(shell->fds);
+				return;
+			}
+		}
 		if (redir && (redir->type == '<' || redir->type == '-'))
 		{
 			if (redirs_in(shell->fds, redir, shell) < 0)
+			{
+				close_fds(shell->fds);
+				free(shell->fds);
 				return ;
+			}
 		}
 		else if (redir && (redir->type == '>' || redir->type == '+'))
 			if (redirs_out(shell->fds, redir, shell) < 0)
+			{
+				close_fds(shell->fds);
+				free(shell->fds);
 				return ;
+			}
 		redir = redir->next;
 	}
 	if (execcmd->argv[0])

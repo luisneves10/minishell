@@ -6,11 +6,52 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/06 10:27:27 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 12:58:33 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	**clean_argv(t_cmd *cmd)
+{
+	int		i;
+	int		j;
+	int		size;
+	char	**new_argv;
+
+	i = 0;
+	size = 0;
+	while (cmd->argv[i])
+	{
+		if (cmd->argv[i] && cmd->argv[i][0])
+			size++;
+		i++;
+	}
+	new_argv = ft_calloc(sizeof(char *), size + 1);
+	if (!new_argv)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (cmd->argv[i])
+	{
+		if (cmd->argv[i] && cmd->argv[i][0])
+		{
+			new_argv[j] = ft_strdup(cmd->argv[i]);
+			if (!new_argv[j])
+			{
+				perror("ft_strdup");
+				return (NULL);
+			}
+			j++;
+		}
+		i++;
+	}
+	i = 0;
+	while (cmd->argv[i])
+		free (cmd->argv[i++]);
+	free (cmd->argv);
+	return (new_argv);
+}
 
 static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, t_shell *shell)
 {
@@ -71,6 +112,7 @@ static t_cmd	*parse_pipe(char **ptr_str, t_shell *shell)
 	s = NULL;
 	es = NULL;
 	cmd = parse_exec(ptr_str, shell);
+	cmd->argv = clean_argv(cmd);
 	while (find_char(ptr_str, "|"))
 	{
 		get_token(ptr_str, &s, &es);
