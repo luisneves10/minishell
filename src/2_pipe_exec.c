@@ -6,13 +6,25 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:18:03 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/06 10:08:31 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 13:11:50 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	fork_function1(t_cmd *pipecmd, t_shell *shell)
+void	fork_exit(t_cmd *cmd, t_shell *shell)
+{
+	int	exit_status;
+
+	run_cmd(cmd, shell);
+	delete_heredocs(shell, 0);
+	free_cmd(shell->head);
+	exit_status = shell->exit_status;
+	free_shell(shell, 2);
+	exit(exit_status);
+}
+
+int	fork_function1(t_cmd *pipecmd, t_shell *shell)
 {
 	int	pid;
 
@@ -20,7 +32,7 @@ void	fork_function1(t_cmd *pipecmd, t_shell *shell)
 	if (pid < 0)
 	{
 		perror("fork error");
-		exit(77);
+		exit(1);
 	}
 	if (pid == 0)
 	{
@@ -31,15 +43,12 @@ void	fork_function1(t_cmd *pipecmd, t_shell *shell)
 			exit(-1);
 		}
 		close(pipecmd->pipefd[1]);
-		run_cmd(pipecmd->left, shell);
-		delete_heredocs(shell, 0);
-		free_cmd(shell->head);
-		free_shell(shell, 2);
-		exit(0);
+		fork_exit(pipecmd->left, shell);
 	}
+	return (pid);
 }
 
-void	fork_function2(t_cmd *pipecmd, t_shell *shell)
+int	fork_function2(t_cmd *pipecmd, t_shell *shell)
 {
 	int	pid;
 
@@ -47,7 +56,7 @@ void	fork_function2(t_cmd *pipecmd, t_shell *shell)
 	if (pid < 0)
 	{
 		perror("fork error");
-		exit(77);
+		exit(1);
 	}
 	if (pid == 0)
 	{
@@ -58,10 +67,7 @@ void	fork_function2(t_cmd *pipecmd, t_shell *shell)
 			exit(-1);
 		}
 		close(pipecmd->pipefd[0]);
-		run_cmd(pipecmd->right, shell);
-		free_cmd(shell->head);
-		delete_heredocs(shell, 0);
-		free_shell(shell, 2);
-		exit(0);
+		fork_exit(pipecmd->right, shell);
 	}
+	return (pid);
 }

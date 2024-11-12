@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/06 15:20:46 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 13:07:45 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ void	execute_commands(t_cmd *cmd, t_shell *shell)
 	int		pid;
 	char	*path;
 
+	if (cmd->argv[0][0] == '\0' || !cmd->argv[0])
+		return ;
 	command_type(cmd, shell, &path);
 	if (path == NULL)
 		return ;
@@ -111,6 +113,11 @@ void	execute_commands(t_cmd *cmd, t_shell *shell)
 
 void	run_cmd(t_cmd *cmd, t_shell *shell)
 {
+	int	status1;
+	int	status2;
+	int	pid1;
+	int	pid2;
+
 	if (!cmd)
 		return ;
 	if (cmd->type == EXEC)
@@ -122,12 +129,17 @@ void	run_cmd(t_cmd *cmd, t_shell *shell)
 			perror("pipe error");
 			exit(1);
 		}
-		fork_function1(cmd, shell);
-		fork_function2(cmd, shell);
+		pid1 = fork_function1(cmd, shell);
+		pid2 = fork_function2(cmd, shell);
 		close(cmd->pipefd[0]);
 		close(cmd->pipefd[1]);
-		wait(NULL);
-		wait(NULL);
+		waitpid(pid1, &status1, 0);
+		waitpid(pid2, &status2, 0);
+		if (WIFEXITED(status2))
+			shell->exit_status = WEXITSTATUS(status2);
+		else if (WIFEXITED(status1))
+			shell->exit_status = WEXITSTATUS(status1);
+		else
+			shell->exit_status = 0;
 	}
-//	shell->exit_status = 0;
 }

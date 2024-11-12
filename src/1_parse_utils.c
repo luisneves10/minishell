@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/07 12:27:11 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 12:42:52 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ char	*aloc_file(char *start_file, t_redir *new_redir, char *end_file)
 	if (!file)
 	{
 		free(new_redir);
+		free(temp);
 		exit(1);
 	}
+	free(temp);
 	return (file);
 }
 
@@ -76,7 +78,7 @@ int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
 		*start_tok = str;
 	while (*str)
 	{
-		while (*str && !find_char(&str, " |\"\'"))
+		while (*str && !find_char(&str, " \"\'"))
 			str++;
 		if (*str == '"' || *str == '\'')
 		{
@@ -92,8 +94,8 @@ int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
 	}
 	if (end_tok)
 		*end_tok = str;
-	// if (*str)
-	// 	str++;
+	//if (*str && *str == '|')
+	//	str++;
 	*ptr_str = str;
 	return ('a');
 }
@@ -109,7 +111,7 @@ int	get_token(char **ptr_str, char **start_tok, char **end_tok)
 	str = *ptr_str;
 	while (*str && *str == ' ')
 		str++;
-	if (token_has_quotes(str))
+	if (token_has_quotes(str) && (*str != '<' && *str != '>'))
 		return (parse_quotes(ptr_str, str, start_tok, end_tok));
 	if (start_tok)
 		*start_tok = str;
