@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/12 11:25:06 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 15:54:22 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	redirs_in(t_fds *fds, t_redir *redir, t_shell *shell)
 		close(fds->in_fd);
 	fds->in_fd = open(redir->file, O_RDONLY);
 	if (fds->in_fd < 0)
-		return (mini_error("No such file or directory\n", -1, shell));
+		return (mini_error("No such file or directory", -1, shell));
 	handle_in(fds);
 	return (1);
 }
@@ -69,7 +69,7 @@ int	redirs_out(t_fds *fds, t_redir *redir, t_shell *shell)
 	else
 		fds->out = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds->out < 0)
-		return (mini_error("No such file or directory\n", -1, shell));
+		return (mini_error("No such file or directory", -1, shell));
 	handle_out(fds);
 	return (1);
 }
@@ -80,6 +80,14 @@ void	handle_redirs(t_cmd *execcmd, t_shell *shell)
 
 	shell->fds = init_fds();
 	redir = execcmd->redir;
+	if (redir && ft_strncmp(redir->file, EXPAND_NULL, 11) == 0)
+	{
+		shell->exit_status = 1;
+		mini_error("ambiguous redirect", -1, shell);
+		close_fds(shell->fds);
+		free(shell->fds);
+		return;
+	}
 	while (redir)
 	{
 		if (redir->type == '>' || redir->type == '+')

@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 15:19:00 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/30 14:55:02 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 15:02:34 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,9 @@ int	find_char(char **ptr_str, char *set)
 	if (!ptr_str || !*ptr_str || !set)
 		return (0);
 	s = *ptr_str;
-	if (*s && !ft_strchr(set, ' '))
+	if (*s)
 	{
-		while (*s && *s == ' ')
+		while (*s && (*s == ' ' || *s == '\t'))//mudar aqui
 			s++;
 	}
 	*ptr_str = s;

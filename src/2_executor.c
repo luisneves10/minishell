@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/12 13:07:45 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:31:38 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ char	*get_cmd_path(char **env, char *cmd)
 
 	i = 0;
 	path = NULL;
+	if (*cmd == '\0')
+		return (NULL);
 	while (env[i])
 	{
 		if (ft_strncmp("PATH", env[i], 4) == 0)
@@ -65,6 +67,20 @@ char	*get_cmd_path(char **env, char *cmd)
 	return (real_path);
 }
 
+int	is_directory(char *path)
+{
+	struct stat	path_stat;
+
+	if (access(path, F_OK) == -1)
+		return (0);
+	if (stat(path, &path_stat) == -1)
+	{
+		perror("stat error");
+		return (0);
+	}
+	return (S_ISDIR(path_stat.st_mode));
+	}
+
 void	command_type(t_cmd *cmd, t_shell *shell, char **path)
 {
 	if (is_builtin(cmd) != NULL)
@@ -73,9 +89,18 @@ void	command_type(t_cmd *cmd, t_shell *shell, char **path)
 		*path = NULL;
 		return ;
 	}
-	if (cmd->argv[0][0] == '/' || ft_strncmp(cmd->argv[0], "./", 2) == 0
-		|| ft_strncmp(cmd->argv[0], "../", 3) == 0)
-		*path = cmd->argv[0];
+	else if (cmd->argv[0][0] == '/' || ft_strncmp(cmd->argv[0], "./", 2) == 0
+		|| ft_strncmp(cmd->argv[0], "../", 3) == 0) //encontrar / no fim da str
+		{
+			*path = cmd->argv[0];
+			if (is_directory(*path))
+		{
+			mini_error("Is a directory", -1, shell);
+			shell->exit_status = 126;
+			*path = NULL;
+			return ;
+		}
+		}
 	else
 	{
 		*path = get_cmd_path(shell->env, cmd->argv[0]);
@@ -94,8 +119,8 @@ void	execute_commands(t_cmd *cmd, t_shell *shell)
 	int		pid;
 	char	*path;
 
-	if (cmd->argv[0][0] == '\0' || !cmd->argv[0])
-		return ;
+/* 	if (cmd->argv[0][0] == '\0' || !cmd->argv[0])
+	 	return ; */
 	command_type(cmd, shell, &path);
 	if (path == NULL)
 		return ;

@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 15:21:52 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/30 12:00:54 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 15:41:18 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	valid_name_len(t_shell *shell, char *arg)
 	while (arg[i])
 	{
 		if (arg[i] == '+' && arg[i + 1] == '=')
-			return (EXPAND_APPEND);
+			return (EXPORT_APPEND);
 		if (arg[i] == '=')
 			break ;
 		if (!ft_isalnum(arg[i]) && arg[i] != '_')
@@ -36,7 +36,7 @@ static int	valid_name_len(t_shell *shell, char *arg)
 		}
 		i++;
 	}
-	return (EXPAND_NEW);
+	return (EXPORT_NEW);
 }
 
 static int	var_update(char **local_env, char *var)
@@ -109,9 +109,9 @@ int	ft_export(char **argv, t_shell *shell)
 	flag = 0;
 	while (argv[++i] != NULL)
 	{
-		if (valid_name_len(shell, argv[i]) == EXPAND_NEW)
+		if (valid_name_len(shell, argv[i]) == EXPORT_NEW)
 			shell->env = update_env(shell->env, argv[i]);
-		else if (valid_name_len(shell, argv[i]) == EXPAND_APPEND)
+		else if (valid_name_len(shell, argv[i]) == EXPORT_APPEND)
 			append_var(shell, argv[i]);
 		else if (!valid_name_len(shell, argv[i]))
 		{

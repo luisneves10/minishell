@@ -6,13 +6,13 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/12 12:42:52 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 15:25:29 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*aloc_file(char *start_file, t_redir *new_redir, char *end_file)
+char	*aloc_file(char *start_file, t_redir *new_redir, char *end_file, t_shell *shell)
 {
 	int		file_length;
 	char	*file;
@@ -20,7 +20,7 @@ char	*aloc_file(char *start_file, t_redir *new_redir, char *end_file)
 
 	file_length = end_file - start_file;
 	temp = ft_strndup(start_file, file_length);
-	file = clean_token(temp, NULL);
+	file = clean_token(temp, shell); //tem que se enviar o shell
 	if (!file)
 	{
 		free(new_redir);
@@ -32,7 +32,7 @@ char	*aloc_file(char *start_file, t_redir *new_redir, char *end_file)
 }
 
 t_redir	*add_redir(t_redir *head, int type,
-					char *start_file, char *end_file)
+					char *start_file, char *end_file, t_shell *shell)
 {
 	t_redir	*tmp;
 	t_redir	*new_redir;
@@ -45,7 +45,7 @@ t_redir	*add_redir(t_redir *head, int type,
 	if (type == '-')
 		new_redir->file = NULL;
 	else
-		new_redir->file = aloc_file(start_file, new_redir, end_file);
+		new_redir->file = aloc_file(start_file, new_redir, end_file, shell);
 	new_redir->next = NULL;
 	if (!head)
 		return (new_redir);
