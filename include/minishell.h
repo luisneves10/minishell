@@ -27,9 +27,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-# define HEREDOC 1
-# define TOKEN 0
-
 /* ----------------------------------------------------- COMMAND MACROS ----- */
 # define EXEC  1
 # define REDIR 2
@@ -37,9 +34,11 @@
 # define LIST  4
 # define BACK  5
 
-/* ------------------------------------------------------ EXPAND MACROS ----- */
+/* ------------------------------------------------------ EXPORT MACROS ----- */
 # define EXPORT_NEW  1
 # define EXPORT_APPEND 2
+
+/* ------------------------------------------------------ EXPAND MACROS ----- */
 # define EXPAND_NULL "EXPAND_NULL"
 
 /* -------------------------------------------------------- EXIT ERRORS ----- */
@@ -49,6 +48,10 @@
 /* -------------------------------------------------------- EXIT MACROS ----- */
 # define EXIT_EOF 10
 # define EXIT_CMD 11
+
+/* --------------------------------------------------- TOKEN OR HEREDOC ----- */
+# define HEREDOC 1
+# define TOKEN 0
 
 extern int	g_ctrlc;
 typedef struct s_redir

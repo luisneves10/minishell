@@ -31,7 +31,6 @@ void	free_shell(t_shell *shell, int i)
 				close_fds(shell->fds);
 				free (shell->fds);
 			}
-			printf("exit\n");
 		}
 		free (shell);
 		return ;
@@ -42,7 +41,7 @@ void	free_shell(t_shell *shell, int i)
 
 static char	*get_prompt(void)
 {
-	char	path[1024];
+	char	path[4096];
 	char	*prompt;
 	char	*user;
 
