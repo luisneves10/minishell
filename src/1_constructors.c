@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/07 15:00:46 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 14:53:36 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ t_shell	*init_struct(char **argv, char **envp)
 	shell->name = argv[0] + 2;
 	shell->exit_status = 0;
 	shell->argc = 0;
+	shell->status1 = 0;
+	shell->status2 = 0;
 	shell->prompt = NULL;
 	shell->input = NULL;
 	shell->fds = NULL;

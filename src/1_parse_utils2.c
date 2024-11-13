@@ -6,11 +6,65 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 15:19:00 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/12 15:02:34 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 16:27:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	**copy_argv(char **argv, int size, int i, int j)
+{
+	char	**new_argv;
+
+	new_argv = ft_calloc(sizeof(char *), size + 1);
+	if (!new_argv)
+		return (NULL);
+	while (argv[i])
+	{
+		if (argv[i][0] == '\0')
+		{
+			new_argv[j] = ft_strdup("");
+			j ++;
+		}
+		else if (ft_strncmp(argv[i], EXPAND_NULL, 11) != 0)
+		{
+			new_argv[j] = ft_strdup(argv[i]);
+			if (!new_argv[j])
+			{
+				perror("ft_strdup");
+				return (NULL);
+			}
+			j++;
+		}
+		i++;
+	}
+	return (new_argv);
+}
+
+char	**clean_argv(t_cmd *cmd)
+{
+	int		i;
+	int		j;
+	int		size;
+	char	**new_argv;
+
+	i = 0;
+	j = 0;
+	size = 0;
+	while (cmd->argv[i])
+	{
+		if (ft_strncmp(cmd->argv[i], EXPAND_NULL, 11) != 0)
+			size++;
+		i++;
+	}
+	i = 0;
+	new_argv = copy_argv(cmd->argv, size, i, j);
+	i = 0;
+	while (cmd->argv[i])
+		free (cmd->argv[i++]);
+	free (cmd->argv);
+	return (new_argv);
+}
 
 static void	quote_check(char *str, int *in_quotes, char *quote_type)
 {
@@ -32,11 +86,11 @@ void	token_count(char *str, t_shell *shell)
 	quote_type = 0;
 	while (*str)
 	{
-		while (*str == ' ' && !in_quotes)
+		while (is_whitespace(*str) && !in_quotes)
 			str++;
-		if (*str && *str != ' ' && *str != '|')
+		if (*str && !is_whitespace(*str) && *str != '|')
 			shell->argc++;
-		while (*str && (in_quotes || (*str != ' ' && *str != '|')))
+		while (*str && (in_quotes || (!is_whitespace(*str) && *str != '|')))
 		{
 			if ((*str == '\'' || *str == '"')
 				&& (!in_quotes || *str == quote_type))
@@ -48,42 +102,6 @@ void	token_count(char *str, t_shell *shell)
 	}
 }
 
-int	special_redirs(char **str)
-{
-	if (**str == '>')
-	{
-		(*str)++;
-		if (**str == '>')
-		{
-			return ('+');
-		}
-		(*str)--;
-		return ('>');
-	}
-	else if (**str == '<')
-	{
-		(*str)++;
-		if (**str == '<')
-		{
-			return ('-');
-		}
-		(*str)--;
-		return ('<');
-	}
-	return ('?');
-}
-
-int	special_chars(char **str)
-{
-	if (**str == '|')
-		return ('|');
-	else if (**str == '<' || **str == '>')
-		return (special_redirs(str));
-	else if (**str == 0)
-		return (0);
-	return ('a');
-}
-
 int	find_char(char **ptr_str, char *set)
 {
 	char	*s;
@@ -93,7 +111,7 @@ int	find_char(char **ptr_str, char *set)
 	s = *ptr_str;
 	if (*s)
 	{
-		while (*s && (*s == ' ' || *s == '\t'))//mudar aqui
+		while (*s && is_whitespace(*s))
 			s++;
 	}
 	*ptr_str = s;

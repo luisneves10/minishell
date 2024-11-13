@@ -6,11 +6,20 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 16:14:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/12 15:05:00 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 14:13:45 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_whitespace(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\r'
+		|| c == '\v' || c == '\f')
+		return (1);
+	else
+		return (0);
+}
 
 int	mini_error(char *str, int error, t_shell *shell)
 {

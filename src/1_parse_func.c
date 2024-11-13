@@ -6,57 +6,11 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/12 15:40:47 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:37:22 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	**clean_argv(t_cmd *cmd)
-{
-	int		i;
-	int		j;
-	int		size;
-	char	**new_argv;
-
-	i = 0;
-	size = 0;
-	while (cmd->argv[i])
-	{
-		if (ft_strncmp(cmd->argv[i], EXPAND_NULL, 11) != 0)
-			size++;
-		i++;
-	}
-	new_argv = ft_calloc(sizeof(char *), size + 1);
-	if (!new_argv)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (cmd->argv[i])
-	{
-		if (cmd->argv[i][0] == '\0')
-		{
-			new_argv[j] = ft_strdup(cmd	->argv[i]);
-			j ++;
-		}
-		else if (ft_strncmp(cmd->argv[i], EXPAND_NULL, 11) != 0)
-		{
-			new_argv[j] = ft_strdup(cmd->argv[i]);
-			if (!new_argv[j])
-			{
-				perror("ft_strdup");
-				return (NULL);
-			}
-			j++;
-		}
-		i++;
-	}
-	i = 0;
-	while (cmd->argv[i])
-		free (cmd->argv[i++]);
-	free (cmd->argv);
-	return (new_argv);
-}
 
 static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, t_shell *shell)
 {
@@ -79,7 +33,9 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, t_shell *shell)
 			shell->heredoc = get_delimiter(start_tok, end_tok, shell);
 			shell->heredoc_flag = 1;
 		}
-		cmd->redir = add_redir(cmd->redir, token, start_tok, end_tok, shell);
+		tok->start = start_tok;
+		tok->end = end_tok;
+		cmd->redir = add_redir(cmd->redir, token, tok, shell);
 	}
 	free(tok);
 	return (cmd);
