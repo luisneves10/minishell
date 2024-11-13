@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/13 12:27:56 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:57:51 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,14 @@ void	command_type(t_cmd *cmd, t_shell *shell, char **path)
 		*path = get_cmd_path(shell->env, cmd->argv[0]);
 		if (!(*path))
 		{
+			if (ft_strncmp(cmd->argv[0], "sudo", 4) == 0
+				&& ft_strlen(cmd->argv[0]) == ft_strlen("sudo"))
+			{
+				ft_putstr_fd(cmd->argv[0], 2);
+				ft_putstr_fd(": permission denied\n", 2);
+				shell->exit_status = 126;
+				return ;
+			}
 			ft_putstr_fd(cmd->argv[0], 2);
 			ft_putstr_fd(": command not found\n", 2);
 			shell->exit_status = 127;
