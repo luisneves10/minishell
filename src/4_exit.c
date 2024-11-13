@@ -46,11 +46,13 @@ static int	exit_error(char *arg, int error)
 {
 	if (error == ERR_ARG)
 	{
+		printf("exit\n");
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		return (1);
 	}
 	else if (error == ERR_NUM)
 	{
+		printf("exit\n");
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(arg, 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
@@ -63,27 +65,27 @@ void	ft_exit(char **argv, t_shell *shell)
 {
 	int	exit_code;
 
-	if (argv[1] == NULL)
+	if (*(argv + 1) == NULL)
 	{
 		free_shell(shell, EXIT_CMD);
 		exit (0);
 	}
-	if (argv[2])
+	if (ft_strncmp(*(argv + 1), "--", 2) == 0
+		&& (ft_strlen(*(argv + 1)) == ft_strlen("--")))
+		return (ft_exit(argv + 1, shell));
+	if (!valid_code(*(argv + 1)))
 	{
+		exit_code = exit_error(*(argv + 1), ERR_NUM);
 		free_shell(shell, EXIT_CMD);
-		exit (exit_error(NULL, ERR_ARG));
+		exit(exit_code);
 	}
-	if (argv[1][0] == '-' && argv[1][1] == '-' && argv[1][2] == '\0')
+	if (*(argv + 2))
 	{
-		free_shell(shell, EXIT_CMD);
-		exit (0);
+		shell->exit_status = exit_error("", ERR_ARG);
+		return ;
 	}
-	if (!valid_code(argv[1]))
-	{
-		free_shell(shell, EXIT_CMD);
-		exit(exit_error(argv[1], ERR_NUM));
-	}
-	exit_code = ft_atoi(argv[1]);
+	exit_code = ft_atoi(*(argv + 1));
 	free_shell(shell, EXIT_CMD);
+	printf("exit\n");
 	exit(calculate_exit_code(exit_code));
 }
