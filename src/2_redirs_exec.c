@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/13 11:55:42 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:29:59 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,12 +122,14 @@ void	handle_redirs(t_cmd *execcmd, t_shell *shell)
 			}
 		}
 		else if (redir && (redir->type == '>' || redir->type == '+'))
+		{
 			if (redirs_out(shell->fds, redir, shell) < 0)
 			{
 				close_fds(shell->fds);
 				free(shell->fds);
 				return ;
 			}
+		}
 		redir = redir->next;
 	}
 	if (execcmd->argv[0])

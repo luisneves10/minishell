@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/12 16:31:38 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:27:56 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	is_directory(char *path)
 		return (0);
 	}
 	return (S_ISDIR(path_stat.st_mode));
-	}
+}
 
 void	command_type(t_cmd *cmd, t_shell *shell, char **path)
 {
@@ -90,17 +90,17 @@ void	command_type(t_cmd *cmd, t_shell *shell, char **path)
 		return ;
 	}
 	else if (cmd->argv[0][0] == '/' || ft_strncmp(cmd->argv[0], "./", 2) == 0
-		|| ft_strncmp(cmd->argv[0], "../", 3) == 0) //encontrar / no fim da str
-		{
-			*path = cmd->argv[0];
-			if (is_directory(*path))
+		|| ft_strncmp(cmd->argv[0], "../", 3) == 0 || cmd->argv[0][ft_strlen(cmd->argv[0]) - 1] == '/') //encontrar / no fim da str
+	{
+		*path = cmd->argv[0];
+		if (is_directory(*path))
 		{
 			mini_error("Is a directory", -1, shell);
 			shell->exit_status = 126;
 			*path = NULL;
 			return ;
 		}
-		}
+	}
 	else
 	{
 		*path = get_cmd_path(shell->env, cmd->argv[0]);
@@ -119,8 +119,6 @@ void	execute_commands(t_cmd *cmd, t_shell *shell)
 	int		pid;
 	char	*path;
 
-/* 	if (cmd->argv[0][0] == '\0' || !cmd->argv[0])
-	 	return ; */
 	command_type(cmd, shell, &path);
 	if (path == NULL)
 		return ;
