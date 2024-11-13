@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/12 15:40:59 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 11:51:14 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 # include "../libft/include/get_next_line.h"
 # include <sys/types.h>
 # include <sys/wait.h>
+
+# define HEREDOC 1
+# define TOKEN 0
 
 /* ----------------------------------------------------- COMMAND MACROS ----- */
 # define EXEC  1
@@ -165,7 +168,7 @@ t_redir		*add_redir(t_redir *head, int type,
 				char *start_file, char *end_file, t_shell *shell);
 int			deal_token(t_cmd *cmd, char **str,
 				t_token *token, t_shell *shell);
-char		*clean_token(char *tok, t_shell *shell);
+char		*clean_token(char *tok, t_shell *shell, int type);
 int			final_token_size(t_chunk *chunks);
 t_chunk		*chunk_last(t_chunk *chunk);
 void		chunk_add_back(t_chunk **chunks, t_chunk *chunk, t_chunk **head);

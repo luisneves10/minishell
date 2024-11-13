@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/12 15:54:22 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 11:55:42 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	handle_redirs(t_cmd *execcmd, t_shell *shell)
 
 	shell->fds = init_fds();
 	redir = execcmd->redir;
-	if (redir && ft_strncmp(redir->file, EXPAND_NULL, 11) == 0)
+	if (redir && redir->type != '-' && ft_strncmp(redir->file, EXPAND_NULL, 11) == 0)
 	{
 		shell->exit_status = 1;
 		mini_error("ambiguous redirect", -1, shell);
@@ -101,7 +101,7 @@ void	handle_redirs(t_cmd *execcmd, t_shell *shell)
 				return;
 			}
 		}
-		if (redir->type == '-' || redir->type == '<')
+		if (redir->type == '<')
 		{
 			if (access(redir->file, F_OK) == 0 && access(redir->file, R_OK) == -1)
 			{

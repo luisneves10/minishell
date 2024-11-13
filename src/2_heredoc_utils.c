@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:29:45 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/05 10:44:49 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 11:58:25 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_heredoc	*get_heredoc(t_shell *shell, t_heredoc *new_heredoc)
 
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 {
-	int			len;
+	char		*tmp;
 	t_heredoc	*new_heredoc;
 
 	new_heredoc = malloc(sizeof(t_heredoc));
@@ -48,15 +48,16 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell)
 	new_heredoc->filepath = NULL;
 	new_heredoc->next = NULL;
 	new_heredoc->fd = -1;
-	len = end_tok - start_tok;
-	new_heredoc->delimiter = ft_calloc(len + 1, sizeof(char));
-	if (!new_heredoc->delimiter)
+	tmp = ft_calloc((end_tok - start_tok) + 1, sizeof(char));
+	if (!tmp)
 	{
 		free(new_heredoc);
 		perror("calloc error");
 		return (NULL);
 	}
-	ft_strlcpy(new_heredoc->delimiter, start_tok, len + 1);
+	ft_strlcpy(tmp, start_tok, (end_tok - start_tok) + 1);
+	new_heredoc->delimiter = clean_token(tmp, shell, HEREDOC);
+	free(tmp);
 	return (get_heredoc(shell, new_heredoc));
 }
 
