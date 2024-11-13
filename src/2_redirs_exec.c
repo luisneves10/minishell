@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/13 12:29:59 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:40:52 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,56 +80,14 @@ void	handle_redirs(t_cmd *execcmd, t_shell *shell)
 
 	shell->fds = init_fds();
 	redir = execcmd->redir;
-	if (redir && redir->type != '-' && ft_strncmp(redir->file, EXPAND_NULL, 11) == 0)
-	{
-		shell->exit_status = 1;
-		mini_error("ambiguous redirect", -1, shell);
-		close_fds(shell->fds);
-		free(shell->fds);
-		return;
-	}
+	if (ambigous_redir(shell, redir))
+		return ;
 	while (redir)
 	{
-		if (redir->type == '>' || redir->type == '+')
-		{
-			if (access(redir->file, F_OK) == 0 && access(redir->file, W_OK) == -1)
-			{
-				perror("minishell");
-				shell->exit_status = 1;
-				close_fds(shell->fds);
-				free(shell->fds);
-				return;
-			}
-		}
-		if (redir->type == '<')
-		{
-			if (access(redir->file, F_OK) == 0 && access(redir->file, R_OK) == -1)
-			{
-				perror("minishell");
-				shell->exit_status = 1;
-				close_fds(shell->fds);
-				free(shell->fds);
-				return;
-			}
-		}
-		if (redir && (redir->type == '<' || redir->type == '-'))
-		{
-			if (redirs_in(shell->fds, redir, shell) < 0)
-			{
-				close_fds(shell->fds);
-				free(shell->fds);
-				return ;
-			}
-		}
-		else if (redir && (redir->type == '>' || redir->type == '+'))
-		{
-			if (redirs_out(shell->fds, redir, shell) < 0)
-			{
-				close_fds(shell->fds);
-				free(shell->fds);
-				return ;
-			}
-		}
+		if (file_permissions(shell, redir))
+			return ;
+		else if (!valid_redir(shell, redir))
+			return ;
 		redir = redir->next;
 	}
 	if (execcmd->argv[0])

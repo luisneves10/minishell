@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/13 11:51:14 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:50:21 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ typedef struct shell
 	char		*input;
 	char		*prompt;
 	int			argc;
+	int			status1;
+	int			status2;
 	int			exit_heredoc;
 	int			exit_status;
 	int			heredoc_flag;
@@ -124,9 +126,17 @@ typedef struct shell
 /* ========================================================================== */
 /* ------------------------------ FUNCTIONS --------------------------------- */
 /* ========================================================================== */
-
 int			mini_error(char *str, int error, t_shell *shell);
 void		close_fds(t_fds *fds);
+int			is_whitespace(char c);
+int			is_directory(char *path);
+void		path_errors(t_shell *shell, t_cmd *cmd);
+void		wait_pipes_close(t_cmd *cmd, t_shell *shell, int pid1, int pid2);
+char		**clean_argv(t_cmd *cmd);
+
+/* ========================================================================== */
+/* ------------------------------ EXPANSIONS ---------------------------------*/
+/* ========================================================================== */
 char		*deal_expansion(char *token, t_shell *shell);
 void		on_off_flag(int *flag);
 char		*expansion_join(char *token, char *old_final, int *i);
@@ -137,6 +147,7 @@ char		*create_expand(char *expand);
 /*	INITIALIZATION AND SIGNALS                                                */
 /* ========================================================================== */
 void		init_minishell(t_shell *shell);
+t_token		*create_token(void);
 void		signals(void);
 t_shell		*init_struct(char **argv, char **envp);
 void		free_shell(t_shell *shell, int i);
@@ -161,11 +172,9 @@ t_cmd		*parse_cmd(char *str, t_shell *shell);
 int			get_token(char **ptr_str, char **start_token, char **end_token);
 int			special_chars(char **str);
 int			find_char(char **ptr_str, char *set);
-t_cmd		*exec_cmd(t_shell *shell);
 int			syntax_check(t_shell *shell);
 void		token_count(char *str, t_shell *argc);
-t_redir		*add_redir(t_redir *head, int type,
-				char *start_file, char *end_file, t_shell *shell);
+t_redir		*add_redir(t_redir *head, int type, t_token *tok, t_shell *shell);
 int			deal_token(t_cmd *cmd, char **str,
 				t_token *token, t_shell *shell);
 char		*clean_token(char *tok, t_shell *shell, int type);
@@ -176,38 +185,42 @@ char		*chunks_join(t_chunk *chunks);
 void		free_chunks(t_chunk *chunks);
 
 /* ========================================================================== */
-/*	COMMANDS AND REDIRECTIONS                                                 */
+/*	COMMANDS                                                                  */
 /* ========================================================================== */
 void		run_cmd(t_cmd *cmd, t_shell *shell);
-void		handle_redirs(t_cmd *execcmd, t_shell *shell);
 void		execute_commands(t_cmd *execcmd, t_shell *shell);
-void		free_split(char **split);
 void		handle_child_process(char *path, t_cmd *execcmd,
 				t_shell *shell);
 void		handle_parent_process(int pid, char *path,
 				t_cmd *execcmd, t_shell *shell);
-t_cmd		*pipe_cmd(t_cmd *left, t_cmd *right);
 int			fork_function1(t_cmd *pipecmd, t_shell *shell);
 int			fork_function2(t_cmd *pipecmd, t_shell *shell);
-t_token		*create_token(void);
+
+/* ========================================================================== */
+/*	REDIRECTIONS                                                              */
+/* ========================================================================== */
+void		handle_redirs(t_cmd *execcmd, t_shell *shell);
 int			handle_heredoc(t_shell *shell);
 t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
+int			special_redirs(char **str);
+int			ambigous_redir(t_shell *shell, t_redir *redir);
+int			file_permissions(t_shell *shell, t_redir *redir);
+int			valid_redir(t_shell *shell, t_redir *redir);
+int			redirs_in(t_fds *fds, t_redir *redir, t_shell *shell);
+int			redirs_out(t_fds *fds, t_redir *redir, t_shell *shell);
 
 /* ========================================================================== */
 /*	EXECUTION AND PROCESS HANDLING                                            */
 /* ========================================================================== */
 char		*get_cmd_path(char **env, char *cmd);
 char		*get_cmds_path(char *path, char *cmd);
-void		child1_process(t_cmd *pipecmd, t_shell *shell,
-				int prev_pipe, int *pi);
-void		fork_function(t_cmd *pipecmd, t_shell *shell);
-void		close_all(t_cmd *pipecmd);
 
 /* ========================================================================== */
 /*	MEMORY MANAGEMENT                                                         */
 /* ========================================================================== */
 void		free_cmd(t_cmd *cmd);
 void		delete_heredocs(t_shell *shell, int flag);
+void		free_split(char **split);
 
 /* ========================================================================== */
 /*	BUILTINS                                                                  */

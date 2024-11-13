@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_clean_token_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 12:16:29 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/06 13:42:14 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/11/13 16:04:04 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*chunks_join(t_chunk *chunks)
 {
 	char	*str;
 
-	str = ft_calloc(sizeof(char), final_token_size(chunks));
+	str = ft_calloc(sizeof(char), final_token_size(chunks) + 1);
 	if (!str)
 		return (NULL);
 	while (chunks && chunks->str)
