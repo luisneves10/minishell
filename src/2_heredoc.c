@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/06 15:58:38 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:01:19 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	handle_heredoc(t_shell *shell)
 	while (curr)
 	{
 		index = ft_itoa(curr->index);
-		curr->filepath = ft_strjoin("../heredoc_", index);
+		curr->filepath = ft_strjoin("/tmp/heredoc_", index);
 		free(index);
 		if (process_heredoc(curr, shell) == 1)
 		{

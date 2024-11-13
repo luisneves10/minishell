@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/12 12:58:33 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/12 15:40:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	**clean_argv(t_cmd *cmd)
 	size = 0;
 	while (cmd->argv[i])
 	{
-		if (cmd->argv[i] && cmd->argv[i][0])
+		if (ft_strncmp(cmd->argv[i], EXPAND_NULL, 11) != 0)
 			size++;
 		i++;
 	}
@@ -34,7 +34,12 @@ char	**clean_argv(t_cmd *cmd)
 	j = 0;
 	while (cmd->argv[i])
 	{
-		if (cmd->argv[i] && cmd->argv[i][0])
+		if (cmd->argv[i][0] == '\0')
+		{
+			new_argv[j] = ft_strdup(cmd	->argv[i]);
+			j ++;
+		}
+		else if (ft_strncmp(cmd->argv[i], EXPAND_NULL, 11) != 0)
 		{
 			new_argv[j] = ft_strdup(cmd->argv[i]);
 			if (!new_argv[j])
@@ -74,7 +79,7 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, t_shell *shell)
 			shell->heredoc = get_delimiter(start_tok, end_tok, shell);
 			shell->heredoc_flag = 1;
 		}
-		cmd->redir = add_redir(cmd->redir, token, start_tok, end_tok);
+		cmd->redir = add_redir(cmd->redir, token, start_tok, end_tok, shell);
 	}
 	free(tok);
 	return (cmd);

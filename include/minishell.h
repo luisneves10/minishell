@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/12 13:15:08 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/13 11:51:14 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
+# define HEREDOC 1
+# define TOKEN 0
+
 /* ----------------------------------------------------- COMMAND MACROS ----- */
 # define EXEC  1
 # define REDIR 2
@@ -35,8 +38,9 @@
 # define BACK  5
 
 /* ------------------------------------------------------ EXPAND MACROS ----- */
-# define EXPAND_NEW  1
-# define EXPAND_APPEND 2
+# define EXPORT_NEW  1
+# define EXPORT_APPEND 2
+# define EXPAND_NULL "EXPAND_NULL"
 
 /* -------------------------------------------------------- EXIT ERRORS ----- */
 # define ERR_NUM  1
@@ -161,10 +165,10 @@ t_cmd		*exec_cmd(t_shell *shell);
 int			syntax_check(t_shell *shell);
 void		token_count(char *str, t_shell *argc);
 t_redir		*add_redir(t_redir *head, int type,
-				char *start_file, char *end_file);
+				char *start_file, char *end_file, t_shell *shell);
 int			deal_token(t_cmd *cmd, char **str,
 				t_token *token, t_shell *shell);
-char		*clean_token(char *tok, t_shell *shell);
+char		*clean_token(char *tok, t_shell *shell, int type);
 int			final_token_size(t_chunk *chunks);
 t_chunk		*chunk_last(t_chunk *chunk);
 void		chunk_add_back(t_chunk **chunks, t_chunk *chunk, t_chunk **head);
@@ -194,10 +198,10 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
 /* ========================================================================== */
 char		*get_cmd_path(char **env, char *cmd);
 char		*get_cmds_path(char *path, char *cmd);
-void		child1_process(t_pipecmd *pipecmd, t_shell *shell,
+void		child1_process(t_cmd *pipecmd, t_shell *shell,
 				int prev_pipe, int *pi);
-void		fork_function(t_pipecmd *pipecmd, t_shell *shell);
-void		close_all(t_pipecmd *pipecmd);
+void		fork_function(t_cmd *pipecmd, t_shell *shell);
+void		close_all(t_cmd *pipecmd);
 
 /* ========================================================================== */
 /*	MEMORY MANAGEMENT                                                         */
