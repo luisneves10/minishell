@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/13 15:50:21 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 10:21:43 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@
 # define TOKEN 0
 
 extern int	g_ctrlc;
+
 typedef struct s_redir
 {
 	int				type;

@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/13 15:08:44 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 10:35:20 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	child_process_heredoc(t_heredoc *curr, t_shell *shell)
 
 	signal(SIGINT, SIG_DFL);
 	ft_strlcpy(delimiter, curr->delimiter, ft_strlen(curr->delimiter) + 1);
-	ft_strlcpy(delimiter, curr->filepath, ft_strlen(curr->filepath) + 1);
+	ft_strlcpy(file, curr->filepath, ft_strlen(curr->filepath) + 1);
 	delete_heredocs(shell, 0);
 	free_cmd(shell->head);
 	free_shell(shell, 2);

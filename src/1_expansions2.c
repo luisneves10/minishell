@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:11:42 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/07 15:13:50 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 10:27:31 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	return_exit_code(char **token, t_shell *shell)
 	final_token = create_expand(*token);
 	if (ft_strncmp(final_token, "?", 1) == 0)
 	{
-		if (g_ctrlc == 1)
+		if (g_ctrlc == SIGINT)
 			shell->exit_status = 130;
 	}
 	return (free(final_token));
