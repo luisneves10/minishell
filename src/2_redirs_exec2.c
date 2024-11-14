@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:40:32 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/13 15:40:55 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 13:21:59 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	ambigous_redir(t_shell *shell, t_redir *redir)
 {
 	if (redir && redir->type != '-'
-		&& ft_strncmp(redir->file, EXPAND_NULL, 11) == 0)
+		&& redir->file[0] == '\0' && shell->ambiguous == 1)
 	{
 		shell->exit_status = 1;
 		mini_error("ambiguous redirect", -1, shell);

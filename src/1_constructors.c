@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:24:29 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/13 14:53:36 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 14:51:32 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_cmd	*create_cmd(t_shell *shell, int type, t_cmd *left, t_cmd *right)
 		if (!cmd->argv)
 			return (NULL);
 	}
+	cmd->argc = 0;
 	cmd->left = left;
 	cmd->right = right;
 	cmd->type = type;
@@ -52,6 +53,7 @@ t_shell	*init_struct(char **argv, char **envp)
 	if (!shell)
 		return (NULL);
 	shell->head = NULL;
+	shell->ambiguous = 0;
 	shell->heredoc_flag = 0;
 	shell->exit_heredoc = 0;
 	shell->heredoc = NULL;

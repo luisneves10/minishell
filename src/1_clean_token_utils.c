@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 12:16:29 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/13 16:04:04 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 13:20:07 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	free_chunks(t_chunk *chunks)
 	}
 }
 
-char	*chunks_join(t_chunk *chunks)
+char	*chunks_join(t_chunk *chunks, t_shell *shell)
 {
 	char	*str;
 
@@ -75,7 +75,14 @@ char	*chunks_join(t_chunk *chunks)
 		return (NULL);
 	while (chunks && chunks->str)
 	{
-		str = ft_strjoin_free(str, chunks->str);
+		if (ft_strncmp(chunks->str, EXPAND_NULL, 1) == 0
+			&& ft_strlen(chunks->str) == ft_strlen(EXPAND_NULL))
+		{
+			shell->ambiguous = 1;
+			str = ft_strjoin_free(str, "");
+		}
+		else
+			str = ft_strjoin_free(str, chunks->str);
 		chunks = chunks->next;
 	}
 	return (str);

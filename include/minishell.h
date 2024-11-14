@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/14 10:21:43 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 14:51:17 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 # define EXPORT_APPEND 2
 
 /* ------------------------------------------------------ EXPAND MACROS ----- */
-# define EXPAND_NULL "EXPAND_NULL"
+# define EXPAND_NULL "\x02"
 
 /* -------------------------------------------------------- EXIT ERRORS ----- */
 # define ERR_NUM  1
@@ -68,6 +68,7 @@ typedef struct cmd
 	int			type;
 	char		**argv;
 	t_redir		*redir;
+	int			argc;
 	int			fd_out;
 	int			fd_in;
 	int			pipefd[2];
@@ -116,6 +117,7 @@ typedef struct shell
 	char		**env;
 	char		*input;
 	char		*prompt;
+	int			ambiguous;
 	int			argc;
 	int			status1;
 	int			status2;
@@ -185,7 +187,7 @@ char		*clean_token(char *tok, t_shell *shell, int type);
 int			final_token_size(t_chunk *chunks);
 t_chunk		*chunk_last(t_chunk *chunk);
 void		chunk_add_back(t_chunk **chunks, t_chunk *chunk, t_chunk **head);
-char		*chunks_join(t_chunk *chunks);
+char		*chunks_join(t_chunk *chunks, t_shell *shell);
 void		free_chunks(t_chunk *chunks);
 
 /* ========================================================================== */

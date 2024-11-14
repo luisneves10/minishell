@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 15:19:00 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/14 11:48:39 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 15:02:57 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ char	**copy_argv(char **argv, int size, int i, int j)
 		return (NULL);
 	while (argv[i])
 	{
-		if (argv[i][0] == '\0')
+		if (argv[i] && argv[i][0] == '\0')
 		{
 			new_argv[j] = ft_strdup("");
 			j ++;
 		}
-		else if (ft_strncmp(argv[i], EXPAND_NULL, 11) != 0)
+		else if (ft_strncmp(argv[i], EXPAND_NULL, ft_strlen(argv[i])) != 0)
 		{
 			new_argv[j] = ft_strdup(argv[i]);
 			if (!new_argv[j])
@@ -53,16 +53,16 @@ char	**clean_argv(t_cmd *cmd)
 	size = 0;
 	while (cmd->argv[i])
 	{
-		if (ft_strncmp(cmd->argv[i], EXPAND_NULL, 11) != 0)
+		if (ft_strncmp(cmd->argv[i], EXPAND_NULL, ft_strlen(EXPAND_NULL)) != 0)
 			size++;
 		i++;
 	}
 	i = 0;
 	new_argv = copy_argv(cmd->argv, size, i, j);
-	i = 0;
 	while (cmd->argv[i])
 		free (cmd->argv[i++]);
 	free (cmd->argv);
+	cmd->argc = size;
 	return (new_argv);
 }
 

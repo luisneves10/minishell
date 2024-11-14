@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   4_echo.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luibarbo <luibarbo@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 15:35:17 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/02 11:42:19 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/11/14 11:55:28 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ int	ft_echo(char **argv)
 	while (argv[i] && argv[i + 1] != NULL)
 		printf("%s ", argv[i++]);
 	if (is_echo_flag(argv[1]))
-		printf("%s", argv[i]);
+	{
+		if (argv[i])
+			printf("%s", argv[i]);
+	}
 	else
 		printf("%s\n", argv[i]);
 	return (0);

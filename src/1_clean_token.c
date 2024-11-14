@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:18:22 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/13 11:51:48 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 13:21:30 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*clean_token(char *tok, t_shell *shell, int type)
 			chunk->str = expand_chunk(chunk, shell);
 		chunk_add_back(&chunks, chunk, &head);
 	}
-	final_token = chunks_join(chunks);
+	final_token = chunks_join(chunks, shell);
 	free_chunks(head);
 	return (final_token);
 }
