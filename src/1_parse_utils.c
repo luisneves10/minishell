@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/14 10:18:12 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 11:13:00 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
 		*start_tok = str;
 	while (*str)
 	{
-		while (*str && !find_char(&str, " \"\'"))
+		while (*str && !is_whitespace(*str) && !find_char(&str, "\"\'"))
 			str++;
 		if (*str == '"' || *str == '\'')
 		{

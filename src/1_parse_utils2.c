@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 15:19:00 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/13 16:27:47 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 11:10:46 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int	find_char(char **ptr_str, char *set)
 	if (!ptr_str || !*ptr_str || !set)
 		return (0);
 	s = *ptr_str;
-	if (*s)
+	if (*s )
 	{
 		while (*s && is_whitespace(*s))
 			s++;
