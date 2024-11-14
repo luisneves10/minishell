@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 12:37:24 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/13 16:16:29 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 16:24:05 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void	run_cmd(t_cmd *cmd, t_shell *shell)
 		handle_redirs(cmd, shell);
 	else if (cmd->type == PIPE)
 	{
+		signal(SIGINT, SIG_IGN);
 		if (pipe(cmd->pipefd) == -1)
 		{
 			perror("pipe error");
@@ -95,5 +96,6 @@ void	run_cmd(t_cmd *cmd, t_shell *shell)
 			shell->exit_status = WEXITSTATUS(shell->status1);
 		else
 			shell->exit_status = 0;
+		signals();
 	}
 }

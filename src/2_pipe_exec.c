@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:18:03 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/12 13:11:50 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 16:24:43 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	fork_function1(t_cmd *pipecmd, t_shell *shell)
 	}
 	if (pid == 0)
 	{
+		signal(SIGINT, child_signal_handler);
 		close(pipecmd->pipefd[0]);
 		if (dup2(pipecmd->pipefd[1], STDOUT_FILENO) < 0)
 		{
@@ -60,6 +61,7 @@ int	fork_function2(t_cmd *pipecmd, t_shell *shell)
 	}
 	if (pid == 0)
 	{
+		signal(SIGINT, child_signal_handler);
 		close(pipecmd->pipefd[1]);
 		if (dup2(pipecmd->pipefd[0], STDIN_FILENO) < 0)
 		{
