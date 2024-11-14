@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:19:52 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/14 11:13:00 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/14 11:50:46 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	parse_quotes(char **ptr_str, char *str, char **start_tok, char **end_tok)
 			if (*str && *str == quote_type)
 				str++;
 		}
-		if (is_whitespace(*str) || *str == '|')
+		if (is_whitespace(*str) || *str == '|' || *str == '<' || *str == '>')
 			break ;
 	}
 	if (end_tok)
