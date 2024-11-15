@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:12:34 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/15 15:16:48 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:35:00 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ char	*deal_expansion(char *token, t_shell *shell)
 			final = ft_strjoin_free(final, tmp);
 			free(tmp);
 			tmp = NULL;
-			printf("final: %s\n", final);
 		}
 		else
 		{
