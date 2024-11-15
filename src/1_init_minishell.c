@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/15 14:08:06 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:42:46 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	init_minishell(t_shell *shell)
 
 	while (1)
 	{
-		//start_signals();
 		shell->prompt = get_prompt();
 		shell->input = readline(shell->prompt);
 		if (!shell->input)

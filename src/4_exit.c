@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 14:28:33 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/15 12:03:23 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/15 16:06:52 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,16 @@ static int	exit_error(char *arg, int error)
 	return (0);
 }
 
+static void	free_and_exit(char **argv, t_shell *shell)
+{
+	int	exit_code;
+
+	exit_code = ft_atoi(*(argv + 1));
+	free_shell(shell, EXIT_CMD);
+	printf("exit\n");
+	exit(calculate_exit_code(exit_code));
+}
+
 void	ft_exit(char **argv, t_shell *shell)
 {
 	int	exit_code;
@@ -74,7 +84,8 @@ void	ft_exit(char **argv, t_shell *shell)
 	if (ft_strncmp(*(argv + 1), "--", 2) == 0
 		&& (ft_strlen(*(argv + 1)) == ft_strlen("--")))
 		return (ft_exit(argv + 1, shell));
-	if (!valid_code(*(argv + 1)))
+	if (!valid_code(*(argv + 1))
+		|| ((*(argv + 1))[0] == '-' && !(*(argv + 1))[1]))
 	{
 		exit_code = exit_error(*(argv + 1), ERR_NUM);
 		free_shell(shell, EXIT_CMD);
@@ -85,8 +96,5 @@ void	ft_exit(char **argv, t_shell *shell)
 		shell->exit_status = exit_error("", ERR_ARG);
 		return ;
 	}
-	exit_code = ft_atoi(*(argv + 1));
-	free_shell(shell, EXIT_CMD);
-	printf("exit\n");
-	exit(calculate_exit_code(exit_code));
+	free_and_exit(argv, shell);
 }

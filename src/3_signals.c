@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 10:41:36 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/15 14:19:51 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:47:55 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	heredoc_sig_handler(int sig)
 		exit(2);
 	}
 }
+
 void	child_signal_handler(int sig)
 {
 	if (sig == SIGINT)

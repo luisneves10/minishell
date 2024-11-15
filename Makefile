@@ -6,7 +6,7 @@
 #    By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/13 14:19:16 by luibarbo          #+#    #+#              #
-#    Updated: 2024/11/13 15:42:06 by daduarte         ###   ########.fr        #
+#    Updated: 2024/11/15 15:47:20 by daduarte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,8 +45,7 @@ SRC_FILES	= 0_main.c \
 			  3_signals.c \
 			  4_builtins.c 4_echo.c 4_pwd.c 4_export.c 4_export2.c \
 			  4_export3.c 4_unset.c 4_env.c 4_exit.c 4_utils.c 4_cd.c \
-			  5_free_functions.c \
-			  6_error.c
+			  5_free_functions.c 5_error.c \
 
 SRC			= $(addprefix $(SRC_DIR), $(SRC_FILES))
 

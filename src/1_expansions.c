@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:12:34 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/15 15:35:00 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:41:50 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,7 @@ char	*is_expansion(char **token, t_shell *shell)
 			return (free(expand), ft_strdup(shell->env[i]
 					+ (var_name_len(shell->env[i]) + 1)));
 		else
-		{
-			//shell->expand_flag = 1;
-			//return (free(expand), ft_strdup(EXPAND_NULL));
 			return (free(expand), ft_strdup(EXPAND_NULL));
-		}
 	}
 	return (ft_strdup(tmp));
 }

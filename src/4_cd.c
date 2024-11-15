@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:01:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/15 14:55:47 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:48:11 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ static int	update_var(t_shell *shell, char *var_name, char *var_value)
 	char	*new_var;
 	char	*tmp;
 
-	// if (!var_value)
-	// 	return (1);
 	index = var_search(shell->env, var_name);
 	if (index >= 0)
 	{
