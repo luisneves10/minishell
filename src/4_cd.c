@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:01:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/07 15:44:17 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/15 14:55:47 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,20 +58,18 @@ static int	change_dir(char **argv, t_shell *shell)
 	home_index = var_search(shell->env, "HOME");
 	if (argv[1][0] == '~')
 	{
-		argv[1]++;
 		if (home_index >= 0)
-			path = ft_strjoin(env[home_index] + 5, argv[1]);
+			path = ft_strjoin(env[home_index] + 5, argv[1] + 1);
 		else
-			path = ft_strjoin(getenv("HOME"), argv[1]);
+			path = ft_strjoin(getenv("HOME"), argv[1] + 1);
 		if (chdir(path) == -1)
 		{
 			perror("minishell: cd");
-			free (path);
-			return (1);
+			return (free (path), 1);
 		}
 		free (path);
 	}
-	else if (chdir(argv[1]) == -1)
+	else if (argv[1][0] && chdir(argv[1]) == -1)
 	{
 		perror("minishell: cd");
 		return (1);
@@ -82,13 +80,13 @@ static int	change_dir(char **argv, t_shell *shell)
 int	ft_cd(char **argv, t_shell *shell)
 {
 	char	**env;
-	char	path[1024];
+	char	path[4096];
 	char	*tmp;
 
 	env = shell->env;
 	if (has_options(argv, "cd"))
 		return (1);
-	if (argv[2])
+	if (shell->argc > 1 && argv[2])
 		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
 	tmp = getcwd(path, sizeof(path));
 	if (!argv[1])

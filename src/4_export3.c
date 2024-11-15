@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:32:19 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/30 12:01:08 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:05:30 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,13 @@ void	append_var(t_shell *shell, char *var)
 		if (ft_strncmp(shell->env[i], var, name_len) == 0)
 		{
 			flag = 0;
-			shell->env[i] = ft_strjoin_free(shell->env[i], cpy + 1);
+			if (ft_strchr(shell->env[i], '='))
+				shell->env[i] = ft_strjoin_free(shell->env[i], cpy + 1);
+			else
+			{
+				shell->env[i] = ft_strjoin_free(shell->env[i], "=");
+				shell->env[i] = ft_strjoin_free(shell->env[i], cpy + 1);
+			}
 			return ;
 		}
 		i++;

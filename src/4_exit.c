@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 14:28:33 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/10/30 11:59:40 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/15 12:03:23 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	ft_exit(char **argv, t_shell *shell)
 
 	if (*(argv + 1) == NULL)
 	{
+		printf("exit\n");
 		free_shell(shell, EXIT_CMD);
 		exit (0);
 	}
