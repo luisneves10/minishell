@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_executor_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:28:44 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/13 15:29:29 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/18 15:45:11 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ char	*get_cmd_path(char **env, char *cmd)
 		}
 		i++;
 	}
+	if (!path)
+		return (ft_strjoin("/", cmd));
 	real_path = get_cmds_path(path, cmd);
 	free(path);
 	if (!real_path)

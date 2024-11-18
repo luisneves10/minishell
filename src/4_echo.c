@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   4_echo.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 15:35:17 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/14 11:55:28 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/18 14:31:28 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_echo(char **argv)
 	int	i;
 
 	i = 1;
-	if (!argv[1] || (argv[1] && !argv[1][0]))
+	if (!argv[1])
 	{
 		printf("\n");
 		return (0);

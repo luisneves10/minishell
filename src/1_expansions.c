@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_expansions.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:12:34 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/15 15:41:50 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/18 16:27:48 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,17 @@ char	*is_expansion(char **token, t_shell *shell)
 	return (ft_strdup(tmp));
 }
 
+void	expand_null_case(char **final, char *tmp)
+{
+	if (ft_strncmp(*final, EXPAND_NULL, 1) == 0
+		&& (ft_strlen(*final) == ft_strlen(EXPAND_NULL))
+		&& ft_strncmp(tmp, EXPAND_NULL, 1) == 0
+		&& (ft_strlen(tmp) == ft_strlen(EXPAND_NULL)))
+		*final = ft_strjoin_free(*final, "");
+	else
+		*final = ft_strjoin_free(*final, tmp);
+}
+
 char	*deal_expansion(char *token, t_shell *shell)
 {
 	int		i;
@@ -53,7 +64,7 @@ char	*deal_expansion(char *token, t_shell *shell)
 		if (*token && *token == '$')
 		{
 			tmp = is_expansion(&token, shell);
-			final = ft_strjoin_free(final, tmp);
+			expand_null_case(&final, tmp);
 			free(tmp);
 			tmp = NULL;
 		}

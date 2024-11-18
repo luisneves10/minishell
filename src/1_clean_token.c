@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_clean_token.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:18:22 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/14 13:21:30 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/18 15:11:22 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 void	chunk_no_quotes(t_chunk **chunk, char **cpy, int size)
 {
 	(*chunk)->str = ft_strndup(*cpy, size);
-	(*chunk)->type = 'a';
+	if (**cpy == '$')
+		(*chunk)->type = '$';
+	else
+		(*chunk)->type = 'a';
 	if (!(*chunk)->str)
 		free(*chunk);
 }

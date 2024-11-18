@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   4_export3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:32:19 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/15 15:05:30 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/18 16:28:42 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,18 @@ static void	create_var(t_shell *shell, char *var)
 	free (new_var);
 }
 
+void	append_condition(int *flag, t_shell *shell, char *cpy, int i)
+{
+	*flag = 0;
+	if (ft_strchr(shell->env[i], '='))
+		shell->env[i] = ft_strjoin_free(shell->env[i], cpy + 1);
+	else
+	{
+		shell->env[i] = ft_strjoin_free(shell->env[i], "=");
+		shell->env[i] = ft_strjoin_free(shell->env[i], cpy + 1);
+	}
+}
+
 void	append_var(t_shell *shell, char *var)
 {
 	int		name_len;
@@ -58,14 +70,7 @@ void	append_var(t_shell *shell, char *var)
 	{
 		if (ft_strncmp(shell->env[i], var, name_len) == 0)
 		{
-			flag = 0;
-			if (ft_strchr(shell->env[i], '='))
-				shell->env[i] = ft_strjoin_free(shell->env[i], cpy + 1);
-			else
-			{
-				shell->env[i] = ft_strjoin_free(shell->env[i], "=");
-				shell->env[i] = ft_strjoin_free(shell->env[i], cpy + 1);
-			}
+			append_condition(&flag, shell, cpy, i);
 			return ;
 		}
 		i++;

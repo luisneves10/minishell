@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_clean_token_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 12:16:29 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/14 13:20:07 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/18 15:13:46 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ char	*chunks_join(t_chunk *chunks, t_shell *shell)
 			shell->ambiguous = 1;
 			str = ft_strjoin_free(str, "");
 		}
+		else if (chunks->type == '$' && chunks->next)
+			str = ft_strjoin_free(str, "");
 		else
 			str = ft_strjoin_free(str, chunks->str);
 		chunks = chunks->next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_executor2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 11:36:02 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/15 15:47:42 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/18 16:19:14 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,24 @@ void	free_split(char **split)
 
 void	handle_child_process(char *path, t_cmd *execcmd, t_shell *shell)
 {
+	int		flag;
+	char	*tmp;
+
+	flag = 0;
 	signal(SIGINT, child_signal_handler);
 	signal(SIGQUIT, SIG_DFL);
 	execve(path, execcmd->argv, shell->env);
 	perror("execve error");
 	if (access(path, F_OK) == -1)
+	{
+		tmp = ft_strjoin("/", execcmd->argv[0]);
+		if (ft_strncmp(path, tmp, ft_strlen(path)) == 0)
+			free(path);
+		free(tmp);
+		flag = 1;
+	}
+	free_shell(shell, EXIT_CMD);
+	if (flag == 1)
 		exit(127);
 	exit(126);
 }
