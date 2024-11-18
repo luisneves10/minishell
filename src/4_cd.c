@@ -3,50 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   4_cd.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 13:01:42 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/15 15:48:11 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/18 17:54:19 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	home_is_set(char **local_env)
-{
-	int	index;
-
-	index = var_search(local_env, "HOME");
-	if (index >= 0)
-		if (ft_strchr(local_env[index], '='))
-			return (1);
-	printf("minishell: cd: HOME not set\n");
-	return (0);
-}
-
-static int	update_var(t_shell *shell, char *var_name, char *var_value)
-{
-	int		index;
-	char	*new_var;
-	char	*tmp;
-
-	index = var_search(shell->env, var_name);
-	if (index >= 0)
-	{
-		new_var = ft_strjoin_free(ft_strdup(""), var_name);
-		if (var_value[0])
-		{
-			new_var = ft_strjoin_free(new_var, "=");
-		}
-		new_var = ft_strjoin_free(new_var, var_value);
-		tmp = shell->env[index];
-		shell->env[index] = new_var;
-		free (tmp);
-	}
-	return (0);
-}
-
-static int	change_dir(char **argv, t_shell *shell)
+static	int	cd_home_path(char **argv, t_shell *shell)
 {
 	char	**env;
 	char	*path;
@@ -54,19 +20,49 @@ static int	change_dir(char **argv, t_shell *shell)
 
 	env = shell->env;
 	home_index = var_search(shell->env, "HOME");
-	if (argv[1][0] == '~')
+	if (home_index >= 0)
+		path = ft_strjoin(env[home_index] + 5, argv[1] + 1);
+	else
 	{
-		if (home_index >= 0)
-			path = ft_strjoin(env[home_index] + 5, argv[1] + 1);
-		else
+		if (shell->home_index != -1)
 			path = ft_strjoin(getenv("HOME"), argv[1] + 1);
-		if (chdir(path) == -1)
+	}
+	if (chdir(path) == -1)
+	{
+		perror("minishell: cd");
+		return (free (path), 1);
+	}
+	free (path);
+	return (0);
+}
+
+static	int	cd_minus(t_shell *shell)
+{
+	char	**env;
+	char	path[4096];
+
+	env = shell->env;
+	if (var_is_set(shell->env, "OLDPWD"))
+	{
+		if (chdir(env[var_search(shell->env, "OLDPWD")] + 7) == -1)
 		{
 			perror("minishell: cd");
-			return (free (path), 1);
+			return (1);
 		}
-		free (path);
+		getcwd(path, sizeof(path));
+		printf("%s\n", path);
 	}
+	else
+		return (1);
+	return (0);
+}
+
+static int	change_dir(char **argv, t_shell *shell)
+{
+	if (argv[1][0] == '~')
+		return (cd_home_path(argv, shell));
+	else if (ft_strncmp(argv[1], "-", 1) == 0 && ft_strlen(argv[1]) == 1)
+		return (cd_minus(shell));
 	else if (argv[1][0] && chdir(argv[1]) == -1)
 	{
 		perror("minishell: cd");
@@ -87,9 +83,10 @@ int	ft_cd(char **argv, t_shell *shell)
 	if (shell->argc > 1 && argv[2])
 		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
 	tmp = getcwd(path, sizeof(path));
-	if (!argv[1])
+	if (!argv[1] || (ft_strncmp(argv[1], "--", 2) == 0
+			&& ft_strlen(argv[1]) == 2))
 	{
-		if (home_is_set(shell->env))
+		if (var_is_set(shell->env, "HOME"))
 			chdir(env[var_search(shell->env, "HOME")] + 5);
 		else
 			return (1);

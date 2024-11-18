@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   0_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:58:12 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/15 14:08:09 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/18 17:36:01 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	main(int argc, char **argv, char *envp[])
 	shell = init_struct(argv, envp);
 	if (!shell)
 		return (1);
+	shell->home_index = var_search(envp, "HOME");
 	if (argc != 1 || argv[1])
 		return (0);
 	signals();

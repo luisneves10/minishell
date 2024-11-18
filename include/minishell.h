@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/18 16:02:37 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/18 17:40:22 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ typedef struct shell
 	int			argc;
 	int			status1;
 	int			status2;
+	int			home_index;
 	int			exit_heredoc;
 	int			exit_status;
 	int			heredoc_flag;
@@ -133,6 +134,8 @@ typedef struct shell
 void	child_signal_handler(int sig);
 void	start_signals(void);
 int		has_slash(char *arg);
+int		var_is_set(char **local_env, char *var);
+int		update_var(t_shell *shell, char *var_name, char *var_value);
 /* ========================================================================== */
 /* ------------------------------ FUNCTIONS --------------------------------- */
 /* ========================================================================== */
