@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/18 17:40:22 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/19 09:57:41 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,12 @@
 # define EXEC  1
 # define REDIR 2
 # define PIPE  3
-# define LIST  4
-# define BACK  5
 
 /* ------------------------------------------------------ EXPORT MACROS ----- */
 # define EXPORT_NEW  1
 # define EXPORT_APPEND 2
 
-/* ------------------------------------------------------ EXPAND MACROS ----- */
+/* ------------------------------------------------------- EXPAND EMPTY ----- */
 # define EXPAND_NULL "\x02"
 
 /* -------------------------------------------------------- EXIT ERRORS ----- */
@@ -130,44 +128,26 @@ typedef struct shell
 	t_fds		*fds;
 }	t_shell;
 
-
-void	child_signal_handler(int sig);
-void	start_signals(void);
-int		has_slash(char *arg);
-int		var_is_set(char **local_env, char *var);
-int		update_var(t_shell *shell, char *var_name, char *var_value);
 /* ========================================================================== */
 /* ------------------------------ FUNCTIONS --------------------------------- */
 /* ========================================================================== */
-int			mini_error(char *str, int error, t_shell *shell);
-void		close_fds(t_fds *fds);
-int			is_whitespace(char c);
-int			is_directory(char *path);
-void		path_errors(t_shell *shell, t_cmd *cmd);
-void		wait_pipes_close(t_cmd *cmd, t_shell *shell, int pid1, int pid2);
-char		**clean_argv(t_cmd *cmd);
 
 /* ========================================================================== */
-/* ------------------------------ EXPANSIONS ---------------------------------*/
-/* ========================================================================== */
-char		*deal_expansion(char *token, t_shell *shell);
-void		on_off_flag(int *flag);
-char		*expansion_join(char *token, char *old_final, int *i);
-char		*expand_cases(char **token, t_shell *shell);
-char		*create_expand(char *expand);
-
-/* ========================================================================== */
-/*	INITIALIZATION AND SIGNALS                                                */
+/*	INITIALIZATION                                                            */
 /* ========================================================================== */
 void		init_minishell(t_shell *shell);
 t_token		*create_token(void);
-void		signals(void);
 t_shell		*init_struct(char **argv, char **envp);
-void		free_shell(t_shell *shell, int i);
 t_fds		*init_fds(void);
+t_cmd		*create_cmd(t_shell *shell, int type, t_cmd *left, t_cmd *right);
+
+/* ========================================================================== */
+/*	SIGNALS                                                                   */
+/* ========================================================================== */
+void		signals(void);
 void		signal_handler(int sig);
 void		heredoc_sig_handler(int sig);
-t_cmd		*create_cmd(t_shell *shell, int type, t_cmd *left, t_cmd *right);
+void		child_signal_handler(int sig);
 
 /* ========================================================================== */
 /*	ENVIRONMENT UTILS                                                         */
@@ -196,6 +176,15 @@ t_chunk		*chunk_last(t_chunk *chunk);
 void		chunk_add_back(t_chunk **chunks, t_chunk *chunk, t_chunk **head);
 char		*chunks_join(t_chunk *chunks, t_shell *shell);
 void		free_chunks(t_chunk *chunks);
+char		**clean_argv(t_cmd *cmd);
+
+/* ========================================================================== */
+/*	EXPANSIONS                                                                */
+/* ========================================================================== */
+char		*deal_expansion(char *token, t_shell *shell);
+char		*expansion_join(char *token, char *old_final, int *i);
+char		*expand_cases(char **token, t_shell *shell);
+char		*create_expand(char *expand);
 
 /* ========================================================================== */
 /*	COMMANDS                                                                  */
@@ -208,6 +197,12 @@ void		handle_parent_process(int pid, char *path,
 				t_cmd *execcmd, t_shell *shell);
 int			fork_function1(t_cmd *pipecmd, t_shell *shell);
 int			fork_function2(t_cmd *pipecmd, t_shell *shell);
+void		wait_pipes_close(t_cmd *cmd, t_shell *shell, int pid1, int pid2);
+char		*get_cmd_path(char **env, char *cmd);
+char		*get_cmds_path(char *path, char *cmd);
+int			is_directory(char *path);
+void		path_errors(t_shell *shell, t_cmd *cmd);
+int			has_slash(char *arg);
 
 /* ========================================================================== */
 /*	REDIRECTIONS                                                              */
@@ -221,12 +216,7 @@ int			file_permissions(t_shell *shell, t_redir *redir);
 int			valid_redir(t_shell *shell, t_redir *redir);
 int			redirs_in(t_fds *fds, t_redir *redir, t_shell *shell);
 int			redirs_out(t_fds *fds, t_redir *redir, t_shell *shell);
-
-/* ========================================================================== */
-/*	EXECUTION AND PROCESS HANDLING                                            */
-/* ========================================================================== */
-char		*get_cmd_path(char **env, char *cmd);
-char		*get_cmds_path(char *path, char *cmd);
+void		close_fds(t_fds *fds);
 
 /* ========================================================================== */
 /*	MEMORY MANAGEMENT                                                         */
@@ -234,6 +224,7 @@ char		*get_cmds_path(char *path, char *cmd);
 void		free_cmd(t_cmd *cmd);
 void		delete_heredocs(t_shell *shell, int flag);
 void		free_split(char **split);
+void		free_shell(t_shell *shell, int i);
 
 /* ========================================================================== */
 /*	BUILTINS                                                                  */
@@ -243,6 +234,8 @@ void		exec_builtin(char **argv, char *builtin, t_shell *shell);
 int			ft_echo(char **argv);
 int			ft_pwd(char **argv);
 int			ft_cd(char **argv, t_shell *shell);
+int			var_is_set(char **local_env, char *var);
+int			update_var(t_shell *shell, char *var_name, char *var_value);
 int			ft_export(char **argv, t_shell *shell);
 char		**update_env(char **local_env, char *var);
 int			ft_export_no_args(t_shell *shell);
@@ -250,10 +243,13 @@ void		append_var(t_shell *shell, char *var);
 int			ft_unset(char **argv, t_shell *shell);
 int			ft_env(char **argv, t_shell *shell);
 void		ft_exit(char **argv, t_shell *shell);
+int			has_options(char **argv, char *command);
 
 /* ========================================================================== */
-/*	BUILTIN UTILS                                                             */
+/*	UTILS                                                                     */
 /* ========================================================================== */
-int			has_options(char **argv, char *command);
+int			mini_error(char *str, int error, t_shell *shell);
+int			is_whitespace(char c);
+void		on_off_flag(int *flag);
 
 #endif

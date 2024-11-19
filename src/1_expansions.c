@@ -51,6 +51,36 @@ void	expand_null_case(char **final, char *tmp)
 		*final = ft_strjoin_free(*final, tmp);
 }
 
+char	*clean_expansion(char *str)
+{
+	int		i;
+	int		j;
+	int		size;
+	char	*final;
+
+	i = 0;
+	size = 0;
+	while (str[i])
+	{
+		if (str[i] != EXPAND_NULL[0])
+			size++;
+		i++;
+	}
+	final = ft_calloc(sizeof(char), size + 1);
+	if (!final)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] != EXPAND_NULL[0])
+			final[j++] = str[i];
+		i++;
+	}
+	free (str);
+	return (final);
+}
+
 char	*deal_expansion(char *token, t_shell *shell)
 {
 	int		i;
@@ -75,5 +105,7 @@ char	*deal_expansion(char *token, t_shell *shell)
 			token = token + i;
 		}
 	}
+	if (ft_strlen(final) > 1)
+		final = clean_expansion(final);
 	return (final);
 }

@@ -17,7 +17,7 @@ int	ft_pwd(char **argv)
 	char	path[4096];
 
 	if (has_options(argv, argv[0]))
-		return (1);
+		return (2);
 	getcwd(path, sizeof(path));
 	printf("%s\n", path);
 	return (0);
