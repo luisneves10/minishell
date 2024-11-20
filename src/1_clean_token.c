@@ -93,7 +93,8 @@ char	*clean_token(char *tok, t_shell *shell, int type)
 			free_chunks(head);
 			return (NULL);
 		}
-		if ((chunk->type == '"' || chunk->type == 'a') && type == TOKEN)
+		if ((chunk->type == '"' || chunk->type == 'a' || chunk->type == '$')
+			&& type == TOKEN)
 			chunk->str = expand_chunk(chunk, shell);
 		chunk_add_back(&chunks, chunk, &head);
 	}

@@ -6,7 +6,7 @@
 #    By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/13 14:19:16 by luibarbo          #+#    #+#              #
-#    Updated: 2024/11/18 17:40:33 by daduarte         ###   ########.fr        #
+#    Updated: 2024/11/20 11:38:26 by luibarbo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ LIBFT		= libft/libft.a
 
 LEAKS_LOG		= ./leaks.log
 READLINE_SUPP	= readline.supp
-VALGRINDFLAGS	= -s --suppressions=$(READLINE_SUPP) \
+VALGRINDFLAGS	= -s -q --suppressions=$(READLINE_SUPP) \
 				  --tool=memcheck --leak-check=full \
 				  --show-leak-kinds=all --track-origins=yes \
 				  --track-fds=yes --show-below-main=no
@@ -101,4 +101,30 @@ re: fclean all
 le: re
 	valgrind $(VALGRINDFLAGS) ./$(NAME)
 
-.PHONY: all clean fclean re le
+define SUP_BODY
+{
+   name
+   Memcheck:Leak
+   fun:*alloc
+   ...
+   obj:*/libreadline.so.*
+   ...
+}
+{
+    leak readline
+    Memcheck:Leak
+    ...
+    fun:readline
+}
+{
+    leak add_history
+    Memcheck:Leak
+    ...
+    fun:add_history
+}
+endef
+
+sup:
+	$(file > readline.supp,$(SUP_BODY))
+
+.PHONY: all clean fclean re le sup

@@ -58,13 +58,12 @@ char	*clean_expansion(char *str)
 	int		size;
 	char	*final;
 
-	i = 0;
+	i = -1;
 	size = 0;
-	while (str[i])
+	while (str[++i])
 	{
 		if (str[i] != EXPAND_NULL[0])
 			size++;
-		i++;
 	}
 	final = ft_calloc(sizeof(char), size + 1);
 	if (!final)

@@ -14,9 +14,20 @@
 
 static int	is_echo_flag(char *arg)
 {
-	if (arg[0] == '-' && arg[1] == 'n' && arg[2] == '\0')
-		return (1);
-	return (0);
+	int	i;
+
+	if (arg[0] != '-')
+		return (0);
+	if (!arg[1])
+		return (0);
+	i = 1;
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	ft_echo(char **argv)
