@@ -81,7 +81,8 @@ char	*chunks_join(t_chunk *chunks, t_shell *shell)
 			shell->ambiguous = 1;
 			str = ft_strjoin_free(str, "");
 		}
-		else if (chunks->type == '$' && chunks->next)
+		else if (chunks->type == '$' && chunks->str[0] == '$'
+			&& ft_strlen(chunks->str) == 1 && chunks->next)
 			str = ft_strjoin_free(str, "");
 		else
 			str = ft_strjoin_free(str, chunks->str);
