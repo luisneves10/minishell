@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 15:40:32 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/14 13:21:59 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/21 14:45:05 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ int	file_permissions(t_shell *shell, t_redir *redir)
 	return (0);
 }
 
-int	valid_redir(t_shell *shell, t_redir *redir)
+int	valid_redir(t_shell *shell, t_redir *redir, t_cmd *cmd)
 {
 	if (redir && (redir->type == '<' || redir->type == '-'))
 	{
-		if (redirs_in(shell->fds, redir, shell) < 0)
+		if (redirs_in(shell->fds, redir, shell, cmd) < 0)
 		{
 			close_fds(shell->fds);
 			free(shell->fds);

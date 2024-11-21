@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/13 15:40:52 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:16:33 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ static void	handle_out(t_fds *fds)
 	}
 }
 
-int	redirs_in(t_fds *fds, t_redir *redir, t_shell *shell)
+int	redirs_in(t_fds *fds, t_redir *redir, t_shell *shell, t_cmd *cmd)
 {
 	if (redir->type == '-')
 	{
-		redir->file = shell->heredoc->filepath;
-		shell->heredoc = shell->heredoc->next;
+		redir->file = cmd->heredoc->filepath;
+		cmd->heredoc = cmd->heredoc->next;
 	}
 	if (fds->in_fd != -1)
 		close(fds->in_fd);
@@ -86,7 +86,7 @@ void	handle_redirs(t_cmd *execcmd, t_shell *shell)
 	{
 		if (file_permissions(shell, redir))
 			return ;
-		else if (!valid_redir(shell, redir))
+		else if (!valid_redir(shell, redir, execcmd))
 			return ;
 		redir = redir->next;
 	}

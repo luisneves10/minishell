@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   1_init_minishell.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 11:53:26 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/18 17:32:55 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:39:58 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ void	init_minishell(t_shell *shell)
 		{
 			cmd = parse_cmd(shell->input, shell);
 			shell->head = cmd;
-			if (handle_heredoc(shell) == 0)
+			if (handle_heredoc(cmd, shell) == 0)
 				run_cmd(cmd, shell);
+			delete_heredocs(shell, 1, shell->head);
 			free_cmd(shell->head);
 		}
-		delete_heredocs(shell, 1);
 		free_shell(shell, 0);
 	}
 	rl_clear_history();

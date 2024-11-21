@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/14 14:57:02 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:47:22 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,43 @@ void	delete_herefile(t_shell *shell, t_heredoc *current)
 	shell->heredoc_head = NULL;
 }
 
-void	delete_heredocs(t_shell *shell, int flag)
+void	delete_heredocs(t_shell *shell, int flag, t_cmd *cmd)
 {
 	t_heredoc	*current;
 	t_heredoc	*temp;
+	t_cmd		*curr;
 
-	current = shell->heredoc_head;
-	while (current != NULL)
+	if (!cmd)
+		return;
+	curr = cmd;
+	if (curr->type == EXEC)
 	{
-		if (current->fd >= 0)
-			close (current->fd);
-		if (flag == 1)
-			delete_herefile(shell, current);
-		if (current->filepath)
+		current = curr->heredoc_head;
+		while (current != NULL)
 		{
-			free(current->filepath);
-			current->filepath = NULL;
+			if (current->fd >= 0)
+				close (current->fd);
+			if (flag == 1)
+				delete_herefile(shell, current);
+			if (current->filepath)
+			{
+				free(current->filepath);
+				current->filepath = NULL;
+			}
+			if (current->delimiter)
+			{
+				free(current->delimiter);
+				current->delimiter = NULL;
+			}
+			temp = current;
+			current = current->next;
+			free(temp);
 		}
-		if (current->delimiter)
-		{
-			free(current->delimiter);
-			current->delimiter = NULL;
-		}
-		temp = current;
-		current = current->next;
-		free(temp);
+	}
+	else if (curr->type == PIPE)
+	{
+		delete_heredocs(shell, flag, curr->left);
+		delete_heredocs(shell, flag, curr->right);
 	}
 }
 
