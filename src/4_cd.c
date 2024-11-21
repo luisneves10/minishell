@@ -26,6 +26,8 @@ static	int	cd_home_path(char **argv, t_shell *shell)
 	{
 		if (shell->home_index != -1)
 			path = ft_strjoin(getenv("HOME"), argv[1] + 1);
+		else
+			return (1);
 	}
 	if (chdir(path) == -1)
 	{
