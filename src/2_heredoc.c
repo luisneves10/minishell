@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/14 10:35:20 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/26 09:07:41 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	child_process_heredoc(t_heredoc *curr, t_shell *shell)
 	signal(SIGINT, SIG_DFL);
 	ft_strlcpy(delimiter, curr->delimiter, ft_strlen(curr->delimiter) + 1);
 	ft_strlcpy(file, curr->filepath, ft_strlen(curr->filepath) + 1);
-	delete_heredocs(shell, 0);
+	delete_heredocs(shell, 0, shell->head);
 	free_cmd(shell->head);
 	free_shell(shell, 2);
 	read_heredoc(delimiter, file);
@@ -105,26 +105,25 @@ int	process_heredoc(t_heredoc *curr, t_shell *shell)
 	return (0);
 }
 
-int	handle_heredoc(t_shell *shell)
+int	handle_heredoc(t_cmd *cmd, t_shell *shell)
 {
-	char		*index;
 	t_heredoc	*curr;
 
-	if (shell->heredoc_flag != 1)
-		return (0);
-	shell->heredoc_head = shell->heredoc;
-	curr = shell->heredoc;
-	while (curr)
+	if (!cmd)
+		return (1);
+	else if (cmd->type == EXEC)
 	{
-		index = ft_itoa(curr->index);
-		curr->filepath = ft_strjoin("/tmp/heredoc_", index);
-		free(index);
-		if (process_heredoc(curr, shell) == 1)
-		{
-			shell->exit_status = 130;
+		if (shell->heredoc_flag != 1)
+			return (0);
+		cmd->heredoc_head = cmd->heredoc;
+		curr = cmd->heredoc;
+		if (heredoc_loop(curr, shell) == 1)
 			return (1);
-		}
-		curr = curr->next;
+	}
+	else if (cmd->type == PIPE)
+	{
+		handle_heredoc(cmd->left, shell);
+		handle_heredoc(cmd->right, shell);
 	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/19 09:57:41 by luibarbo         ###   ########.fr       */
+/*   Updated: 2024/11/26 11:19:59 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,15 @@ typedef struct s_redir
 	struct s_redir	*next;
 }	t_redir;
 
+typedef struct heredoc
+{
+	int				fd;
+	int				index;
+	char			*filepath;
+	char			*delimiter;
+	struct heredoc	*next;
+}	t_heredoc;
+
 typedef struct cmd
 {
 	int			type;
@@ -69,6 +78,8 @@ typedef struct cmd
 	int			argc;
 	int			fd_out;
 	int			fd_in;
+	t_heredoc	*heredoc;
+	t_heredoc	*heredoc_head;
 	int			pipefd[2];
 	int			prev_pipe;
 	struct cmd	*left;
@@ -99,15 +110,6 @@ typedef struct file_descriptors
 	int	saved_out;
 }	t_fds;
 
-typedef struct heredoc
-{
-	int				fd;
-	int				index;
-	char			*filepath;
-	char			*delimiter;
-	struct heredoc	*next;
-}	t_heredoc;
-
 typedef struct shell
 {
 	t_cmd		*head;
@@ -117,14 +119,13 @@ typedef struct shell
 	char		*prompt;
 	int			ambiguous;
 	int			argc;
+	int			heredoc_name;
 	int			status1;
 	int			status2;
 	int			home_index;
 	int			exit_heredoc;
 	int			exit_status;
 	int			heredoc_flag;
-	t_heredoc	*heredoc;
-	t_heredoc	*heredoc_head;
 	t_fds		*fds;
 }	t_shell;
 
@@ -208,13 +209,16 @@ int			has_slash(char *arg);
 /*	REDIRECTIONS                                                              */
 /* ========================================================================== */
 void		handle_redirs(t_cmd *execcmd, t_shell *shell);
-int			handle_heredoc(t_shell *shell);
-t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell);
+int			handle_heredoc(t_cmd *cmd, t_shell *shell);
+int			heredoc_loop(t_heredoc *curr, t_shell *shell);
+int			process_heredoc(t_heredoc *curr, t_shell *shell);
+t_heredoc	*get_delimiter(char *start_tok, char *end_tok,
+				t_shell *shell, t_cmd *cmd);
 int			special_redirs(char **str);
 int			ambigous_redir(t_shell *shell, t_redir *redir);
 int			file_permissions(t_shell *shell, t_redir *redir);
-int			valid_redir(t_shell *shell, t_redir *redir);
-int			redirs_in(t_fds *fds, t_redir *redir, t_shell *shell);
+int			valid_redir(t_shell *shell, t_redir *redir, t_cmd *cmd);
+int			redirs_in(t_fds *fds, t_redir *redir, t_shell *shell, t_cmd *cmd);
 int			redirs_out(t_fds *fds, t_redir *redir, t_shell *shell);
 void		close_fds(t_fds *fds);
 
@@ -222,7 +226,7 @@ void		close_fds(t_fds *fds);
 /*	MEMORY MANAGEMENT                                                         */
 /* ========================================================================== */
 void		free_cmd(t_cmd *cmd);
-void		delete_heredocs(t_shell *shell, int flag);
+void		delete_heredocs(t_shell *shell, int flag, t_cmd *cmd);
 void		free_split(char **split);
 void		free_shell(t_shell *shell, int i);
 

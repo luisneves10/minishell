@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:18:03 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/15 15:44:41 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/21 16:41:09 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	fork_exit(t_cmd *cmd, t_shell *shell)
 	int	exit_status;
 
 	run_cmd(cmd, shell);
-	delete_heredocs(shell, 0);
+	delete_heredocs(shell, 0, shell->head);
 	free_cmd(shell->head);
 	exit_status = shell->exit_status;
 	free_shell(shell, 2);

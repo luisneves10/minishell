@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:22:07 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/14 14:43:59 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/21 14:36:17 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static t_cmd	*parse_redirs(t_cmd *cmd, char **ptr_str, t_shell *shell)
 		}
 		if (token == '-')
 		{
-			shell->heredoc = get_delimiter(start_tok, end_tok, shell);
+			cmd->heredoc = get_delimiter(start_tok, end_tok, shell, cmd);
 			shell->heredoc_flag = 1;
 		}
 		tok->start = start_tok;
