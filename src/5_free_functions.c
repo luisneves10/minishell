@@ -6,20 +6,34 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/21 16:47:22 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/26 11:25:37 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	delete_herefile(t_shell *shell, t_heredoc *current)
+static void	delete_herefile(t_heredoc *current)
 {
 	if (current->filepath)
 		if (access(current->filepath, F_OK) == 0)
 			if (unlink(current->filepath) < 0)
 				perror("Error deleting heredoc file");
-	shell->heredoc = NULL;
-	shell->heredoc_head = NULL;
+}
+
+static void	delete_delimiter(int flag, t_heredoc *heredoc)
+{
+	if (flag == 1)
+		delete_herefile(heredoc);
+	if (heredoc->filepath)
+	{
+		free(heredoc->filepath);
+		heredoc->filepath = NULL;
+	}
+	if (heredoc->delimiter)
+	{
+		free(heredoc->delimiter);
+		heredoc->delimiter = NULL;
+	}
 }
 
 void	delete_heredocs(t_shell *shell, int flag, t_cmd *cmd)
@@ -29,7 +43,7 @@ void	delete_heredocs(t_shell *shell, int flag, t_cmd *cmd)
 	t_cmd		*curr;
 
 	if (!cmd)
-		return;
+		return ;
 	curr = cmd;
 	if (curr->type == EXEC)
 	{
@@ -38,18 +52,7 @@ void	delete_heredocs(t_shell *shell, int flag, t_cmd *cmd)
 		{
 			if (current->fd >= 0)
 				close (current->fd);
-			if (flag == 1)
-				delete_herefile(shell, current);
-			if (current->filepath)
-			{
-				free(current->filepath);
-				current->filepath = NULL;
-			}
-			if (current->delimiter)
-			{
-				free(current->delimiter);
-				current->delimiter = NULL;
-			}
+			delete_delimiter(flag, current);
 			temp = current;
 			current = current->next;
 			free(temp);

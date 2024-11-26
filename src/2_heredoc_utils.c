@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:29:45 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/21 15:57:49 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/26 11:23:15 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_heredoc	*get_heredoc(t_heredoc *new_heredoc, t_cmd *cmd)
 	{
 		new_heredoc->index = 0;
 		cmd->heredoc = new_heredoc;
+		cmd->heredoc_head = new_heredoc;
 	}
 	else
 	{
@@ -53,7 +54,8 @@ t_heredoc	*get_heredoc(t_heredoc *new_heredoc, t_cmd *cmd)
 	return (cmd->heredoc);
 }
 
-t_heredoc	*get_delimiter(char *start_tok, char *end_tok, t_shell *shell, t_cmd *cmd)
+t_heredoc	*get_delimiter(char *start_tok, char *end_tok,
+			t_shell *shell, t_cmd *cmd)
 {
 	char		*tmp;
 	t_heredoc	*new_heredoc;

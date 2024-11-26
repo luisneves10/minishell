@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/21 15:36:36 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/26 11:19:59 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,6 @@ typedef struct shell
 	int			exit_heredoc;
 	int			exit_status;
 	int			heredoc_flag;
-	t_heredoc	*heredoc;
-	t_heredoc	*heredoc_head;
 	t_fds		*fds;
 }	t_shell;
 
