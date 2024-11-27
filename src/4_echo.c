@@ -37,19 +37,22 @@ int	ft_echo(char **argv)
 	i = 1;
 	if (!argv[1])
 	{
-		printf("\n");
+		ft_putchar_fd('\n', 1);
 		return (0);
 	}
-	if (is_echo_flag(argv[1]))
+	while (is_echo_flag(argv[i]))
 		i++;
 	while (argv[i] && argv[i + 1] != NULL)
-		printf("%s ", argv[i++]);
+	{
+		ft_putstr_fd(argv[i++], 1);
+		ft_putchar_fd(' ', 1);
+	}
 	if (is_echo_flag(argv[1]))
 	{
 		if (argv[i])
-			printf("%s", argv[i]);
+			ft_putstr_fd(argv[i], 1);
 	}
 	else
-		printf("%s\n", argv[i]);
+		ft_putendl_fd(argv[i], 1);
 	return (0);
 }
