@@ -3,36 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   5_free_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 10:18:57 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/26 11:25:37 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/28 22:42:19 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	delete_herefile(t_heredoc *current)
+static void	delete_delimiter(t_heredoc *heredoc, t_shell *shell, int flag)
 {
-	if (current->filepath)
-		if (access(current->filepath, F_OK) == 0)
-			if (unlink(current->filepath) < 0)
-				perror("Error deleting heredoc file");
-}
-
-static void	delete_delimiter(int flag, t_heredoc *heredoc)
-{
-	if (flag == 1)
-		delete_herefile(heredoc);
-	if (heredoc->filepath)
-	{
-		free(heredoc->filepath);
-		heredoc->filepath = NULL;
-	}
 	if (heredoc->delimiter)
 	{
 		free(heredoc->delimiter);
 		heredoc->delimiter = NULL;
+	}
+	if (shell->heredoc_flag == 1 && flag == 1)
+	{
+		close(heredoc->pipe_fd[0]);
 	}
 }
 
@@ -52,7 +41,7 @@ void	delete_heredocs(t_shell *shell, int flag, t_cmd *cmd)
 		{
 			if (current->fd >= 0)
 				close (current->fd);
-			delete_delimiter(flag, current);
+			delete_delimiter(current, shell, flag);
 			temp = current;
 			current = current->next;
 			free(temp);
