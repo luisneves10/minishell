@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -247,6 +248,8 @@ void		append_var(t_shell *shell, char *var);
 int			ft_unset(char **argv, t_shell *shell);
 int			ft_env(char **argv, t_shell *shell);
 void		ft_exit(char **argv, t_shell *shell);
+int			exit_error(char *arg, int error);
+int			valid_code(char *arg);
 int			has_options(char **argv, char *command);
 
 /* ========================================================================== */

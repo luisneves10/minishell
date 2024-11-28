@@ -6,33 +6,11 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 14:28:33 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/15 16:06:52 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/28 10:24:35 by luibarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	valid_code(char *arg)
-{
-	int	i;
-
-	if (ft_strncmp(arg, "922337203685477580", 18) == 0
-		&& arg[18] && arg[18] > '7' && arg[18] <= '9')
-		return (0);
-	i = 0;
-	if (ft_isdigit(arg[i]) || arg[i] == '+' || arg[i] == '-')
-		i++;
-	else
-		return (0);
-	while (arg[i])
-	{
-		if (arg[i] >= '0' && arg[i] <= '9')
-			i++;
-		else
-			return (0);
-	}
-	return (1);
-}
 
 static int	calculate_exit_code(int code)
 {
@@ -42,32 +20,13 @@ static int	calculate_exit_code(int code)
 		return (256 + (code % 256));
 }
 
-static int	exit_error(char *arg, int error)
-{
-	if (error == ERR_ARG)
-	{
-		printf("exit\n");
-		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		return (1);
-	}
-	else if (error == ERR_NUM)
-	{
-		printf("exit\n");
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(arg, 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
-		return (2);
-	}
-	return (0);
-}
-
 static void	free_and_exit(char **argv, t_shell *shell)
 {
 	int	exit_code;
 
 	exit_code = ft_atoi(*(argv + 1));
 	free_shell(shell, EXIT_CMD);
-	printf("exit\n");
+	ft_putstr_fd("exit\n", 1);
 	exit(calculate_exit_code(exit_code));
 }
 
@@ -77,7 +36,7 @@ void	ft_exit(char **argv, t_shell *shell)
 
 	if (*(argv + 1) == NULL)
 	{
-		printf("exit\n");
+		ft_putstr_fd("exit\n", 1);
 		free_shell(shell, EXIT_CMD);
 		exit (0);
 	}
