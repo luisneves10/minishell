@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 14:17:38 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/26 11:19:59 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/28 20:07:01 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct heredoc
 {
 	int				fd;
 	int				index;
-	char			*filepath;
+	int				pipe_fd[2];
 	char			*delimiter;
 	struct heredoc	*next;
 }	t_heredoc;

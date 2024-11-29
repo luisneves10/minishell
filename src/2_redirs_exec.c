@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_redirs_exec.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 22:45:59 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/21 15:16:33 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/28 20:12:03 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,17 @@ int	redirs_in(t_fds *fds, t_redir *redir, t_shell *shell, t_cmd *cmd)
 {
 	if (redir->type == '-')
 	{
-		redir->file = cmd->heredoc->filepath;
+		fds->in_fd = cmd->heredoc->pipe_fd[0];
 		cmd->heredoc = cmd->heredoc->next;
 	}
-	if (fds->in_fd != -1)
-		close(fds->in_fd);
-	fds->in_fd = open(redir->file, O_RDONLY);
-	if (fds->in_fd < 0)
-		return (mini_error("No such file or directory", -1, shell));
+	else
+	{
+		if (fds->in_fd != -1)
+			close(fds->in_fd);
+		fds->in_fd = open(redir->file, O_RDONLY);
+		if (fds->in_fd < 0)
+			return (mini_error("No such file or directory", -1, shell));
+	}
 	handle_in(fds);
 	return (1);
 }

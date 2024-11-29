@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_heredoc_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 16:29:45 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/26 11:23:15 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/11/28 22:15:27 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 int	heredoc_loop(t_heredoc *curr, t_shell *shell)
 {
-	static int	real_index;
-	char		*index;
-
 	while (curr)
 	{
-		index = ft_itoa(real_index++);
-		curr->filepath = ft_strjoin("/tmp/heredoc_", index);
-		free(index);
+		if (pipe(curr->pipe_fd) == -1)
+		{
+			perror("pipe error");
+			return (1);
+		}
 		if (process_heredoc(curr, shell) == 1)
 		{
 			shell->exit_status = 130;
@@ -67,15 +66,13 @@ t_heredoc	*get_delimiter(char *start_tok, char *end_tok,
 		exit(1);
 	}
 	new_heredoc->delimiter = NULL;
-	new_heredoc->filepath = NULL;
 	new_heredoc->next = NULL;
 	new_heredoc->fd = -1;
+	new_heredoc->pipe_fd[0] = -1;
+	new_heredoc->pipe_fd[1] = -1;
 	tmp = ft_calloc((end_tok - start_tok) + 1, sizeof(char));
 	if (!tmp)
-	{
-		free(new_heredoc);
-		return (NULL);
-	}
+		return (free(new_heredoc), NULL);
 	ft_strlcpy(tmp, start_tok, (end_tok - start_tok) + 1);
 	if (ft_strchr(tmp, '"') || ft_strchr(tmp, '\''))
 		new_heredoc->delimiter = clean_token(tmp, shell, HEREDOC);
