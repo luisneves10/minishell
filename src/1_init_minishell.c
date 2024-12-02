@@ -42,19 +42,11 @@ void	free_shell(t_shell *shell, int i)
 
 static char	*get_prompt(void)
 {
-	char	path[4096];
 	char	*prompt;
-	char	*user;
 
 	prompt = ft_strjoin_free(ft_strdup("\033[1;34m"), "");
-	user = getenv("USER");
-	if (user)
-		prompt = ft_strjoin_free(prompt, user);
-	else
-		prompt = ft_strjoin_free(prompt, "minishell");
-	prompt = ft_strjoin_free(prompt, ":\033[0m");
-	prompt = ft_strjoin_free(prompt, getcwd(path, sizeof(path)));
-	prompt = ft_strjoin_free(prompt, "$ ");
+	prompt = ft_strjoin_free(prompt, "minishell");
+	prompt = ft_strjoin_free(prompt, "$\033[0m ");
 	return (prompt);
 }
 

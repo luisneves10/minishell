@@ -240,6 +240,7 @@ int			ft_echo(char **argv);
 int			ft_pwd(char **argv);
 int			ft_cd(char **argv, t_shell *shell);
 int			var_is_set(char **local_env, char *var);
+char		*ft_getcwd(t_shell *shell);
 int			update_var(t_shell *shell, char *var_name, char *var_value);
 int			ft_export(char **argv, t_shell *shell);
 char		**update_env(char **local_env, char *var);
