@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 11:12:34 by daduarte          #+#    #+#             */
-/*   Updated: 2024/12/03 13:06:11 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/12/03 13:32:23 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ char	*is_expansion(char **token, t_shell *shell)
 	if (**token == '$')
 	{
 		(*token)++;
-		if (is_whitespace(**token) || **token == '\0')
+		if (is_whitespace(**token) || **token == '\0'
+			|| **token == '\'' || **token == '"')
 			return (ft_strdup("$"));
 		if (**token == '0' || **token == '$'
 			|| ft_isdigit(**token) || **token == '?')
