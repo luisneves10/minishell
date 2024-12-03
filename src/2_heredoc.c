@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2_heredoc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:30:27 by daduarte          #+#    #+#             */
-/*   Updated: 2024/11/28 22:39:59 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:44:48 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ static void	read_heredoc(char *delimiter, int write_fd)
 		ret = read_heredoc_cases(line, delimiter, write_fd);
 		if (ret == 2)
 			break ;
-		else if (ret == 1)
-			return ;
 		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);
 		free(line);
@@ -61,6 +59,7 @@ void	child_process_heredoc(t_heredoc *curr, t_shell *shell)
 	char	delimiter[4096];
 	int		fd;
 
+	close(curr->pipe_fd[0]);
 	fd = curr->pipe_fd[1];
 	signal(SIGINT, SIG_DFL);
 	ft_strlcpy(delimiter, curr->delimiter, ft_strlen(curr->delimiter) + 1);
@@ -110,12 +109,17 @@ int	handle_heredoc(t_cmd *cmd, t_shell *shell)
 		cmd->heredoc_head = cmd->heredoc;
 		curr = cmd->heredoc;
 		if (heredoc_loop(curr, shell) == 1)
+		{
+			close(curr->pipe_fd[1]);
 			return (1);
+		}
 	}
 	else if (cmd->type == PIPE)
 	{
-		handle_heredoc(cmd->left, shell);
-		handle_heredoc(cmd->right, shell);
+		if (handle_heredoc(cmd->left, shell) == 1)
+			return (1);
+		if (handle_heredoc(cmd->right, shell) == 1)
+			return (1);
 	}
 	return (0);
 }
