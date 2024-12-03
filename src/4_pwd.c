@@ -18,7 +18,7 @@ int	ft_pwd(char **argv)
 
 	if (has_options(argv, argv[0]))
 		return (2);
-	getcwd(path, sizeof(path));
-	printf("%s\n", path);
+	if (getcwd(path, sizeof(path)))
+		ft_putendl_fd(path, 1);
 	return (0);
 }
