@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 10:41:36 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/15 15:47:55 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:33:12 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,16 @@ void	heredoc_sig_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
+		g_ctrlc = SIGINT;
 		printf("\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
-		exit(2);
+		exit(SIGINT);
 	}
 }
 
 void	child_signal_handler(int sig)
 {
 	if (sig == SIGINT)
-		(void)sig;
+		g_ctrlc = SIGINT;
 }

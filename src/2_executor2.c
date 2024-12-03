@@ -6,7 +6,7 @@
 /*   By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 11:36:02 by luibarbo          #+#    #+#             */
-/*   Updated: 2024/11/21 16:22:35 by daduarte         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:29:18 by daduarte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,9 @@ void	handle_parent_process(int pid, char *path,
 	int	status;
 
 	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		shell->exit_status = 130;
+	else if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
 	else
 		shell->exit_status = 1;
