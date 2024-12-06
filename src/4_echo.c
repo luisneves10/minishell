@@ -16,6 +16,8 @@ static int	is_echo_flag(char *arg)
 {
 	int	i;
 
+	if (!arg)
+		return (0);
 	if (arg[0] != '-')
 		return (0);
 	if (!arg[1])
@@ -53,6 +55,7 @@ int	ft_echo(char **argv)
 			ft_putstr_fd(argv[i], 1);
 	}
 	else
-		ft_putendl_fd(argv[i], 1);
+		if (argv[i])
+			ft_putendl_fd(argv[i], 1);
 	return (0);
 }
