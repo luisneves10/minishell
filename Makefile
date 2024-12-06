@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: daduarte <daduarte@student.42porto.com>    +#+  +:+       +#+         #
+#    By: daduarte <daduarte@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/13 14:19:16 by luibarbo          #+#    #+#              #
-#    Updated: 2024/11/20 11:38:26 by luibarbo         ###   ########.fr        #
+#    Updated: 2024/12/06 09:44:09 by daduarte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ READLINE_SUPP	= readline.supp
 VALGRINDFLAGS	= -s -q --suppressions=$(READLINE_SUPP) \
 				  --tool=memcheck --leak-check=full \
 				  --show-leak-kinds=all --track-origins=yes \
-				  --track-fds=yes --show-below-main=no
+				  --show-below-main=no
 
 SRC_FILES	= 0_main.c \
 			  1_init_minishell.c 1_constructors.c 1_parse_func.c \
