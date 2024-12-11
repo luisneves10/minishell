@@ -60,6 +60,6 @@ To run the Minishell project on your local machine, follow these steps:
 
 - **Memory Management:** Ensuring proper allocation and freeing of resources improved my understanding of dynamic memory.
 
-- **Command Parsing:** Handling edge cases with quotes, escapes, and special characters enhanced my parsing skills.
+- **Command Parsing:** Handling many edge cases enhanced my parsing skills.
 
 - **Unix Shell Behavior:** Understanding the inner workings of a shell through replicating its functionalities.
